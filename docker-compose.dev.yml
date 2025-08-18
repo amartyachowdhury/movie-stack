@@ -1,0 +1,81 @@
+version: '3.8'
+
+services:
+  # Backend API (Development)
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: movie-stack-backend-dev
+    ports:
+      - "5001:5000"
+    environment:
+      - FLASK_ENV=development
+      - FLASK_DEBUG=1
+      - DATABASE_URL=postgresql://postgres:password@db:5432/movie_stack
+      - TMDB_API_KEY=${TMDB_API_KEY}
+    volumes:
+      - ./app:/app/app
+      - ./instance:/app/instance
+    depends_on:
+      - db
+    networks:
+      - movie-stack-network
+    restart: unless-stopped
+    command: ["python", "-m", "flask", "run", "--host=0.0.0.0", "--port=5000", "--reload"]
+
+  # Frontend React App (Development)
+  frontend-dev:
+    image: node:16-alpine
+    container_name: movie-stack-frontend-dev
+    working_dir: /app
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./movie-stack-frontend:/app
+      - /app/node_modules
+    environment:
+      - REACT_APP_API_URL=http://localhost:5000
+    depends_on:
+      - backend
+    networks:
+      - movie-stack-network
+    restart: unless-stopped
+    command: ["npm", "start"]
+
+  # PostgreSQL Database
+  db:
+    image: postgres:13-alpine
+    container_name: movie-stack-db-dev
+    environment:
+      - POSTGRES_DB=movie_stack
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - postgres_data_dev:/var/lib/postgresql/data
+      - ./docker/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    networks:
+      - movie-stack-network
+    restart: unless-stopped
+
+  # Redis for caching
+  redis:
+    image: redis:6-alpine
+    container_name: movie-stack-redis-dev
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data_dev:/data
+    networks:
+      - movie-stack-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data_dev:
+  redis_data_dev:
+
+networks:
+  movie-stack-network:
+    driver: bridge
