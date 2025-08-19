@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
 import ErrorBoundary from './components/ErrorBoundary';
@@ -12,6 +12,7 @@ import WatchlistManager from './components/WatchlistManager';
 import SmartRecommendations from './components/SmartRecommendations';
 import MovieTrailers from './components/MovieTrailers';
 import ThemeCustomizer from './components/ThemeCustomizer';
+import AnalyticsDashboard from './components/AnalyticsDashboard';
 import './styles/theme.css';
 import './App.css';
 
@@ -20,6 +21,7 @@ import * as serviceWorker from './serviceWorker';
 
 function AppContent() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [showThemeCustomizer, setShowThemeCustomizer] = useState(false);
 
   useEffect(() => {
@@ -48,6 +50,9 @@ function AppContent() {
           } />
           <Route path="/recommendations" element={
             user ? <SmartRecommendations userId={user.id} /> : <LoginForm />
+          } />
+          <Route path="/analytics" element={
+            user ? <AnalyticsDashboard userId={user.id} onMovieClick={(movie) => navigate(`/movie/${movie.id || movie.tmdb_id}`)} /> : <LoginForm />
           } />
           <Route path="/profile" element={
             user ? <UserProfile /> : <LoginForm />

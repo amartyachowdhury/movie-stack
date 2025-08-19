@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import MovieCard from '../components/MovieCard';
 import { Movie } from '../components/MovieCard';
 import RatingAnalytics from '../components/RatingAnalytics';
+import MovieReviews from '../components/MovieReviews';
 import apiService from '../services/api';
 import './MovieDetailsPage.css';
 
@@ -44,7 +45,7 @@ const MovieDetailsPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [userRating, setUserRating] = useState<number>(0);
-  const [activeTab, setActiveTab] = useState<'overview' | 'cast' | 'similar'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'cast' | 'similar' | 'reviews'>('overview');
 
   useEffect(() => {
     if (movieId) {
@@ -248,6 +249,12 @@ const MovieDetailsPage: React.FC = () => {
         >
           Similar Movies
         </button>
+        <button
+          className={`tab-button ${activeTab === 'reviews' ? 'active' : ''}`}
+          onClick={() => setActiveTab('reviews')}
+        >
+          Reviews & Discussion
+        </button>
       </div>
 
       <div className="tab-content">
@@ -338,6 +345,15 @@ const MovieDetailsPage: React.FC = () => {
             ) : (
               <p>No similar movies found.</p>
             )}
+          </div>
+        )}
+
+        {activeTab === 'reviews' && (
+          <div className="reviews-content">
+            <MovieReviews 
+              movie={movie} 
+              userId={1} // TODO: Get actual user ID from auth context
+            />
           </div>
         )}
       </div>

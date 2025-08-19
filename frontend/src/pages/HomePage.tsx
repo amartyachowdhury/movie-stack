@@ -210,6 +210,24 @@ const HomePage: React.FC = () => {
               </div>
               <div className="user-menu">
                 <button 
+                  className="nav-button"
+                  onClick={() => navigate('/watchlist')}
+                >
+                  📋 Watchlist
+                </button>
+                <button 
+                  className="nav-button"
+                  onClick={() => navigate('/recommendations')}
+                >
+                  🤖 AI Recommendations
+                </button>
+                <button 
+                  className="nav-button"
+                  onClick={() => navigate('/analytics')}
+                >
+                  📊 Analytics
+                </button>
+                <button 
                   className="profile-button"
                   onClick={() => navigate('/profile')}
                 >
