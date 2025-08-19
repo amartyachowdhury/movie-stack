@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import MovieGrid from '../components/MovieGrid';
 import SearchBar from '../components/SearchBar';
+import ThemeToggle from '../components/ThemeToggle';
 import { useMovies } from '../hooks/useMovies';
 import { useRecommendations } from '../hooks/useRecommendations';
 import { Movie } from '../components/MovieCard';
@@ -223,6 +224,9 @@ const HomePage: React.FC = () => {
               </div>
             </>
           )}
+        </div>
+        <div className="theme-controls">
+          <ThemeToggle />
         </div>
       </div>
       

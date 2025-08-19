@@ -1,6 +1,6 @@
 .home-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--bg-gradient);
   padding-top: 60px;
 }
 
@@ -9,24 +9,29 @@
   top: 0;
   left: 0;
   right: 0;
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--overlay-light);
   backdrop-filter: blur(10px);
   padding: 12px 24px;
   z-index: 1000;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  border-bottom: 1px solid var(--border-primary);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .user-info {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
   gap: 16px;
-  max-width: 1200px;
-  margin: 0 auto;
+}
+
+.theme-controls {
+  display: flex;
+  align-items: center;
 }
 
 .welcome-text {
-  color: #2d3748;
+  color: var(--text-primary);
   font-weight: 500;
   font-size: 14px;
 }
@@ -47,11 +52,11 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--bg-gradient);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: var(--text-inverse);
   font-size: 14px;
   font-weight: 600;
 }
@@ -73,17 +78,17 @@
 }
 
 .profile-button {
-  background: #667eea;
-  color: white;
+  background: var(--button-primary-bg);
+  color: var(--button-primary-text);
 }
 
 .profile-button:hover {
-  background: #5a67d8;
+  background: var(--accent-secondary);
 }
 
 .logout-button {
-  background: #e53e3e;
-  color: white;
+  background: var(--accent-danger);
+  color: var(--text-inverse);
 }
 
 .logout-button:hover {

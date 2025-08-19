@@ -1,0 +1,145 @@
+/* CSS Variables for Theme System */
+:root {
+  /* Light Theme Colors */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-tertiary: #e9ecef;
+  --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --bg-gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --text-tertiary: #999999;
+  --text-inverse: #ffffff;
+  
+  --border-primary: #e9ecef;
+  --border-secondary: #dee2e6;
+  --border-accent: #667eea;
+  
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.2);
+  --shadow-xl: 0 12px 24px rgba(0, 0, 0, 0.25);
+  
+  --accent-primary: #667eea;
+  --accent-secondary: #764ba2;
+  --accent-success: #28a745;
+  --accent-warning: #ffc107;
+  --accent-danger: #dc3545;
+  --accent-info: #17a2b8;
+  
+  --overlay-light: rgba(255, 255, 255, 0.9);
+  --overlay-dark: rgba(0, 0, 0, 0.1);
+  
+  --card-bg: #ffffff;
+  --card-border: #e9ecef;
+  --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  
+  --input-bg: #ffffff;
+  --input-border: #dee2e6;
+  --input-focus: #667eea;
+  
+  --button-primary-bg: #667eea;
+  --button-primary-text: #ffffff;
+  --button-secondary-bg: #f8f9fa;
+  --button-secondary-text: #333333;
+  
+  --rating-star: #ffc107;
+  --rating-star-empty: #e9ecef;
+  
+  --skeleton-bg: #f0f0f0;
+  --skeleton-shimmer: #e0e0e0;
+}
+
+/* Dark Theme Colors */
+[data-theme="dark"] {
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #2d2d2d;
+  --bg-tertiary: #404040;
+  --bg-gradient: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  --bg-gradient-secondary: linear-gradient(135deg, #ec4899 0%, #f97316 100%);
+  
+  --text-primary: #ffffff;
+  --text-secondary: #d1d5db;
+  --text-tertiary: #9ca3af;
+  --text-inverse: #1a1a1a;
+  
+  --border-primary: #404040;
+  --border-secondary: #525252;
+  --border-accent: #4f46e5;
+  
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 12px 24px rgba(0, 0, 0, 0.6);
+  
+  --accent-primary: #4f46e5;
+  --accent-secondary: #7c3aed;
+  --accent-success: #10b981;
+  --accent-warning: #f59e0b;
+  --accent-danger: #ef4444;
+  --accent-info: #06b6d4;
+  
+  --overlay-light: rgba(26, 26, 26, 0.9);
+  --overlay-dark: rgba(0, 0, 0, 0.3);
+  
+  --card-bg: #2d2d2d;
+  --card-border: #404040;
+  --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  
+  --input-bg: #2d2d2d;
+  --input-border: #404040;
+  --input-focus: #4f46e5;
+  
+  --button-primary-bg: #4f46e5;
+  --button-primary-text: #ffffff;
+  --button-secondary-bg: #404040;
+  --button-secondary-text: #ffffff;
+  
+  --rating-star: #f59e0b;
+  --rating-star-empty: #404040;
+  
+  --skeleton-bg: #404040;
+  --skeleton-shimmer: #525252;
+}
+
+/* Smooth transitions for theme switching */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Disable transitions for specific elements that shouldn't animate */
+.no-transition,
+.no-transition * {
+  transition: none !important;
+}
+
+/* Focus styles for accessibility */
+*:focus {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+/* Selection styles */
+::selection {
+  background-color: var(--accent-primary);
+  color: var(--text-inverse);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-secondary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-tertiary);
+}
