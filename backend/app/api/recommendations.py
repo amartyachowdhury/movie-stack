@@ -90,9 +90,108 @@ def get_collaborative_recommendations(user_id):
         current_app.logger.error(f"Error generating collaborative recommendations for user {user_id}: {str(e)}")
         return error_response("Failed to generate recommendations", 500)
 
+@bp.route('/content-based/<int:user_id>', methods=['GET'])
+def get_content_based_recommendations_for_user(user_id):
+    """Get content-based recommendations for a user based on their rated movies"""
+    try:
+        user = User.query.get_or_404(user_id)
+        
+        # Get user's rated movies
+        user_ratings = Rating.query.filter_by(user_id=user_id).all()
+        
+        if not user_ratings:
+            return success_response({
+                "recommendations": [],
+                "message": "No ratings found for user"
+            })
+        
+        # Get all movies for similarity calculation
+        all_movies = Movie.query.all()
+        
+        if len(all_movies) < 2:
+            return success_response({
+                "recommendations": [],
+                "message": "Not enough movies for recommendations"
+            })
+        
+        # Create feature vectors based on genres
+        movie_features = []
+        all_genres = set()
+        for movie in all_movies:
+            if movie.genres:
+                genres = movie.genres.split(',')
+                all_genres.update(genres)
+        
+        genre_dict = {genre: i for i, genre in enumerate(all_genres)}
+        
+        for movie in all_movies:
+            feature_vector = [0] * len(genre_dict)
+            if movie.genres:
+                for genre in movie.genres.split(','):
+                    if genre in genre_dict:
+                        feature_vector[genre_dict[genre]] = 1
+            movie_features.append(feature_vector)
+        
+        movie_features = np.array(movie_features)
+        
+        # Calculate similarity matrix
+        movie_similarity = cosine_similarity(movie_features)
+        
+        # Get user's highly rated movies
+        user_movies = {rating.movie_id: rating.rating for rating in user_ratings}
+        highly_rated_movies = [movie_id for movie_id, rating in user_movies.items() if rating >= 4]
+        
+        if not highly_rated_movies:
+            return success_response({
+                "recommendations": [],
+                "message": "No highly rated movies found for user"
+            })
+        
+        # Calculate average similarity scores for all movies based on user's preferences
+        movie_scores = defaultdict(float)
+        movie_counts = defaultdict(int)
+        
+        for movie_id in highly_rated_movies:
+            movie_index = [m.id for m in all_movies].index(movie_id)
+            similar_scores = movie_similarity[movie_index]
+            
+            for i, score in enumerate(similar_scores):
+                other_movie_id = all_movies[i].id
+                if other_movie_id not in user_movies:  # Don't recommend already rated movies
+                    movie_scores[other_movie_id] += score
+                    movie_counts[other_movie_id] += 1
+        
+        # Calculate average scores and create recommendations
+        recommendations = []
+        for movie_id, total_score in movie_scores.items():
+            if movie_counts[movie_id] > 0:
+                avg_score = total_score / movie_counts[movie_id]
+                movie = Movie.query.get(movie_id)
+                if movie:
+                    recommendations.append({
+                        'id': movie.id,
+                        'title': movie.title,
+                        'overview': movie.overview or '',
+                        'poster_path': movie.poster_path or '',
+                        'release_date': movie.release_date.isoformat() if movie.release_date else '',
+                        'vote_average': movie.vote_average or 0,
+                        'similarity_score': float(avg_score)
+                    })
+        
+        # Sort by similarity score and return top recommendations
+        recommendations.sort(key=lambda x: x['similarity_score'], reverse=True)
+        
+        return success_response({
+            "recommendations": recommendations[:10]
+        })
+        
+    except Exception as e:
+        current_app.logger.error(f"Error generating content-based recommendations for user {user_id}: {str(e)}")
+        return error_response("Failed to generate recommendations", 500)
+
 @bp.route('/content/<int:movie_id>', methods=['GET'])
-def get_content_based_recommendations(movie_id):
-    """Get content-based recommendations for a movie"""
+def get_content_based_recommendations_for_movie(movie_id):
+    """Get content-based recommendations for a specific movie"""
     try:
         movie = Movie.query.get_or_404(movie_id)
         movies = Movie.query.all()
@@ -166,34 +265,140 @@ def get_hybrid_recommendations(user_id):
                 "message": "No ratings found for user"
             })
         
-        # Get content-based recommendations for user's highly rated movies
-        content_recommendations = []
-        for rating in user_ratings:
-            if rating.rating >= 4:  # Only consider highly rated movies
-                similar_movies = rating.movie.get_similar_movies(limit=5)
-                content_recommendations.extend(similar_movies)
+        # Get collaborative recommendations (extract logic directly)
+        collaborative_recommendations = []
+        try:
+            # Get all ratings
+            all_ratings = Rating.query.all()
+            
+            if len(all_ratings) >= 10:  # Need minimum data for recommendations
+                # Create user-movie rating matrix
+                user_ratings_dict = defaultdict(dict)
+                for rating in all_ratings:
+                    user_ratings_dict[rating.user_id][rating.movie_id] = rating.rating
+                
+                # Convert to numpy array for calculations
+                users = list(user_ratings_dict.keys())
+                movies = list(set(rating.movie_id for rating in all_ratings))
+                
+                user_matrix = []
+                for u in users:
+                    user_vector = []
+                    for movie_id in movies:
+                        user_vector.append(user_ratings_dict[u].get(movie_id, 0))
+                    user_matrix.append(user_vector)
+                
+                user_matrix = np.array(user_matrix)
+                
+                # Calculate similarity between users
+                user_similarity = cosine_similarity(user_matrix)
+                
+                # Get similar users
+                user_index = users.index(user_id)
+                similar_users = user_similarity[user_index]
+                similar_users_indices = similar_users.argsort()[-6:-1][::-1]  # Top 5 similar users
+                
+                # Get recommendations based on similar users
+                user_movies = set(user_ratings_dict[user_id].keys())
+                
+                for similar_user_index in similar_users_indices:
+                    similar_user_id = users[similar_user_index]
+                    for movie_id, rating in user_ratings_dict[similar_user_id].items():
+                        if movie_id not in user_movies and rating >= 4:  # Only recommend highly rated movies
+                            movie = Movie.query.get(movie_id)
+                            if movie:
+                                collaborative_recommendations.append({
+                                    'id': movie.id,
+                                    'title': movie.title,
+                                    'overview': movie.overview or '',
+                                    'poster_path': movie.poster_path or '',
+                                    'release_date': movie.release_date.isoformat() if movie.release_date else '',
+                                    'vote_average': movie.vote_average or 0,
+                                    'similarity_score': float(similar_users[similar_user_index])
+                                })
+        except Exception as e:
+            current_app.logger.warning(f"Error in collaborative part of hybrid recommendations: {str(e)}")
         
-        # Get collaborative recommendations
-        collaborative_response = get_collaborative_recommendations(user_id)
-        if collaborative_response.status_code == 200:
-            collaborative_data = collaborative_response.get_json()
-            collaborative_recommendations = collaborative_data.get('data', {}).get('recommendations', [])
-        else:
-            collaborative_recommendations = []
+        # Get content-based recommendations (extract logic directly)
+        content_recommendations = []
+        try:
+            # Get all movies for similarity calculation
+            all_movies = Movie.query.all()
+            
+            if len(all_movies) >= 2:
+                # Create feature vectors based on genres
+                movie_features = []
+                all_genres = set()
+                for movie in all_movies:
+                    if movie.genres:
+                        genres = movie.genres.split(',')
+                        all_genres.update(genres)
+                
+                genre_dict = {genre: i for i, genre in enumerate(all_genres)}
+                
+                for movie in all_movies:
+                    feature_vector = [0] * len(genre_dict)
+                    if movie.genres:
+                        for genre in movie.genres.split(','):
+                            if genre in genre_dict:
+                                feature_vector[genre_dict[genre]] = 1
+                    movie_features.append(feature_vector)
+                
+                movie_features = np.array(movie_features)
+                
+                # Calculate similarity matrix
+                movie_similarity = cosine_similarity(movie_features)
+                
+                # Get user's highly rated movies
+                user_movies = {rating.movie_id: rating.rating for rating in user_ratings}
+                highly_rated_movies = [movie_id for movie_id, rating in user_movies.items() if rating >= 4]
+                
+                if highly_rated_movies:
+                    # Calculate average similarity scores for all movies based on user's preferences
+                    movie_scores = defaultdict(float)
+                    movie_counts = defaultdict(int)
+                    
+                    for movie_id in highly_rated_movies:
+                        movie_index = [m.id for m in all_movies].index(movie_id)
+                        similar_scores = movie_similarity[movie_index]
+                        
+                        for i, score in enumerate(similar_scores):
+                            other_movie_id = all_movies[i].id
+                            if other_movie_id not in user_movies:  # Don't recommend already rated movies
+                                movie_scores[other_movie_id] += score
+                                movie_counts[other_movie_id] += 1
+                    
+                    # Calculate average scores and create recommendations
+                    for movie_id, total_score in movie_scores.items():
+                        if movie_counts[movie_id] > 0:
+                            avg_score = total_score / movie_counts[movie_id]
+                            movie = Movie.query.get(movie_id)
+                            if movie:
+                                content_recommendations.append({
+                                    'id': movie.id,
+                                    'title': movie.title,
+                                    'overview': movie.overview or '',
+                                    'poster_path': movie.poster_path or '',
+                                    'release_date': movie.release_date.isoformat() if movie.release_date else '',
+                                    'vote_average': movie.vote_average or 0,
+                                    'similarity_score': float(avg_score)
+                                })
+        except Exception as e:
+            current_app.logger.warning(f"Error in content-based part of hybrid recommendations: {str(e)}")
         
         # Combine and rank recommendations
         all_recommendations = {}
         
         # Add content-based recommendations
-        for movie in content_recommendations:
-            if movie.id not in all_recommendations:
-                all_recommendations[movie.id] = {
-                    'id': movie.id,
-                    'title': movie.title,
-                    'overview': movie.overview or '',
-                    'poster_path': movie.poster_path or '',
-                    'release_date': movie.release_date.isoformat() if movie.release_date else '',
-                    'vote_average': movie.vote_average or 0,
+        for rec in content_recommendations:
+            if rec['id'] not in all_recommendations:
+                all_recommendations[rec['id']] = {
+                    'id': rec['id'],
+                    'title': rec['title'],
+                    'overview': rec['overview'],
+                    'poster_path': rec['poster_path'],
+                    'release_date': rec['release_date'],
+                    'vote_average': rec['vote_average'],
                     'score': 0.5  # Base score for content-based
                 }
         
