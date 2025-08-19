@@ -66,7 +66,37 @@ def get_movies():
 def get_movie(movie_id):
     """Get specific movie details"""
     try:
-        movie = Movie.query.get_or_404(movie_id)
+        # First try to find in local database
+        movie = Movie.query.filter_by(id=movie_id).first()
+        
+        if not movie:
+            # If not found locally, try to fetch from TMDB
+            tmdb_service = TMDBService()
+            tmdb_movie = tmdb_service.get_movie_details(movie_id)
+            
+            if tmdb_movie:
+                # Create a movie object from TMDB data
+                movie_data = {
+                    'id': movie_id,
+                    'tmdb_id': movie_id,
+                    'title': tmdb_movie.get('title', ''),
+                    'overview': tmdb_movie.get('overview', ''),
+                    'poster_path': tmdb_movie.get('poster_path', ''),
+                    'release_date': tmdb_movie.get('release_date', ''),
+                    'vote_average': tmdb_movie.get('vote_average', 0),
+                    'genres': tmdb_movie.get('genres', []),
+                    'runtime': tmdb_movie.get('runtime', 0),
+                    'status': tmdb_movie.get('status', ''),
+                    'tagline': tmdb_movie.get('tagline', ''),
+                    'budget': tmdb_movie.get('budget', 0),
+                    'revenue': tmdb_movie.get('revenue', 0),
+                    'production_companies': tmdb_movie.get('production_companies', []),
+                    'spoken_languages': tmdb_movie.get('spoken_languages', []),
+                    'recent_ratings': []
+                }
+                return success_response(movie_data)
+            else:
+                return error_response("Movie not found", 404)
         
         # Get user ratings for this movie
         ratings = Rating.query.filter_by(movie_id=movie_id).limit(5).all()

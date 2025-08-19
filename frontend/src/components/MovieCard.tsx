@@ -29,7 +29,7 @@ const MovieCard: React.FC<MovieCardProps> = ({
 }) => {
   const posterUrl = movie.poster_path
     ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-    : '/placeholder-movie.jpg';
+    : '/placeholder-movie.svg';
 
   const handleRatingChange = (rating: number) => {
     if (onRateMovie) {
