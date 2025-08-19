@@ -325,8 +325,11 @@ const MovieDetailsPage: React.FC = () => {
               <div className="similar-movies-grid">
                 {movie.similar_movies.slice(0, 6).map((similarMovie) => (
                   <MovieCard
-                    key={similarMovie.id || similarMovie.tmdb_id}
-                    movie={similarMovie}
+                    key={similarMovie.tmdb_id || similarMovie.id}
+                    movie={{
+                      ...similarMovie,
+                      id: similarMovie.tmdb_id || similarMovie.id
+                    }}
                     onMovieClick={(movie) => navigate(`/movie/${movie.id || movie.tmdb_id}`)}
                     showRating={false}
                   />

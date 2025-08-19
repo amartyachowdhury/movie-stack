@@ -67,8 +67,10 @@ def get_collaborative_recommendations(user_id):
                         recommendations.append({
                             'id': movie.id,
                             'title': movie.title,
-                            'poster_path': movie.poster_path,
-                            'vote_average': movie.vote_average,
+                            'overview': movie.overview or '',
+                            'poster_path': movie.poster_path or '',
+                            'release_date': movie.release_date.isoformat() if movie.release_date else '',
+                            'vote_average': movie.vote_average or 0,
                             'similarity_score': float(similar_users[similar_user_index])
                         })
         
@@ -134,8 +136,10 @@ def get_content_based_recommendations(movie_id):
                 recommendations.append({
                     'id': similar_movie.id,
                     'title': similar_movie.title,
-                    'poster_path': similar_movie.poster_path,
-                    'vote_average': similar_movie.vote_average,
+                    'overview': similar_movie.overview or '',
+                    'poster_path': similar_movie.poster_path or '',
+                    'release_date': similar_movie.release_date.isoformat() if similar_movie.release_date else '',
+                    'vote_average': similar_movie.vote_average or 0,
                     'similarity_score': float(similar_scores[index])
                 })
         
@@ -186,8 +190,10 @@ def get_hybrid_recommendations(user_id):
                 all_recommendations[movie.id] = {
                     'id': movie.id,
                     'title': movie.title,
-                    'poster_path': movie.poster_path,
-                    'vote_average': movie.vote_average,
+                    'overview': movie.overview or '',
+                    'poster_path': movie.poster_path or '',
+                    'release_date': movie.release_date.isoformat() if movie.release_date else '',
+                    'vote_average': movie.vote_average or 0,
                     'score': 0.5  # Base score for content-based
                 }
         

@@ -5,10 +5,10 @@ export interface Movie {
   id?: number;
   tmdb_id?: number;
   title: string;
-  overview: string;
-  poster_path: string;
-  release_date: string;
-  vote_average: number;
+  overview?: string;
+  poster_path?: string;
+  release_date?: string;
+  vote_average?: number;
   genre_ids?: number[];
 }
 
@@ -33,7 +33,10 @@ const MovieCard: React.FC<MovieCardProps> = ({
 
   const handleRatingChange = (rating: number) => {
     if (onRateMovie) {
-      onRateMovie(movie.id || movie.tmdb_id || 0, rating);
+      const movieId = movie.id || movie.tmdb_id || 0;
+      if (movieId) {
+        onRateMovie(movieId, rating);
+      }
     }
   };
 
@@ -43,20 +46,20 @@ const MovieCard: React.FC<MovieCardProps> = ({
         <img src={posterUrl} alt={movie.title} />
         <div className="movie-overlay">
           <div className="movie-rating">
-            ⭐ {movie.vote_average.toFixed(1)}
+            ⭐ {movie.vote_average ? movie.vote_average.toFixed(1) : 'N/A'}
           </div>
         </div>
       </div>
       
       <div className="movie-info">
-        <h3 className="movie-title">{movie.title}</h3>
+        <h3 className="movie-title">{movie.title || 'Untitled'}</h3>
         <p className="movie-year">
           {movie.release_date ? new Date(movie.release_date).getFullYear() : 'N/A'}
         </p>
         <p className="movie-overview">
-          {movie.overview.length > 100 
+          {movie.overview && movie.overview.length > 100 
             ? `${movie.overview.substring(0, 100)}...` 
-            : movie.overview}
+            : movie.overview || 'No overview available'}
         </p>
         
         {showRating && (
