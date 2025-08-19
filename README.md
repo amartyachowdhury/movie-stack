@@ -42,6 +42,7 @@ Create a `.env` file in the root directory:
 cp .env.example .env
 
 # Edit with your TMDB API key
+# ⚠️ IMPORTANT: Never commit your .env file to version control!
 TMDB_API_KEY=your_tmdb_api_key_here
 SECRET_KEY=your_secret_key_here
 ```
