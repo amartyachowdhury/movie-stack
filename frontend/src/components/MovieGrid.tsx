@@ -50,11 +50,11 @@ const MovieGrid: React.FC<MovieGridProps> = ({
     <div className="movie-grid">
       {movies.map((movie) => (
         <MovieCard
-          key={movie.id}
+          key={movie.id || movie.tmdb_id}
           movie={movie}
           onMovieClick={onMovieClick}
           showRating={showRating}
-          userRating={userRatings[movie.id]}
+          userRating={userRatings[movie.id || movie.tmdb_id || 0]}
           onRateMovie={onRateMovie}
         />
       ))}

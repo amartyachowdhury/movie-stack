@@ -2,13 +2,14 @@ import React from 'react';
 import './MovieCard.css';
 
 export interface Movie {
-  id: number;
+  id?: number;
+  tmdb_id?: number;
   title: string;
   overview: string;
   poster_path: string;
   release_date: string;
   vote_average: number;
-  genre_ids: number[];
+  genre_ids?: number[];
 }
 
 interface MovieCardProps {
@@ -32,7 +33,7 @@ const MovieCard: React.FC<MovieCardProps> = ({
 
   const handleRatingChange = (rating: number) => {
     if (onRateMovie) {
-      onRateMovie(movie.id, rating);
+      onRateMovie(movie.id || movie.tmdb_id || 0, rating);
     }
   };
 

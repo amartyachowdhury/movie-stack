@@ -21,10 +21,11 @@ export const useMovies = (options: UseMoviesOptions = {}) => {
     
     try {
       const response = await apiService.getMovies(page, perPage);
-      setMovies(response.items);
+      setMovies(response.items || []);
       setPagination(response.pagination);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch movies');
+      setMovies([]);
     } finally {
       setLoading(false);
     }
@@ -41,10 +42,11 @@ export const useMovies = (options: UseMoviesOptions = {}) => {
     
     try {
       const response = await apiService.searchMovies(query, page);
-      setMovies(response.items);
+      setMovies(response.items || []);
       setPagination(response.pagination);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to search movies');
+      setMovies([]);
     } finally {
       setLoading(false);
     }
@@ -56,10 +58,11 @@ export const useMovies = (options: UseMoviesOptions = {}) => {
     
     try {
       const response = await apiService.getPopularMovies(page);
-      setMovies(response.items);
+      setMovies(response.items || []);
       setPagination(response.pagination);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch popular movies');
+      setMovies([]);
     } finally {
       setLoading(false);
     }

@@ -15,10 +15,11 @@ export const useRecommendations = () => {
     
     try {
       const response: RecommendationResponse = await apiService.getCollaborativeRecommendations(userId);
-      setRecommendations(response.recommendations);
+      setRecommendations(response.recommendations || []);
       setAlgorithm(response.algorithm);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch collaborative recommendations');
+      setRecommendations([]);
     } finally {
       setLoading(false);
     }
@@ -30,10 +31,11 @@ export const useRecommendations = () => {
     
     try {
       const response: RecommendationResponse = await apiService.getContentBasedRecommendations(userId);
-      setRecommendations(response.recommendations);
+      setRecommendations(response.recommendations || []);
       setAlgorithm(response.algorithm);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch content-based recommendations');
+      setRecommendations([]);
     } finally {
       setLoading(false);
     }
@@ -45,10 +47,11 @@ export const useRecommendations = () => {
     
     try {
       const response: RecommendationResponse = await apiService.getHybridRecommendations(userId);
-      setRecommendations(response.recommendations);
+      setRecommendations(response.recommendations || []);
       setAlgorithm(response.algorithm);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch hybrid recommendations');
+      setRecommendations([]);
     } finally {
       setLoading(false);
     }

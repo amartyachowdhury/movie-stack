@@ -102,6 +102,36 @@
   padding: 0 24px;
 }
 
+.error-message {
+  text-align: center;
+  padding: 40px 24px;
+  background: #fff5f5;
+  border: 1px solid #fed7d7;
+  border-radius: 8px;
+  margin-bottom: 24px;
+}
+
+.error-message p {
+  color: #c53030;
+  margin: 0 0 16px 0;
+  font-size: 16px;
+}
+
+.error-message button {
+  background: #e53e3e;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s ease;
+}
+
+.error-message button:hover {
+  background: #c53030;
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
   .hero-section {

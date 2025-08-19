@@ -9,10 +9,11 @@ const HomePage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'popular' | 'recommendations'>('popular');
   const [selectedAlgorithm, setSelectedAlgorithm] = useState<'collaborative' | 'content' | 'hybrid'>('collaborative');
   
-  const { movies: popularMovies, loading: popularLoading, fetchPopularMovies } = useMovies();
+  const { movies: popularMovies, loading: popularLoading, error: popularError, fetchPopularMovies } = useMovies();
   const { 
     recommendations, 
     loading: recommendationsLoading, 
+    error: recommendationsError,
     algorithm,
     getCollaborativeRecommendations,
     getContentBasedRecommendations,
@@ -92,6 +93,32 @@ const HomePage: React.FC = () => {
         )}
 
         <div className="movies-section">
+          {(activeTab === 'popular' && popularError) && (
+            <div className="error-message">
+              <p>Error loading popular movies: {popularError}</p>
+              <button onClick={() => fetchPopularMovies(1)}>Try Again</button>
+            </div>
+          )}
+          
+          {(activeTab === 'recommendations' && recommendationsError) && (
+            <div className="error-message">
+              <p>Error loading recommendations: {recommendationsError}</p>
+              <button onClick={() => {
+                switch (selectedAlgorithm) {
+                  case 'collaborative':
+                    getCollaborativeRecommendations(1);
+                    break;
+                  case 'content':
+                    getContentBasedRecommendations(1);
+                    break;
+                  case 'hybrid':
+                    getHybridRecommendations(1);
+                    break;
+                }
+              }}>Try Again</button>
+            </div>
+          )}
+          
           {activeTab === 'popular' ? (
             <MovieGrid
               movies={popularMovies}
