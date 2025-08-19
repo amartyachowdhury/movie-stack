@@ -22,7 +22,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, loading = false }) => {
   const [showFilters, setShowFilters] = useState(false);
   const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Debounced search function
+  // Debounced search function with better state management
   const debouncedSearch = useCallback((searchQuery: string, searchFilters: SearchFilters) => {
     // Clear existing timeout
     if (searchTimeoutRef.current) {
@@ -31,12 +31,32 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, loading = false }) => {
     
     // Set new timeout
     searchTimeoutRef.current = setTimeout(() => {
+      // Only trigger search if the query or filters have actually changed
       onSearch(searchQuery, searchFilters);
-    }, 500);
+    }, 400); // Slightly increased delay to reduce flickering
   }, [onSearch]);
 
+  // Track previous search to prevent unnecessary calls
+  const prevSearchRef = useRef<{ query: string; filters: SearchFilters } | null>(null);
+
   useEffect(() => {
-    debouncedSearch(query, filters);
+    // Only trigger search if there's actual input
+    if (query.trim() || Object.values(filters).some(filter => filter)) {
+      // Check if search criteria have actually changed
+      const currentSearch = { query, filters };
+      const prevSearch = prevSearchRef.current;
+      
+      if (!prevSearch || 
+          prevSearch.query !== query || 
+          JSON.stringify(prevSearch.filters) !== JSON.stringify(filters)) {
+        prevSearchRef.current = currentSearch;
+        debouncedSearch(query, filters);
+      }
+    } else {
+      // Clear search when no input
+      prevSearchRef.current = null;
+      onSearch('', filters);
+    }
     
     // Cleanup timeout on unmount
     return () => {
@@ -44,7 +64,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, loading = false }) => {
         clearTimeout(searchTimeoutRef.current);
       }
     };
-  }, [query, filters, debouncedSearch]);
+  }, [query, filters, debouncedSearch, onSearch]);
 
   const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(e.target.value);

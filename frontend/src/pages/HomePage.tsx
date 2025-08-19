@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import MovieGrid from '../components/MovieGrid';
@@ -27,12 +27,11 @@ const HomePage: React.FC = () => {
     fetchPopularMovies 
   } = useMovies();
   
-  const { 
-    movies: searchResults, 
-    loading: searchLoading, 
-    error: searchError, 
-    searchMovies 
-  } = useMovies();
+  // Separate state for search results to prevent conflicts
+  const [searchResults, setSearchResults] = useState<Movie[]>([]);
+  const [searchLoading, setSearchLoading] = useState(false);
+  const [searchError, setSearchError] = useState<string | null>(null);
+  const [isSearching, setIsSearching] = useState(false);
   
   const { 
     recommendations, 
@@ -64,7 +63,13 @@ const HomePage: React.FC = () => {
     }
   }, [activeTab, selectedAlgorithm, getCollaborativeRecommendations, getContentBasedRecommendations, getHybridRecommendations]);
 
-  const handleSearch = (query: string, filters: any) => {
+  const handleSearch = async (query: string, filters: any) => {
+    // Prevent multiple simultaneous searches
+    if (isSearching) return;
+    
+    // Create a search key to track if this search is still relevant
+    const searchKey = `${query}-${JSON.stringify(filters)}`;
+    
     setSearchQuery(query);
     setSearchFilters(filters);
     
@@ -76,12 +81,60 @@ const HomePage: React.FC = () => {
       if (activeTab !== 'search') {
         setActiveTab('search');
       }
-      searchMovies(query, 1, filters);
+      
+      // Custom search implementation to avoid conflicts
+      setIsSearching(true);
+      setSearchLoading(true);
+      setSearchError(null);
+      
+      // Add minimum loading time to prevent flickering
+      const startTime = Date.now();
+      const minLoadingTime = 300; // Minimum 300ms loading time
+      
+      try {
+        const response = await fetch(`/api/movies/search?query=${encodeURIComponent(query)}&page=1&genre=${filters.genre}&year=${filters.year}&min_rating=${filters.minRating}`);
+        
+        // Check if this search is still relevant (user hasn't typed more)
+        if (searchKey !== `${query}-${JSON.stringify(filters)}`) {
+          return; // Search is outdated, ignore results
+        }
+        
+        if (!response.ok) {
+          throw new Error('Search failed');
+        }
+        const data = await response.json();
+        setSearchResults(data.data?.results || []);
+      } catch (err) {
+        // Only set error if this search is still relevant
+        if (searchKey === `${query}-${JSON.stringify(filters)}`) {
+          setSearchError(err instanceof Error ? err.message : 'Search failed');
+          setSearchResults([]);
+        }
+      } finally {
+        // Only update loading state if this search is still relevant
+        if (searchKey === `${query}-${JSON.stringify(filters)}`) {
+          // Ensure minimum loading time to prevent flickering
+          const elapsedTime = Date.now() - startTime;
+          const remainingTime = Math.max(0, minLoadingTime - elapsedTime);
+          
+          setTimeout(() => {
+            // Double-check that this search is still relevant before updating state
+            if (searchKey === `${query}-${JSON.stringify(filters)}`) {
+              setSearchLoading(false);
+              setIsSearching(false);
+            }
+          }, remainingTime);
+        }
+      }
     } else {
       // Only switch back to popular if we're currently on search tab
       if (activeTab === 'search') {
         setActiveTab('popular');
       }
+      // Clear search results when no search criteria
+      setSearchResults([]);
+      setSearchError(null);
+      setSearchLoading(false);
     }
   };
 
@@ -107,6 +160,14 @@ const HomePage: React.FC = () => {
         return popularMovies;
     }
   };
+
+  // Memoize the current movies to prevent unnecessary re-renders
+  const currentMovies = useMemo(() => getCurrentMovies(), [
+    activeTab,
+    searchResults,
+    recommendations,
+    popularMovies
+  ]);
 
   const getCurrentLoading = () => {
     switch (activeTab) {
@@ -221,7 +282,7 @@ const HomePage: React.FC = () => {
               <button onClick={() => {
                 switch (activeTab) {
                   case 'search':
-                    searchMovies(searchQuery, 1);
+                    handleSearch(searchQuery, searchFilters);
                     break;
                   case 'recommendations':
                     switch (selectedAlgorithm) {
@@ -244,7 +305,8 @@ const HomePage: React.FC = () => {
           )}
           
           <MovieGrid
-            movies={getCurrentMovies()}
+            key={`${activeTab}-${selectedAlgorithm}`} // Stable key to prevent unnecessary re-renders
+            movies={currentMovies}
             loading={getCurrentLoading()}
             onMovieClick={handleMovieClick}
             showRating={true}

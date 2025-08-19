@@ -47,7 +47,7 @@ const MovieGrid: React.FC<MovieGridProps> = ({
   }
 
   return (
-    <div className="movie-grid">
+    <div className={`movie-grid ${loading ? 'loading' : ''}`}>
       {movies.map((movie) => (
         <MovieCard
           key={movie.id || movie.tmdb_id}
