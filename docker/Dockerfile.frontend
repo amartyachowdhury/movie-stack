@@ -5,13 +5,13 @@ FROM node:18-alpine as build
 WORKDIR /app
 
 # Copy package files
-COPY movie-stack-frontend/package*.json ./
+COPY frontend/package*.json ./
 
 # Install dependencies
 RUN npm install
 
 # Copy source code
-COPY . .
+COPY frontend/ .
 
 # Build the app
 RUN npm run build

@@ -4,8 +4,8 @@ services:
   # Backend API
   backend:
     build:
-      context: ./backend
-      dockerfile: ../docker/Dockerfile.backend
+      context: .
+      dockerfile: docker/Dockerfile.backend
     container_name: movie-stack-backend
     ports:
       - "5001:5000"
@@ -27,8 +27,8 @@ services:
   # Frontend React App
   frontend:
     build:
-      context: ./frontend
-      dockerfile: ../docker/Dockerfile.frontend
+      context: .
+      dockerfile: docker/Dockerfile.frontend
     container_name: movie-stack-frontend
     ports:
       - "3000:80"

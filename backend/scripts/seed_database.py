@@ -8,7 +8,7 @@ import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from app import app, db
+from app import create_app, db
 from app.models import User, Movie, Rating
 from datetime import datetime
 import hashlib
@@ -20,6 +20,7 @@ def hash_password(password):
 def seed_database():
     """Seed the database with sample data"""
     
+    app = create_app()
     with app.app_context():
         print("🌱 Seeding database with sample data...")
         
