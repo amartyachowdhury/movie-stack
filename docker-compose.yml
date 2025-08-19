@@ -36,19 +36,20 @@ services:
       - movie-stack-network
     restart: unless-stopped
 
-  # PostgreSQL Database
+  # MySQL Database
   db:
-    image: postgres:13-alpine
+    image: mysql:8.0
     container_name: movie-stack-db
     environment:
-      - POSTGRES_DB=movie_stack
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=password
+      - MYSQL_DATABASE=movie_stack
+      - MYSQL_USER=movie_user
+      - MYSQL_PASSWORD=password
+      - MYSQL_ROOT_PASSWORD=rootpassword
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - mysql_data:/var/lib/mysql
       - ./docker/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
-      - "5432:5432"
+      - "3306:3306"
     networks:
       - movie-stack-network
     restart: unless-stopped
@@ -81,7 +82,7 @@ services:
   #   restart: unless-stopped
 
 volumes:
-  postgres_data:
+  mysql_data:
   redis_data:
 
 networks:
