@@ -14,7 +14,7 @@ A full-stack movie recommendation system built with Flask, React, and Docker.
 
 - **Backend**: Flask API with scikit-learn for ML
 - **Frontend**: React with modern UI components
-- **Database**: PostgreSQL with SQLAlchemy ORM
+- **Database**: MySQL with SQLAlchemy ORM
 - **Cache**: Redis for performance optimization
 - **Proxy**: Nginx for routing and load balancing
 
@@ -24,6 +24,7 @@ A full-stack movie recommendation system built with Flask, React, and Docker.
 
 - Docker and Docker Compose installed
 - TMDB API key (get one at [themoviedb.org](https://www.themoviedb.org/documentation/api))
+- MySQL port 3307 available (or change in docker-compose.yml)
 
 ### 1. Clone and Setup
 

@@ -9,8 +9,11 @@ load_dotenv()
 app = Flask(__name__)
 
 # Database configuration
-DATABASE_URL = os.environ.get('DATABASE_URL', 'sqlite:///movie_stack.db')
-if DATABASE_URL.startswith('postgresql://'):
+DATABASE_URL = os.environ.get('DATABASE_URL', 'mysql://movie_user:password@db:3306/movie_stack')
+if DATABASE_URL.startswith('mysql://'):
+    # MySQL URL
+    app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
+elif DATABASE_URL.startswith('postgresql://'):
     # Heroku style PostgreSQL URL
     app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
 else:

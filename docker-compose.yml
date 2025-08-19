@@ -11,7 +11,7 @@ services:
       - "5001:5000"
     environment:
       - FLASK_ENV=development
-      - DATABASE_URL=postgresql://postgres:password@db:5432/movie_stack
+      - DATABASE_URL=mysql://movie_user:password@db:3306/movie_stack
       - TMDB_API_KEY=${TMDB_API_KEY}
     volumes:
       - ./app:/app/app
@@ -49,7 +49,7 @@ services:
       - mysql_data:/var/lib/mysql
       - ./docker/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
-      - "3306:3306"
+      - "3307:3306"
     networks:
       - movie-stack-network
     restart: unless-stopped
