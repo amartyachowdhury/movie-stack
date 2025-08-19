@@ -31,8 +31,8 @@ export const useMovies = (options: UseMoviesOptions = {}) => {
     }
   }, [perPage]);
 
-  const searchMovies = useCallback(async (query: string, page: number = 1) => {
-    if (!query.trim()) {
+  const searchMovies = useCallback(async (query: string, page: number = 1, filters?: any) => {
+    if (!query.trim() && (!filters || !Object.values(filters).some(filter => filter))) {
       await fetchMovies(page);
       return;
     }
@@ -41,7 +41,7 @@ export const useMovies = (options: UseMoviesOptions = {}) => {
     setError(null);
     
     try {
-      const response = await apiService.searchMovies(query, page);
+      const response = await apiService.searchMovies(query, page, filters);
       setMovies(response.items || []);
       setPagination(response.pagination);
     } catch (err) {

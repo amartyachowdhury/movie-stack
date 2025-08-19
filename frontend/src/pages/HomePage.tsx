@@ -1,15 +1,37 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import MovieGrid from '../components/MovieGrid';
+import SearchBar from '../components/SearchBar';
 import { useMovies } from '../hooks/useMovies';
 import { useRecommendations } from '../hooks/useRecommendations';
 import { Movie } from '../components/MovieCard';
 import './HomePage.css';
 
 const HomePage: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'popular' | 'recommendations'>('popular');
+  const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState<'popular' | 'search' | 'recommendations'>('popular');
   const [selectedAlgorithm, setSelectedAlgorithm] = useState<'collaborative' | 'content' | 'hybrid'>('collaborative');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchFilters, setSearchFilters] = useState({
+    genre: '',
+    year: '',
+    minRating: ''
+  });
   
-  const { movies: popularMovies, loading: popularLoading, error: popularError, fetchPopularMovies } = useMovies();
+  const { 
+    movies: popularMovies, 
+    loading: popularLoading, 
+    error: popularError, 
+    fetchPopularMovies 
+  } = useMovies();
+  
+  const { 
+    movies: searchResults, 
+    loading: searchLoading, 
+    error: searchError, 
+    searchMovies 
+  } = useMovies();
+  
   const { 
     recommendations, 
     loading: recommendationsLoading, 
@@ -40,14 +62,60 @@ const HomePage: React.FC = () => {
     }
   }, [activeTab, selectedAlgorithm, getCollaborativeRecommendations, getContentBasedRecommendations, getHybridRecommendations]);
 
+  const handleSearch = (query: string, filters: any) => {
+    setSearchQuery(query);
+    setSearchFilters(filters);
+    if (query.trim() || Object.values(filters).some(filter => filter)) {
+      setActiveTab('search');
+      searchMovies(query, 1, filters);
+    } else {
+      setActiveTab('popular');
+    }
+  };
+
   const handleMovieClick = (movie: Movie) => {
-    // TODO: Navigate to movie details page
-    console.log('Movie clicked:', movie);
+    const movieId = movie.id || movie.tmdb_id;
+    if (movieId) {
+      navigate(`/movie/${movieId}`);
+    }
   };
 
   const handleRateMovie = (movieId: number, rating: number) => {
     // TODO: Implement rating functionality
     console.log('Rate movie:', movieId, rating);
+  };
+
+  const getCurrentMovies = () => {
+    switch (activeTab) {
+      case 'search':
+        return searchResults;
+      case 'recommendations':
+        return recommendations;
+      default:
+        return popularMovies;
+    }
+  };
+
+  const getCurrentLoading = () => {
+    switch (activeTab) {
+      case 'search':
+        return searchLoading;
+      case 'recommendations':
+        return recommendationsLoading;
+      default:
+        return popularLoading;
+    }
+  };
+
+  const getCurrentError = () => {
+    switch (activeTab) {
+      case 'search':
+        return searchError;
+      case 'recommendations':
+        return recommendationsError;
+      default:
+        return popularError;
+    }
   };
 
   return (
@@ -58,12 +126,21 @@ const HomePage: React.FC = () => {
       </div>
 
       <div className="content-section">
+        <SearchBar onSearch={handleSearch} loading={searchLoading} />
+        
         <div className="tab-navigation">
           <button
             className={`tab-button ${activeTab === 'popular' ? 'active' : ''}`}
             onClick={() => setActiveTab('popular')}
           >
             Popular Movies
+          </button>
+          <button
+            className={`tab-button ${activeTab === 'search' ? 'active' : ''}`}
+            onClick={() => setActiveTab('search')}
+            disabled={!searchQuery.trim() && !Object.values(searchFilters).some(filter => filter)}
+          >
+            Search Results
           </button>
           <button
             className={`tab-button ${activeTab === 'recommendations' ? 'active' : ''}`}
@@ -93,49 +170,41 @@ const HomePage: React.FC = () => {
         )}
 
         <div className="movies-section">
-          {(activeTab === 'popular' && popularError) && (
+          {getCurrentError() && (
             <div className="error-message">
-              <p>Error loading popular movies: {popularError}</p>
-              <button onClick={() => fetchPopularMovies(1)}>Try Again</button>
-            </div>
-          )}
-          
-          {(activeTab === 'recommendations' && recommendationsError) && (
-            <div className="error-message">
-              <p>Error loading recommendations: {recommendationsError}</p>
+              <p>Error loading movies: {getCurrentError()}</p>
               <button onClick={() => {
-                switch (selectedAlgorithm) {
-                  case 'collaborative':
-                    getCollaborativeRecommendations(1);
+                switch (activeTab) {
+                  case 'search':
+                    searchMovies(searchQuery, 1);
                     break;
-                  case 'content':
-                    getContentBasedRecommendations(1);
+                  case 'recommendations':
+                    switch (selectedAlgorithm) {
+                      case 'collaborative':
+                        getCollaborativeRecommendations(1);
+                        break;
+                      case 'content':
+                        getContentBasedRecommendations(1);
+                        break;
+                      case 'hybrid':
+                        getHybridRecommendations(1);
+                        break;
+                    }
                     break;
-                  case 'hybrid':
-                    getHybridRecommendations(1);
-                    break;
+                  default:
+                    fetchPopularMovies(1);
                 }
               }}>Try Again</button>
             </div>
           )}
           
-          {activeTab === 'popular' ? (
-            <MovieGrid
-              movies={popularMovies}
-              loading={popularLoading}
-              onMovieClick={handleMovieClick}
-              showRating={true}
-              onRateMovie={handleRateMovie}
-            />
-          ) : (
-            <MovieGrid
-              movies={recommendations}
-              loading={recommendationsLoading}
-              onMovieClick={handleMovieClick}
-              showRating={true}
-              onRateMovie={handleRateMovie}
-            />
-          )}
+          <MovieGrid
+            movies={getCurrentMovies()}
+            loading={getCurrentLoading()}
+            onMovieClick={handleMovieClick}
+            showRating={true}
+            onRateMovie={handleRateMovie}
+          />
         </div>
       </div>
     </div>

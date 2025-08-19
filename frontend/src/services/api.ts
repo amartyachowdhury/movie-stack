@@ -67,10 +67,16 @@ class ApiService {
     return response.data;
   }
 
-  async searchMovies(query: string, page: number = 1): Promise<PaginatedResponse<Movie>> {
-    const response = await this.request<ApiResponse<{ results: Movie[] }>>(
-      `/api/movies/search?query=${encodeURIComponent(query)}&page=${page}`
-    );
+  async searchMovies(query: string, page: number = 1, filters?: any): Promise<PaginatedResponse<Movie>> {
+    let url = `/api/movies/search?query=${encodeURIComponent(query)}&page=${page}`;
+    
+    if (filters) {
+      if (filters.genre) url += `&genre=${encodeURIComponent(filters.genre)}`;
+      if (filters.year) url += `&year=${encodeURIComponent(filters.year)}`;
+      if (filters.minRating) url += `&min_rating=${encodeURIComponent(filters.minRating)}`;
+    }
+    
+    const response = await this.request<ApiResponse<{ results: Movie[] }>>(url);
     return {
       items: response.data.results,
       pagination: {
