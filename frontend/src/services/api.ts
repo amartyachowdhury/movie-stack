@@ -46,19 +46,12 @@ class ApiService {
 
   // Movies API
   async getMovies(page: number = 1, perPage: number = 20): Promise<PaginatedResponse<Movie>> {
-    const response = await this.request<ApiResponse<{ results: Movie[] }>>(
+    const response = await this.request<ApiResponse<{ movies: Movie[]; pagination: any }>>(
       `/api/movies/?page=${page}&per_page=${perPage}`
     );
     return {
-      items: response.data.results,
-      pagination: {
-        page: page,
-        pages: 1,
-        per_page: perPage,
-        total: response.data.results.length,
-        has_next: false,
-        has_prev: false
-      }
+      items: response.data.movies,
+      pagination: response.data.pagination
     };
   }
 
