@@ -82,7 +82,8 @@ test_backend() {
 # Function to run frontend tests
 test_frontend() {
     print_status "Running frontend tests..."
-    docker-compose exec frontend npm test
+    # Frontend tests would need to be run in the build container
+    print_warning "Frontend tests not yet configured for Docker environment"
 }
 
 # Function to seed database
@@ -103,7 +104,8 @@ format_code() {
     docker-compose exec backend black /app
     
     print_status "Formatting frontend code..."
-    docker-compose exec frontend npm run format
+    print_warning "Frontend formatting not yet configured for Docker environment"
+    print_status "Run 'cd frontend && npm run format' locally for frontend formatting"
 }
 
 # Function to lint code
@@ -112,7 +114,8 @@ lint_code() {
     docker-compose exec backend flake8 /app
     
     print_status "Linting frontend code..."
-    docker-compose exec frontend npm run lint
+    print_warning "Frontend linting not yet configured for Docker environment"
+    print_status "Run 'cd frontend && npm run lint' locally for frontend linting"
 }
 
 # Function to show status
