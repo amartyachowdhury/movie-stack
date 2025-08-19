@@ -75,6 +75,11 @@ def get_movie(movie_id):
             tmdb_movie = tmdb_service.get_movie_details(movie_id)
             
             if tmdb_movie:
+                # Get rating statistics for this movie
+                ratings = Rating.query.filter_by(movie_id=movie_id).all()
+                rating_count = len(ratings)
+                average_rating = sum(r.rating for r in ratings) / rating_count if rating_count > 0 else 0
+                
                 # Create a movie object from TMDB data
                 movie_data = {
                     'id': movie_id,
@@ -92,6 +97,11 @@ def get_movie(movie_id):
                     'revenue': tmdb_movie.get('revenue', 0),
                     'production_companies': tmdb_movie.get('production_companies', []),
                     'spoken_languages': tmdb_movie.get('spoken_languages', []),
+                    'cast': tmdb_movie.get('cast', []),
+                    'crew': tmdb_movie.get('crew', []),
+                    'similar_movies': tmdb_movie.get('similar_movies', []),
+                    'rating_count': rating_count,
+                    'average_rating': round(average_rating, 1),
                     'recent_ratings': []
                 }
                 return success_response(movie_data)
@@ -102,8 +112,15 @@ def get_movie(movie_id):
         ratings = Rating.query.filter_by(movie_id=movie_id).limit(5).all()
         ratings_data = [rating.to_dict() for rating in ratings]
         
+        # Get rating statistics
+        all_ratings = Rating.query.filter_by(movie_id=movie_id).all()
+        rating_count = len(all_ratings)
+        average_rating = sum(r.rating for r in all_ratings) / rating_count if rating_count > 0 else 0
+        
         movie_data = movie.to_dict()
         movie_data['recent_ratings'] = ratings_data
+        movie_data['rating_count'] = rating_count
+        movie_data['average_rating'] = round(average_rating, 1)
         
         return success_response(movie_data)
         
