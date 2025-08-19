@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 import MovieGrid from '../components/MovieGrid';
 import SearchBar from '../components/SearchBar';
 import { useMovies } from '../hooks/useMovies';
@@ -9,6 +10,7 @@ import './HomePage.css';
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
   const [activeTab, setActiveTab] = useState<'popular' | 'search' | 'recommendations'>('popular');
   const [selectedAlgorithm, setSelectedAlgorithm] = useState<'collaborative' | 'content' | 'hybrid'>('collaborative');
   const [searchQuery, setSearchQuery] = useState('');
@@ -120,6 +122,39 @@ const HomePage: React.FC = () => {
 
   return (
     <div className="home-page">
+      <div className="user-navigation">
+        <div className="user-info">
+          {user && (
+            <>
+              <span className="welcome-text">Welcome, {user.username}!</span>
+              <div className="user-avatar">
+                {user.avatar_url ? (
+                  <img src={user.avatar_url} alt={user.username} />
+                ) : (
+                  <div className="avatar-placeholder">
+                    {user.username.charAt(0).toUpperCase()}
+                  </div>
+                )}
+              </div>
+              <div className="user-menu">
+                <button 
+                  className="profile-button"
+                  onClick={() => navigate('/profile')}
+                >
+                  Profile
+                </button>
+                <button 
+                  className="logout-button"
+                  onClick={logout}
+                >
+                  Logout
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+      
       <div className="hero-section">
         <h1>🎬 Movie Stack</h1>
         <p>Discover amazing movies with AI-powered recommendations</p>
