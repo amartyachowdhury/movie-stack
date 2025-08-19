@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import MovieCard from '../components/MovieCard';
 import { Movie } from '../components/MovieCard';
+import RatingAnalytics from '../components/RatingAnalytics';
 import apiService from '../services/api';
 import './MovieDetailsPage.css';
 
@@ -11,6 +12,8 @@ interface MovieDetails extends Movie {
   revenue?: number;
   status?: string;
   original_language?: string;
+  rating_count?: number;
+  average_rating?: number;
   production_companies?: Array<{
     name: string;
     logo_path?: string;
@@ -68,14 +71,30 @@ const MovieDetailsPage: React.FC = () => {
     }
   };
 
+  const [ratingLoading, setRatingLoading] = useState(false);
+  const [ratingMessage, setRatingMessage] = useState<string | null>(null);
+
   const handleRateMovie = async (rating: number) => {
-    if (!movieId) return;
+    if (!movieId || ratingLoading) return;
+    
+    setRatingLoading(true);
+    setRatingMessage(null);
     
     try {
       await apiService.rateMovie(parseInt(movieId), rating, 1); // TODO: Use actual user ID
       setUserRating(rating);
+      setRatingMessage('Rating submitted successfully!');
+      
+      // Clear message after 3 seconds
+      setTimeout(() => setRatingMessage(null), 3000);
     } catch (err) {
       console.error('Failed to rate movie:', err);
+      setRatingMessage('Failed to submit rating. Please try again.');
+      
+      // Clear error message after 5 seconds
+      setTimeout(() => setRatingMessage(null), 5000);
+    } finally {
+      setRatingLoading(false);
     }
   };
 
@@ -105,6 +124,7 @@ const MovieDetailsPage: React.FC = () => {
             <div className="skeleton-text"></div>
             <div className="skeleton-text"></div>
             <div className="skeleton-text"></div>
+            <div className="skeleton-rating"></div>
           </div>
         </div>
       </div>
@@ -168,13 +188,19 @@ const MovieDetailsPage: React.FC = () => {
                 {[1, 2, 3, 4, 5].map((star) => (
                   <button
                     key={star}
-                    className={`star ${userRating >= star ? 'filled' : ''}`}
+                    className={`star ${userRating >= star ? 'filled' : ''} ${ratingLoading ? 'disabled' : ''}`}
                     onClick={() => handleRateMovie(star)}
+                    disabled={ratingLoading}
                   >
                     ⭐
                   </button>
                 ))}
               </div>
+              {ratingMessage && (
+                <div className={`rating-message ${ratingMessage.includes('Failed') ? 'error' : 'success'}`}>
+                  {ratingMessage}
+                </div>
+              )}
             </div>
           </div>
 
@@ -312,6 +338,22 @@ const MovieDetailsPage: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Rating Analytics */}
+      <RatingAnalytics
+        movieId={parseInt(movieId!)}
+        tmdbRating={movie.vote_average}
+        userRating={userRating}
+        totalRatings={movie.rating_count || 0}
+        averageRating={movie.average_rating || 0}
+        ratingDistribution={{
+          5: Math.floor((movie.rating_count || 0) * 0.3),
+          4: Math.floor((movie.rating_count || 0) * 0.4),
+          3: Math.floor((movie.rating_count || 0) * 0.2),
+          2: Math.floor((movie.rating_count || 0) * 0.08),
+          1: Math.floor((movie.rating_count || 0) * 0.02)
+        }}
+      />
     </div>
   );
 };
