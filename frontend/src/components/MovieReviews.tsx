@@ -82,6 +82,7 @@ const MovieReviews: React.FC<MovieReviewsProps> = ({ movie, userId, onClose }) =
           helpfulVotes: 127,
           totalVotes: 145,
           createdAt: '2024-01-15T10:30:00Z',
+          isEdited: false,
           userRating: 1
         },
         {
@@ -95,6 +96,7 @@ const MovieReviews: React.FC<MovieReviewsProps> = ({ movie, userId, onClose }) =
           helpfulVotes: 89,
           totalVotes: 112,
           createdAt: '2024-01-14T15:45:00Z',
+          isEdited: false,
           userRating: 1
         },
         {
@@ -109,6 +111,7 @@ const MovieReviews: React.FC<MovieReviewsProps> = ({ movie, userId, onClose }) =
           helpfulVotes: 45,
           totalVotes: 78,
           createdAt: '2024-01-13T09:20:00Z',
+          isEdited: false,
           userRating: -1
         },
         {
@@ -122,6 +125,7 @@ const MovieReviews: React.FC<MovieReviewsProps> = ({ movie, userId, onClose }) =
           helpfulVotes: 203,
           totalVotes: 234,
           createdAt: '2024-01-12T20:15:00Z',
+          isEdited: false,
           userRating: 1
         }
       ];
@@ -136,6 +140,7 @@ const MovieReviews: React.FC<MovieReviewsProps> = ({ movie, userId, onClose }) =
           helpfulVotes: 12,
           totalVotes: 15,
           createdAt: '2024-01-15T11:00:00Z',
+          isEdited: false,
           userRating: 1
         },
         {
@@ -147,6 +152,7 @@ const MovieReviews: React.FC<MovieReviewsProps> = ({ movie, userId, onClose }) =
           helpfulVotes: 8,
           totalVotes: 22,
           createdAt: '2024-01-15T11:30:00Z',
+          isEdited: false,
           userRating: -1,
           replies: [
             {
@@ -158,6 +164,7 @@ const MovieReviews: React.FC<MovieReviewsProps> = ({ movie, userId, onClose }) =
               helpfulVotes: 5,
               totalVotes: 8,
               createdAt: '2024-01-15T12:00:00Z',
+              isEdited: false,
               parentId: 2
             }
           ]
@@ -192,7 +199,9 @@ const MovieReviews: React.FC<MovieReviewsProps> = ({ movie, userId, onClose }) =
         content: reviewForm.content,
         helpfulVotes: 0,
         totalVotes: 0,
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
+        isEdited: false,
+        userRating: 0
       };
 
       setReviews(prev => [newReview, ...prev]);
@@ -242,6 +251,7 @@ const MovieReviews: React.FC<MovieReviewsProps> = ({ movie, userId, onClose }) =
         helpfulVotes: 0,
         totalVotes: 0,
         createdAt: new Date().toISOString(),
+        isEdited: false,
         parentId: replyTo?.id
       };
 

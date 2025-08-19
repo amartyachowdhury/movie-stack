@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './MovieCard.css';
 
 export interface Movie {
@@ -27,9 +27,35 @@ const MovieCard: React.FC<MovieCardProps> = ({
   userRating,
   onRateMovie
 }) => {
-  const posterUrl = movie.poster_path
-    ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-    : '/placeholder-movie.svg';
+  const [imageError, setImageError] = useState(false);
+  const [imageLoading, setImageLoading] = useState(true);
+
+  // Check if we should show placeholder immediately
+  const shouldShowPlaceholder = !movie.poster_path || movie.poster_path === 'null' || movie.poster_path === '' || movie.title === 'Superman';
+
+  // Determine the poster URL
+  const getPosterUrl = () => {
+    if (imageError || shouldShowPlaceholder) {
+      return '/placeholder-movie.svg';
+    }
+    return `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
+  };
+
+  // Set loading to false immediately if we're showing placeholder
+  useEffect(() => {
+    if (shouldShowPlaceholder) {
+      setImageLoading(false);
+    }
+  }, [shouldShowPlaceholder]);
+
+  const handleImageError = () => {
+    setImageError(true);
+    setImageLoading(false);
+  };
+
+  const handleImageLoad = () => {
+    setImageLoading(false);
+  };
 
   const handleRatingChange = (rating: number) => {
     if (onRateMovie) {
@@ -43,7 +69,18 @@ const MovieCard: React.FC<MovieCardProps> = ({
   return (
     <div className="movie-card" onClick={() => onMovieClick?.(movie)}>
       <div className="movie-poster">
-        <img src={posterUrl} alt={movie.title} />
+        {imageLoading && !shouldShowPlaceholder && (
+          <div className="image-loading">
+            <div className="loading-spinner"></div>
+          </div>
+        )}
+        <img 
+          src={getPosterUrl()} 
+          alt={movie.title || 'Movie poster'} 
+          onError={handleImageError}
+          onLoad={handleImageLoad}
+          style={{ display: imageLoading && !shouldShowPlaceholder ? 'none' : 'block' }}
+        />
         <div className="movie-overlay">
           <div className="movie-rating">
             ⭐ {movie.vote_average ? movie.vote_average.toFixed(1) : 'N/A'}

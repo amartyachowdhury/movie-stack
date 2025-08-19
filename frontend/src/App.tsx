@@ -24,6 +24,14 @@ function AppContent() {
   const navigate = useNavigate();
   const [showThemeCustomizer, setShowThemeCustomizer] = useState(false);
 
+  const handleSwitchToRegister = () => {
+    navigate('/register');
+  };
+
+  const handleSwitchToLogin = () => {
+    navigate('/login');
+  };
+
   useEffect(() => {
     // Register service worker for PWA features
     if (process.env.NODE_ENV === 'production') {
@@ -46,19 +54,19 @@ function AppContent() {
           <Route path="/" element={<HomePage />} />
           <Route path="/movie/:id" element={<MovieDetailsPage />} />
           <Route path="/watchlist" element={
-            user ? <WatchlistManager userId={user.id} /> : <LoginForm />
+            user ? <WatchlistManager userId={user.id} /> : <LoginForm onSwitchToRegister={handleSwitchToRegister} />
           } />
           <Route path="/recommendations" element={
-            user ? <SmartRecommendations userId={user.id} /> : <LoginForm />
+            user ? <SmartRecommendations userId={user.id} /> : <LoginForm onSwitchToRegister={handleSwitchToRegister} />
           } />
           <Route path="/analytics" element={
-            user ? <AnalyticsDashboard userId={user.id} onMovieClick={(movie) => navigate(`/movie/${movie.id || movie.tmdb_id}`)} /> : <LoginForm />
+            user ? <AnalyticsDashboard userId={user.id} onMovieClick={(movie) => navigate(`/movie/${movie.id || movie.tmdb_id}`)} /> : <LoginForm onSwitchToRegister={handleSwitchToRegister} />
           } />
           <Route path="/profile" element={
-            user ? <UserProfile /> : <LoginForm />
+            user ? <UserProfile /> : <LoginForm onSwitchToRegister={handleSwitchToRegister} />
           } />
-          <Route path="/login" element={<LoginForm />} />
-          <Route path="/register" element={<RegisterForm />} />
+          <Route path="/login" element={<LoginForm onSwitchToRegister={handleSwitchToRegister} />} />
+          <Route path="/register" element={<RegisterForm onSwitchToLogin={handleSwitchToLogin} />} />
         </Routes>
 
         {/* Theme Customizer Modal */}

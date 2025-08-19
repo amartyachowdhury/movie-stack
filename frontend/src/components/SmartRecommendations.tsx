@@ -4,7 +4,7 @@ import { Movie } from './MovieCard';
 import './SmartRecommendations.css';
 
 interface RecommendationReason {
-  type: 'genre' | 'actor' | 'director' | 'similar' | 'trending' | 'rating' | 'collaborative';
+  type: 'genre' | 'actor' | 'director' | 'similar' | 'trending' | 'rating' | 'collaborative' | 'hidden-gems';
   description: string;
   confidence: number;
   data?: any;
@@ -191,7 +191,7 @@ const SmartRecommendations: React.FC<SmartRecommendationsProps> = ({ userId, onM
       case 'high-confidence':
         return rec.score >= 0.85;
       case 'new-releases':
-        return new Date(rec.movie.release_date).getFullYear() >= 2020;
+        return rec.movie.release_date ? new Date(rec.movie.release_date).getFullYear() >= 2020 : false;
       case 'hidden-gems':
         return rec.reasons.some(r => r.type === 'hidden-gems');
       default:

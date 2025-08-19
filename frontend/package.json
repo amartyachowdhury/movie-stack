@@ -29,6 +29,20 @@
     "extends": [
       "react-app",
       "react-app/jest"
+    ],
+    "rules": {
+      "no-restricted-globals": ["error", {
+        "name": "self",
+        "message": "Use window instead."
+      }]
+    },
+    "overrides": [
+      {
+        "files": ["src/serviceWorker.ts"],
+        "rules": {
+          "no-restricted-globals": "off"
+        }
+      }
     ]
   },
   "browserslist": {

@@ -42,7 +42,7 @@ class Movie(db.Model):
             'overview': self.overview,
             'genres': self.genres,
             'release_date': self.release_date.isoformat() if self.release_date else None,
-            'poster_path': self.poster_path,
+            'poster_path': self.poster_path if self.poster_path and self.poster_path != 'null' else None,
             'vote_average': self.vote_average,
             'popularity': self.popularity,
             'rating_count': len(self.ratings),
