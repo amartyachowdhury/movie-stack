@@ -67,11 +67,21 @@ const HomePage: React.FC = () => {
   const handleSearch = (query: string, filters: any) => {
     setSearchQuery(query);
     setSearchFilters(filters);
-    if (query.trim() || Object.values(filters).some(filter => filter)) {
-      setActiveTab('search');
+    
+    // Only switch to search tab if there's actually a search query or filters
+    const hasSearchCriteria = query.trim() || Object.values(filters).some(filter => filter);
+    
+    if (hasSearchCriteria) {
+      // Only switch tab if we're not already on search tab
+      if (activeTab !== 'search') {
+        setActiveTab('search');
+      }
       searchMovies(query, 1, filters);
     } else {
-      setActiveTab('popular');
+      // Only switch back to popular if we're currently on search tab
+      if (activeTab === 'search') {
+        setActiveTab('popular');
+      }
     }
   };
 
@@ -204,7 +214,7 @@ const HomePage: React.FC = () => {
           </div>
         )}
 
-        <div className="movies-section">
+        <div className={`movies-section ${getCurrentLoading() ? 'loading' : ''}`}>
           {getCurrentError() && (
             <div className="error-message">
               <p>Error loading movies: {getCurrentError()}</p>

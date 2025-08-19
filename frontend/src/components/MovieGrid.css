@@ -5,6 +5,8 @@
   padding: 24px;
   max-width: 1400px;
   margin: 0 auto;
+  min-height: 400px; /* Prevent layout shift */
+  transition: opacity 0.2s ease-in-out;
 }
 
 /* Loading skeleton styles */

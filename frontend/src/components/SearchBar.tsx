@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import './SearchBar.css';
 
 interface SearchFilters {
@@ -20,17 +20,30 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, loading = false }) => {
     minRating: ''
   });
   const [showFilters, setShowFilters] = useState(false);
+  const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Debounced search
-  const debouncedSearch = useCallback(
-    debounce((searchQuery: string, searchFilters: SearchFilters) => {
+  // Debounced search function
+  const debouncedSearch = useCallback((searchQuery: string, searchFilters: SearchFilters) => {
+    // Clear existing timeout
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+    
+    // Set new timeout
+    searchTimeoutRef.current = setTimeout(() => {
       onSearch(searchQuery, searchFilters);
-    }, 500),
-    [onSearch]
-  );
+    }, 500);
+  }, [onSearch]);
 
   useEffect(() => {
     debouncedSearch(query, filters);
+    
+    // Cleanup timeout on unmount
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+    };
   }, [query, filters, debouncedSearch]);
 
   const handleQueryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -152,17 +165,5 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch, loading = false }) => {
     </div>
   );
 };
-
-// Debounce utility function
-function debounce<T extends (...args: any[]) => any>(
-  func: T,
-  wait: number
-): (...args: Parameters<T>) => void {
-  let timeout: NodeJS.Timeout;
-  return (...args: Parameters<T>) => {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => func(...args), wait);
-  };
-}
 
 export default SearchBar;
