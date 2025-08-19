@@ -149,7 +149,7 @@ const MovieDetailsPage: React.FC = () => {
             {movie.runtime && (
               <span className="movie-runtime">{formatRuntime(movie.runtime)}</span>
             )}
-            {movie.genres && movie.genres.length > 0 && (
+            {movie.genres && Array.isArray(movie.genres) && movie.genres.length > 0 && (
               <span className="movie-genres">
                 {movie.genres.map(genre => genre.name).join(', ')}
               </span>
@@ -230,7 +230,7 @@ const MovieDetailsPage: React.FC = () => {
             <h3>Plot Summary</h3>
             <p>{movie.overview}</p>
             
-            {movie.production_companies && movie.production_companies.length > 0 && (
+            {movie.production_companies && Array.isArray(movie.production_companies) && movie.production_companies.length > 0 && (
               <div className="production-companies">
                 <h3>Production Companies</h3>
                 <div className="companies-list">
@@ -247,7 +247,7 @@ const MovieDetailsPage: React.FC = () => {
 
         {activeTab === 'cast' && (
           <div className="cast-content">
-            {movie.cast && movie.cast.length > 0 && (
+            {movie.cast && Array.isArray(movie.cast) && movie.cast.length > 0 && (
               <div className="cast-section">
                 <h3>Cast</h3>
                 <div className="cast-list">
@@ -273,7 +273,7 @@ const MovieDetailsPage: React.FC = () => {
               </div>
             )}
 
-            {movie.crew && movie.crew.length > 0 && (
+            {movie.crew && Array.isArray(movie.crew) && movie.crew.length > 0 && (
               <div className="crew-section">
                 <h3>Crew</h3>
                 <div className="crew-list">
@@ -295,7 +295,7 @@ const MovieDetailsPage: React.FC = () => {
         {activeTab === 'similar' && (
           <div className="similar-content">
             <h3>Similar Movies</h3>
-            {movie.similar_movies && movie.similar_movies.length > 0 ? (
+            {movie.similar_movies && Array.isArray(movie.similar_movies) && movie.similar_movies.length > 0 ? (
               <div className="similar-movies-grid">
                 {movie.similar_movies.slice(0, 6).map((similarMovie) => (
                   <MovieCard
