@@ -46,6 +46,23 @@
   color: #333;
 }
 
+.analytics-subtitle {
+  font-size: 12px;
+  color: #666;
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+.analytics-card.empty-state {
+  background: #f8f9fa;
+  border: 1px dashed #dee2e6;
+}
+
+.empty-fill {
+  background: #e9ecef !important;
+  opacity: 0.5;
+}
+
 .analytics-bar {
   height: 8px;
   background: #e9ecef;
@@ -141,6 +158,36 @@
   color: #155724;
   font-size: 14px;
   line-height: 1.5;
+}
+
+.rating-cta {
+  margin-top: 24px;
+  padding: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px;
+  text-align: center;
+  color: white;
+}
+
+.rating-cta h4 {
+  margin: 0 0 12px 0;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.rating-cta p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  opacity: 0.9;
+}
+
+.rating-stats.empty-stats {
+  opacity: 0.6;
+}
+
+.rating-stats.empty-stats .stat-number {
+  color: #999;
 }
 
 .rating-stats {

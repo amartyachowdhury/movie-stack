@@ -54,9 +54,12 @@ const RatingAnalytics: React.FC<RatingAnalyticsProps> = ({
               style={{ width: `${(tmdbRating / 5) * 100}%` }}
             ></div>
           </div>
+          <div className="analytics-subtitle">
+            {tmdbRating >= 8 ? "Excellent" : tmdbRating >= 7 ? "Very Good" : tmdbRating >= 6 ? "Good" : "Average"}
+          </div>
         </div>
 
-        {userRating && (
+        {userRating ? (
           <div className="analytics-card">
             <div className="analytics-header">
               <span className="analytics-label">Your Rating</span>
@@ -68,10 +71,26 @@ const RatingAnalytics: React.FC<RatingAnalyticsProps> = ({
                 style={{ width: `${(userRating / 5) * 100}%` }}
               ></div>
             </div>
+            <div className="analytics-subtitle">
+              {userRating >= 4 ? "You loved it!" : userRating >= 3 ? "You liked it" : "Not your favorite"}
+            </div>
+          </div>
+        ) : (
+          <div className="analytics-card empty-state">
+            <div className="analytics-header">
+              <span className="analytics-label">Your Rating</span>
+              <span className="analytics-value">—</span>
+            </div>
+            <div className="analytics-bar">
+              <div className="analytics-fill empty-fill"></div>
+            </div>
+            <div className="analytics-subtitle">
+              Rate this movie to see your insights!
+            </div>
           </div>
         )}
 
-        {totalRatings > 0 && (
+        {totalRatings > 0 ? (
           <div className="analytics-card">
             <div className="analytics-header">
               <span className="analytics-label">Community Average</span>
@@ -83,11 +102,27 @@ const RatingAnalytics: React.FC<RatingAnalyticsProps> = ({
                 style={{ width: `${(averageRating / 5) * 100}%` }}
               ></div>
             </div>
+            <div className="analytics-subtitle">
+              Based on {totalRatings} ratings
+            </div>
+          </div>
+        ) : (
+          <div className="analytics-card empty-state">
+            <div className="analytics-header">
+              <span className="analytics-label">Community Average</span>
+              <span className="analytics-value">—</span>
+            </div>
+            <div className="analytics-bar">
+              <div className="analytics-fill empty-fill"></div>
+            </div>
+            <div className="analytics-subtitle">
+              Be the first to rate this movie!
+            </div>
           </div>
         )}
       </div>
 
-      {Object.keys(ratingDistribution).length > 0 && (
+      {totalRatings > 0 && Object.keys(ratingDistribution).length > 0 && (
         <div className="rating-distribution">
           <h4>Rating Distribution</h4>
           <div className="distribution-bars">
@@ -116,7 +151,14 @@ const RatingAnalytics: React.FC<RatingAnalyticsProps> = ({
         </div>
       )}
 
-      {totalRatings > 0 && (
+      {!userRating && (
+        <div className="rating-cta">
+          <h4>Share Your Opinion</h4>
+          <p>Rate this movie to see how your taste compares to others and get personalized recommendations!</p>
+        </div>
+      )}
+
+      {totalRatings > 0 ? (
         <div className="rating-stats">
           <div className="stat-item">
             <span className="stat-number">{totalRatings}</span>
@@ -124,6 +166,17 @@ const RatingAnalytics: React.FC<RatingAnalyticsProps> = ({
           </div>
           <div className="stat-item">
             <span className="stat-number">{Math.round(averageRating * 20)}%</span>
+            <span className="stat-label">Satisfaction Rate</span>
+          </div>
+        </div>
+      ) : (
+        <div className="rating-stats empty-stats">
+          <div className="stat-item">
+            <span className="stat-number">0</span>
+            <span className="stat-label">Community Ratings</span>
+          </div>
+          <div className="stat-item">
+            <span className="stat-number">—</span>
             <span className="stat-label">Satisfaction Rate</span>
           </div>
         </div>

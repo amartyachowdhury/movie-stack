@@ -346,13 +346,22 @@ const MovieDetailsPage: React.FC = () => {
         userRating={userRating}
         totalRatings={movie.rating_count || 0}
         averageRating={movie.average_rating || 0}
-        ratingDistribution={{
-          5: Math.floor((movie.rating_count || 0) * 0.3),
-          4: Math.floor((movie.rating_count || 0) * 0.4),
-          3: Math.floor((movie.rating_count || 0) * 0.2),
-          2: Math.floor((movie.rating_count || 0) * 0.08),
-          1: Math.floor((movie.rating_count || 0) * 0.02)
-        }}
+        ratingDistribution={
+          (movie.rating_count || 0) > 0 ? {
+            5: Math.floor((movie.rating_count || 0) * 0.3),
+            4: Math.floor((movie.rating_count || 0) * 0.4),
+            3: Math.floor((movie.rating_count || 0) * 0.2),
+            2: Math.floor((movie.rating_count || 0) * 0.08),
+            1: Math.floor((movie.rating_count || 0) * 0.02)
+          } : {
+            // Sample data for demonstration when no ratings exist
+            5: 0,
+            4: 0,
+            3: 0,
+            2: 0,
+            1: 0
+          }
+        }
       />
     </div>
   );
