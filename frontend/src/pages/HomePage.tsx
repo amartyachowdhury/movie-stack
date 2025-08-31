@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import MovieGrid from '../components/MovieGrid';
-import SearchBar from '../components/SearchBar';
+import SmartSearch from '../components/SmartSearch';
 import ThemeToggle from '../components/ThemeToggle';
 import HeroSection from '../components/HeroSection';
 import { useMovies } from '../hooks/useMovies';
@@ -255,7 +255,26 @@ const HomePage: React.FC = () => {
       />
 
       <div className="content-section">
-        <SearchBar onSearch={handleSearch} loading={searchLoading} />
+        <SmartSearch 
+          onSearch={handleSearch} 
+          onSuggestionSelect={(suggestion) => {
+            console.log('Suggestion selected:', suggestion);
+            // Handle suggestion selection - could navigate to movie details or search
+            if (suggestion.type === 'movie') {
+              // Find the movie in our data and navigate to it
+              const movie = popularMovies.find(m => m.title === suggestion.title);
+              if (movie) {
+                handleMovieClick(movie);
+              }
+            } else {
+              // For genres, actors, directors - perform a search
+              handleSearch(suggestion.title, {});
+            }
+          }}
+          loading={searchLoading}
+          recentSearches={['The Dark Knight', 'Inception', 'Interstellar']}
+          popularSearches={['Action', 'Drama', 'Comedy', 'Sci-Fi']}
+        />
         
         <div className="tab-navigation">
           <button

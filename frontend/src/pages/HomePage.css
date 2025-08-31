@@ -119,6 +119,12 @@
   z-index: 10;
 }
 
+/* SmartSearch Integration */
+.content-section .smart-search {
+  margin-bottom: var(--space-8);
+  padding: 0 var(--space-6);
+}
+
 .tab-navigation {
   display: flex;
   justify-content: center;
