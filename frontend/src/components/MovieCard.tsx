@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import MovieTrailer from './MovieTrailer';
 import './MovieCard.css';
 
 export interface Movie {
@@ -32,6 +33,7 @@ const MovieCard: React.FC<MovieCardProps> = ({
   const [isHovered, setIsHovered] = useState(false);
   const [isPressed, setIsPressed] = useState(false);
   const [showQuickActions, setShowQuickActions] = useState(false);
+  const [showTrailer, setShowTrailer] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
   // Check if we should show placeholder immediately
@@ -90,8 +92,11 @@ const MovieCard: React.FC<MovieCardProps> = ({
 
   const handleQuickAction = (action: string, event: React.MouseEvent) => {
     event.stopPropagation();
-    // TODO: Implement quick actions (add to watchlist, share, etc.)
-    console.log(`Quick action: ${action} for ${movie.title}`);
+    console.log(`Quick action: ${action} for movie: ${movie.title}`);
+    
+    if (action === 'trailer') {
+      setShowTrailer(true);
+    }
   };
 
   return (
@@ -127,6 +132,13 @@ const MovieCard: React.FC<MovieCardProps> = ({
           {/* Quick Actions */}
           {showQuickActions && (
             <div className="movie-quick-actions">
+              <button
+                className="movie-quick-action"
+                onClick={(e) => handleQuickAction('trailer', e)}
+                aria-label="Watch trailer"
+              >
+                🎬
+              </button>
               <button
                 className="movie-quick-action"
                 onClick={(e) => handleQuickAction('watchlist', e)}
@@ -191,6 +203,16 @@ const MovieCard: React.FC<MovieCardProps> = ({
           </div>
         )}
       </div>
+      
+      {/* Movie Trailer Modal */}
+      {showTrailer && (
+        <MovieTrailer
+          movieId={movie.id || movie.tmdb_id || 0}
+          movieTitle={movie.title || 'Unknown Movie'}
+          isOpen={showTrailer}
+          onClose={() => setShowTrailer(false)}
+        />
+      )}
     </div>
   );
 };

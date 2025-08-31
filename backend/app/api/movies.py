@@ -128,6 +128,38 @@ def get_movie(movie_id):
         current_app.logger.error(f"Error fetching movie {movie_id}: {str(e)}")
         return error_response("Failed to fetch movie", 500)
 
+@bp.route('/<int:movie_id>/trailers', methods=['GET'])
+def get_movie_trailers(movie_id):
+    """Get trailers for a specific movie"""
+    try:
+        # For now, return mock trailer data
+        # In a real implementation, this would fetch from TMDB API
+        mock_trailers = [
+            {
+                'id': '1',
+                'key': 'dQw4w9WgXcQ',  # Rick Roll for demo
+                'name': 'Official Trailer',
+                'site': 'YouTube',
+                'size': 1080,
+                'type': 'Trailer',
+                'official': True
+            },
+            {
+                'id': '2',
+                'key': 'jNQXAC9IVRw',  # Me at the zoo for demo
+                'name': 'Teaser Trailer',
+                'site': 'YouTube',
+                'size': 720,
+                'type': 'Trailer',
+                'official': False
+            }
+        ]
+        
+        return success_response({'trailers': mock_trailers})
+    except Exception as e:
+        current_app.logger.error(f"Error fetching trailers for movie {movie_id}: {str(e)}")
+        return error_response("Failed to fetch trailers", 500)
+
 @bp.route('/<int:movie_id>/rate', methods=['POST'])
 def rate_movie(movie_id):
     """Rate a movie"""
