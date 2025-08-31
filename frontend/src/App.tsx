@@ -14,7 +14,8 @@ import SmartRecommendations from './components/SmartRecommendations';
 import MovieTrailers from './components/MovieTrailers';
 import ThemeCustomizer from './components/ThemeCustomizer';
 import AnalyticsDashboard from './components/AnalyticsDashboard';
-// Navigation components will be added in the next phase
+// import MobileNavigation from './components/navigation/MobileNavigation';
+// import DesktopNavigation from './components/navigation/DesktopNavigation';
 import './styles/design-tokens.css';
 import './styles/theme.css';
 import './styles/animations.css';
@@ -54,6 +55,10 @@ function AppContent() {
   return (
     <Router>
       <div className="App">
+        {/* Navigation Components */}
+        {/* <DesktopNavigation />
+        <MobileNavigation /> */}
+        
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/movie/:id" element={<MovieDetailsPage />} />
