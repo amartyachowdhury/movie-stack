@@ -31,7 +31,7 @@ const MovieCard: React.FC<MovieCardProps> = ({
   const [imageLoading, setImageLoading] = useState(true);
 
   // Check if we should show placeholder immediately
-  const shouldShowPlaceholder = !movie.poster_path || movie.poster_path === 'null' || movie.poster_path === '' || movie.title === 'Superman';
+  const shouldShowPlaceholder = !movie.poster_path || movie.poster_path === 'null' || movie.poster_path === '';
 
   // Determine the poster URL
   const getPosterUrl = () => {
