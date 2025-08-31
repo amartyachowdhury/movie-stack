@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useAnimation } from '../contexts/AnimationContext';
 import MovieGrid from '../components/MovieGrid';
 import SmartSearch from '../components/SmartSearch';
 import ThemeToggle from '../components/ThemeToggle';
 import HeroSection from '../components/HeroSection';
+import AnimatedPage from '../components/AnimatedPage';
 import { useMovies } from '../hooks/useMovies';
 import { useRecommendations } from '../hooks/useRecommendations';
 import { Movie } from '../components/MovieCard';
@@ -13,6 +15,7 @@ import './HomePage.css';
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
+  const { endTransition } = useAnimation();
   const [activeTab, setActiveTab] = useState<'popular' | 'search' | 'recommendations'>('popular');
   const [selectedAlgorithm, setSelectedAlgorithm] = useState<'collaborative' | 'content' | 'hybrid'>('collaborative');
   const [searchQuery, setSearchQuery] = useState('');
@@ -194,7 +197,10 @@ const HomePage: React.FC = () => {
   };
 
   return (
-    <div className="home-page">
+    <AnimatedPage 
+      className="home-page"
+      onAnimationComplete={endTransition}
+    >
       <div className="user-navigation">
         <div className="user-info">
           {user && (
@@ -356,7 +362,7 @@ const HomePage: React.FC = () => {
           />
         </div>
       </div>
-    </div>
+    </AnimatedPage>
   );
 };
 

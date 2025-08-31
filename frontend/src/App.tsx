@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
+import { AnimationProvider } from './contexts/AnimationContext';
 import ErrorBoundary from './components/ErrorBoundary';
 import HomePage from './pages/HomePage';
 import MovieDetailsPage from './pages/MovieDetailsPage';
@@ -16,6 +17,7 @@ import AnalyticsDashboard from './components/AnalyticsDashboard';
 // Navigation components will be added in the next phase
 import './styles/design-tokens.css';
 import './styles/theme.css';
+import './styles/animations.css';
 import './App.css';
 
 // Register service worker for PWA functionality
@@ -95,7 +97,9 @@ function App() {
     <ErrorBoundary>
       <ThemeProvider>
         <AuthProvider>
-          <AppContent />
+          <AnimationProvider>
+            <AppContent />
+          </AnimationProvider>
         </AuthProvider>
       </ThemeProvider>
     </ErrorBoundary>
