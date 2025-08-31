@@ -1,13 +1,16 @@
+/* Import Design Tokens */
+@import url('./design-tokens.css');
+
 /* CSS Variables for Theming */
 :root {
   /* Animation Speed */
-  --animation-speed: 0.3s;
+  --animation-speed: var(--duration-300);
   
   /* Border Radius */
-  --border-radius: 8px;
+  --border-radius: var(--radius-lg);
   
   /* Shadow Intensity */
-  --shadow-intensity: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-intensity: var(--shadow-md);
   
   /* Light Theme (Default) */
   --bg-primary: #ffffff;

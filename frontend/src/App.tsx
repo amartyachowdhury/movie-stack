@@ -13,6 +13,7 @@ import SmartRecommendations from './components/SmartRecommendations';
 import MovieTrailers from './components/MovieTrailers';
 import ThemeCustomizer from './components/ThemeCustomizer';
 import AnalyticsDashboard from './components/AnalyticsDashboard';
+import './styles/design-tokens.css';
 import './styles/theme.css';
 import './App.css';
 
