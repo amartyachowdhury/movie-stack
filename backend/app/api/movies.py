@@ -160,6 +160,93 @@ def get_movie_trailers(movie_id):
         current_app.logger.error(f"Error fetching trailers for movie {movie_id}: {str(e)}")
         return error_response("Failed to fetch trailers", 500)
 
+@bp.route('/analytics', methods=['GET'])
+def get_analytics():
+    """Get analytics data for the current user"""
+    try:
+        # Get query parameters
+        time_range = request.args.get('timeRange', '30d')
+        user_id = request.args.get('userId')
+        
+        if not user_id:
+            return error_response("User ID required", 400)
+        
+        # Mock analytics data for demo
+        analytics_data = {
+            'userStats': {
+                'totalMovies': 156,
+                'totalRatings': 89,
+                'averageRating': 7.8,
+                'watchlistCount': 23,
+                'favoriteGenres': ['Action', 'Drama', 'Sci-Fi', 'Comedy', 'Thriller'],
+                'mostRatedMovies': [
+                    {'title': 'The Dark Knight', 'rating': 9.0, 'date': '2024-01-15'},
+                    {'title': 'Inception', 'rating': 8.5, 'date': '2024-01-10'},
+                    {'title': 'Interstellar', 'rating': 8.8, 'date': '2024-01-05'},
+                    {'title': 'Pulp Fiction', 'rating': 8.9, 'date': '2023-12-28'},
+                    {'title': 'Fight Club', 'rating': 8.7, 'date': '2023-12-20'}
+                ]
+            },
+            'searchStats': {
+                'totalSearches': 342,
+                'popularSearches': [
+                    {'term': 'action movies', 'count': 45},
+                    {'term': 'sci-fi', 'count': 38},
+                    {'term': 'comedy', 'count': 32},
+                    {'term': 'drama', 'count': 28},
+                    {'term': 'thriller', 'count': 25}
+                ],
+                'searchTrends': [
+                    {'date': '2024-01-01', 'searches': 12},
+                    {'date': '2024-01-02', 'searches': 15},
+                    {'date': '2024-01-03', 'searches': 8},
+                    {'date': '2024-01-04', 'searches': 20},
+                    {'date': '2024-01-05', 'searches': 18}
+                ]
+            },
+            'movieStats': {
+                'topRatedMovies': [
+                    {'title': 'The Shawshank Redemption', 'rating': 9.3, 'poster': '/api/posters/278'},
+                    {'title': 'The Godfather', 'rating': 9.2, 'poster': '/api/posters/238'},
+                    {'title': 'The Dark Knight', 'rating': 9.0, 'poster': '/api/posters/155'},
+                    {'title': 'Pulp Fiction', 'rating': 8.9, 'poster': '/api/posters/680'},
+                    {'title': 'Fight Club', 'rating': 8.8, 'poster': '/api/posters/550'}
+                ],
+                'genreDistribution': [
+                    {'genre': 'Action', 'count': 45, 'percentage': 28.8},
+                    {'genre': 'Drama', 'count': 38, 'percentage': 24.4},
+                    {'genre': 'Comedy', 'count': 32, 'percentage': 20.5},
+                    {'genre': 'Sci-Fi', 'count': 25, 'percentage': 16.0},
+                    {'genre': 'Thriller', 'count': 16, 'percentage': 10.3}
+                ],
+                'ratingDistribution': [
+                    {'rating': 5, 'count': 8},
+                    {'rating': 6, 'count': 12},
+                    {'rating': 7, 'count': 25},
+                    {'rating': 8, 'count': 32},
+                    {'rating': 9, 'count': 10},
+                    {'rating': 10, 'count': 2}
+                ]
+            },
+            'recommendations': {
+                'accuracy': 87.5,
+                'totalRecommendations': 156,
+                'acceptedRecommendations': 137,
+                'topRecommendationSources': [
+                    {'source': 'Collaborative Filtering', 'count': 45},
+                    {'source': 'Content-Based', 'count': 38},
+                    {'source': 'Hybrid', 'count': 32},
+                    {'source': 'Popular Movies', 'count': 25},
+                    {'source': 'Genre-Based', 'count': 16}
+                ]
+            }
+        }
+        
+        return success_response(analytics_data)
+    except Exception as e:
+        current_app.logger.error(f"Error fetching analytics: {str(e)}")
+        return error_response("Failed to fetch analytics", 500)
+
 @bp.route('/<int:movie_id>/rate', methods=['POST'])
 def rate_movie(movie_id):
     """Rate a movie"""

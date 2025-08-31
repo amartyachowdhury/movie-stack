@@ -1,6 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { Movie } from './MovieCard';
+import React, { useState, useEffect, useMemo } from 'react';
+import { useAuth } from '../contexts/AuthContext';
+import { useMicroInteractions } from '../hooks/useMicroInteractions';
 import './AnalyticsDashboard.css';
+
+interface Movie {
+  id: number;
+  title: string;
+  overview: string;
+  poster_path: string;
+  vote_average: number;
+  release_date: string;
+}
 
 interface UserInsights {
   totalMoviesWatched: number;
