@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import MovieGrid from '../components/MovieGrid';
 import SearchBar from '../components/SearchBar';
 import ThemeToggle from '../components/ThemeToggle';
+import HeroSection from '../components/HeroSection';
 import { useMovies } from '../hooks/useMovies';
 import { useRecommendations } from '../hooks/useRecommendations';
 import { Movie } from '../components/MovieCard';
@@ -248,10 +249,10 @@ const HomePage: React.FC = () => {
         </div>
       </div>
       
-      <div className="hero-section">
-        <h1>🎬 Movie Stack</h1>
-        <p>Discover amazing movies with AI-powered recommendations</p>
-      </div>
+      <HeroSection 
+        featuredMovies={popularMovies.slice(0, 5)} 
+        loading={popularLoading}
+      />
 
       <div className="content-section">
         <SearchBar onSearch={handleSearch} loading={searchLoading} />
