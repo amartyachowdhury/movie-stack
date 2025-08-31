@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './MovieCard.css';
 
 export interface Movie {
@@ -29,6 +29,10 @@ const MovieCard: React.FC<MovieCardProps> = ({
 }) => {
   const [imageError, setImageError] = useState(false);
   const [imageLoading, setImageLoading] = useState(true);
+  const [isHovered, setIsHovered] = useState(false);
+  const [isPressed, setIsPressed] = useState(false);
+  const [showQuickActions, setShowQuickActions] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
 
   // Check if we should show placeholder immediately
   const shouldShowPlaceholder = !movie.poster_path || movie.poster_path === 'null' || movie.poster_path === '';
@@ -66,8 +70,42 @@ const MovieCard: React.FC<MovieCardProps> = ({
     }
   };
 
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+    setShowQuickActions(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    setShowQuickActions(false);
+  };
+
+  const handleMouseDown = () => {
+    setIsPressed(true);
+  };
+
+  const handleMouseUp = () => {
+    setIsPressed(false);
+  };
+
+  const handleQuickAction = (action: string, event: React.MouseEvent) => {
+    event.stopPropagation();
+    // TODO: Implement quick actions (add to watchlist, share, etc.)
+    console.log(`Quick action: ${action} for ${movie.title}`);
+  };
+
   return (
-    <div className="movie-card" onClick={() => onMovieClick?.(movie)}>
+    <div 
+      ref={cardRef}
+      className={`movie-card ${isHovered ? 'movie-card--hovered' : ''} ${isPressed ? 'movie-card--pressed' : ''}`}
+      onClick={() => onMovieClick?.(movie)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
+      onTouchStart={() => setIsHovered(true)}
+      onTouchEnd={() => setIsHovered(false)}
+    >
       <div className="movie-poster">
         {imageLoading && !shouldShowPlaceholder && (
           <div className="image-loading">
@@ -85,6 +123,40 @@ const MovieCard: React.FC<MovieCardProps> = ({
           <div className="movie-rating">
             ⭐ {movie.vote_average ? movie.vote_average.toFixed(1) : 'N/A'}
           </div>
+          
+          {/* Quick Actions */}
+          {showQuickActions && (
+            <div className="movie-quick-actions">
+              <button
+                className="movie-quick-action"
+                onClick={(e) => handleQuickAction('watchlist', e)}
+                aria-label="Add to watchlist"
+              >
+                📺
+              </button>
+              <button
+                className="movie-quick-action"
+                onClick={(e) => handleQuickAction('favorite', e)}
+                aria-label="Add to favorites"
+              >
+                ❤️
+              </button>
+              <button
+                className="movie-quick-action"
+                onClick={(e) => handleQuickAction('share', e)}
+                aria-label="Share movie"
+              >
+                📤
+              </button>
+            </div>
+          )}
+          
+          {/* Play Button */}
+          {isHovered && (
+            <div className="movie-play-button">
+              <span className="movie-play-icon">▶️</span>
+            </div>
+          )}
         </div>
       </div>
       
