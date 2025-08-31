@@ -247,6 +247,23 @@ def get_analytics():
         current_app.logger.error(f"Error fetching analytics: {str(e)}")
         return error_response("Failed to fetch analytics", 500)
 
+@bp.route('/analytics/performance', methods=['POST'])
+def log_performance_metrics():
+    """Log performance metrics from frontend"""
+    try:
+        data = request.get_json()
+        
+        # Log performance metrics
+        current_app.logger.info(f"Performance metrics: {data}")
+        
+        # In a real implementation, you would store these metrics in a database
+        # For now, we'll just log them
+        
+        return success_response({'message': 'Performance metrics logged successfully'})
+    except Exception as e:
+        current_app.logger.error(f"Error logging performance metrics: {str(e)}")
+        return error_response("Failed to log performance metrics", 500)
+
 @bp.route('/<int:movie_id>/rate', methods=['POST'])
 def rate_movie(movie_id):
     """Rate a movie"""

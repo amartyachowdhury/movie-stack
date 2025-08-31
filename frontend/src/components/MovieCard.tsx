@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import MovieTrailer from './MovieTrailer';
+import LazyImage from './LazyImage';
 import './MovieCard.css';
 
 export interface Movie {
@@ -112,17 +113,16 @@ const MovieCard: React.FC<MovieCardProps> = ({
       onTouchEnd={() => setIsHovered(false)}
     >
       <div className="movie-poster">
-        {imageLoading && !shouldShowPlaceholder && (
-          <div className="image-loading">
-            <div className="loading-spinner"></div>
-          </div>
-        )}
-        <img 
-          src={getPosterUrl()} 
-          alt={movie.title || 'Movie poster'} 
-          onError={handleImageError}
+        <LazyImage
+          src={getPosterUrl()}
+          alt={movie.title || 'Movie poster'}
+          className="movie-poster-image"
+          placeholder="/placeholder-movie.svg"
+          enableProgressive={true}
+          enableBlur={true}
+          enableFade={true}
           onLoad={handleImageLoad}
-          style={{ display: imageLoading && !shouldShowPlaceholder ? 'none' : 'block' }}
+          onError={handleImageError}
         />
         <div className="movie-overlay">
           <div className="movie-rating">
