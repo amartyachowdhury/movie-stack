@@ -32,11 +32,12 @@ def create_app(config_name=None):
     
     # Register blueprints with error handling
     try:
-        from .api import movies, recommendations, users, auth
+        from .api import movies, recommendations, users, auth, analytics
         app.register_blueprint(movies.bp, url_prefix='/api/movies')
         app.register_blueprint(recommendations.bp, url_prefix='/api/recommendations')
         app.register_blueprint(users.bp, url_prefix='/api/users')
         app.register_blueprint(auth.bp, url_prefix='/api/auth')
+        app.register_blueprint(analytics.bp, url_prefix='/api/analytics')
     except ImportError as e:
         app.logger.warning(f"Could not import blueprints: {e}")
         # Register a simple health check if blueprints fail

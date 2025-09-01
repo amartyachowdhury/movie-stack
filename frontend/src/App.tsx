@@ -25,6 +25,11 @@ import './App.css';
 // Register service worker for PWA functionality
 import * as serviceWorker from './serviceWorker';
 
+// Analytics and Monitoring Services
+import analyticsService from './services/analyticsService';
+import monitoringService from './services/monitoringService';
+import { trackCommonActions } from './services/analyticsService';
+
 function AppContent() {
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -38,19 +43,36 @@ function AppContent() {
     navigate('/login');
   };
 
+  // Initialize analytics and monitoring
   useEffect(() => {
+    // Set user ID for analytics if user is logged in
+    if (user) {
+      analyticsService.setUserId(user.id);
+    }
+
+    // Track page view
+    analyticsService.trackPageView(window.location.pathname);
+
     // Register service worker for PWA features in production only
     if (process.env.NODE_ENV === 'production') {
       serviceWorker.register({
         onSuccess: (registration) => {
           console.log('Service Worker registered successfully:', registration);
+          analyticsService.trackSystemHealth('service_worker_registered', 1, 'success');
         },
         onUpdate: (registration) => {
           console.log('New content is available; please refresh.');
+          analyticsService.trackSystemHealth('service_worker_update', 1, 'available');
         }
       });
     }
-  }, []);
+
+    // Cleanup on unmount
+    return () => {
+      analyticsService.destroy();
+      monitoringService.destroy();
+    };
+  }, [user]);
 
   return (
     <Router>
