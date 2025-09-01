@@ -14,6 +14,7 @@ import SmartRecommendations from './components/SmartRecommendations';
 import MovieTrailers from './components/MovieTrailers';
 import ThemeCustomizer from './components/ThemeCustomizer';
 import AnalyticsDashboard from './components/AnalyticsDashboard';
+import ToastContainer from './components/ToastContainer';
 // import MobileNavigation from './components/navigation/MobileNavigation';
 // import DesktopNavigation from './components/navigation/DesktopNavigation';
 import './styles/design-tokens.css';
@@ -69,7 +70,7 @@ function AppContent() {
             user ? <SmartRecommendations userId={user.id} /> : <LoginForm onSwitchToRegister={handleSwitchToRegister} />
           } />
           <Route path="/analytics" element={
-            user ? <AnalyticsDashboard userId={user.id} onMovieClick={(movie) => navigate(`/movie/${movie.id || movie.tmdb_id}`)} /> : <LoginForm onSwitchToRegister={handleSwitchToRegister} />
+            user ? <AnalyticsDashboard userId={user.id} onMovieClick={(movie) => navigate(`/movie/${movie.id}`)} /> : <LoginForm onSwitchToRegister={handleSwitchToRegister} />
           } />
           <Route path="/profile" element={
             user ? <UserProfile /> : <LoginForm onSwitchToRegister={handleSwitchToRegister} />
@@ -83,6 +84,9 @@ function AppContent() {
           isOpen={showThemeCustomizer} 
           onClose={() => setShowThemeCustomizer(false)} 
         />
+
+        {/* Toast Container */}
+        <ToastContainer position="top-right" maxToasts={3} />
 
         {/* Global Theme Customizer Trigger */}
         <button 
