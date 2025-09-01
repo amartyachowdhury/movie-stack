@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { useMicroInteractions } from '../hooks/useMicroInteractions';
 import './MovieTrailer.css';
 
 interface Trailer {
@@ -41,17 +40,7 @@ const MovieTrailer: React.FC<MovieTrailerProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const controlsTimeoutRef = useRef<NodeJS.Timeout>();
 
-  // Micro-interactions for controls
-  const getMicroInteractions = (elementId: string) => {
-    return useMicroInteractions({
-      hoverDelay: 0,
-      animationDuration: 200,
-      enableRipple: true,
-      enableHover: true,
-      enablePress: true,
-      enableFocus: true
-    });
-  };
+  // Note: Micro-interactions removed for production build compliance
 
   // Load trailers if not provided
   useEffect(() => {
@@ -215,8 +204,6 @@ const MovieTrailer: React.FC<MovieTrailerProps> = ({
           className="movie-trailer-close"
           onClick={handleClose}
           aria-label="Close trailer"
-          {...getMicroInteractions('close').handlers}
-          ref={getMicroInteractions('close').rippleRef as unknown as React.RefObject<HTMLButtonElement>}
         >
           ✕
         </button>
@@ -248,8 +235,6 @@ const MovieTrailer: React.FC<MovieTrailerProps> = ({
                       className="movie-trailer-play-pause"
                       onClick={handlePlayPause}
                       aria-label={isPlaying ? 'Pause' : 'Play'}
-                      {...getMicroInteractions('play').handlers}
-                      ref={getMicroInteractions('play').rippleRef as unknown as React.RefObject<HTMLButtonElement>}
                     >
                       {isPlaying ? '⏸️' : '▶️'}
                     </button>
@@ -268,8 +253,6 @@ const MovieTrailer: React.FC<MovieTrailerProps> = ({
                         className="movie-trailer-volume"
                         onClick={handleMuteToggle}
                         aria-label={isMuted ? 'Unmute' : 'Mute'}
-                        {...getMicroInteractions('volume').handlers}
-                        ref={getMicroInteractions('volume').rippleRef as unknown as React.RefObject<HTMLButtonElement>}
                       >
                         {isMuted ? '🔇' : volume > 0.5 ? '🔊' : '🔉'}
                       </button>
@@ -288,8 +271,6 @@ const MovieTrailer: React.FC<MovieTrailerProps> = ({
                         className="movie-trailer-fullscreen"
                         onClick={handleFullscreenToggle}
                         aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
-                        {...getMicroInteractions('fullscreen').handlers}
-                        ref={getMicroInteractions('fullscreen').rippleRef as unknown as React.RefObject<HTMLButtonElement>}
                       >
                         {isFullscreen ? '⤓' : '⤢'}
                       </button>
@@ -316,8 +297,6 @@ const MovieTrailer: React.FC<MovieTrailerProps> = ({
                   key={trailer.id}
                   className={`movie-trailer-item ${selectedTrailer?.id === trailer.id ? 'movie-trailer-item--active' : ''}`}
                   onClick={() => handleTrailerSelect(trailer)}
-                  {...getMicroInteractions(`trailer-${trailer.id}`).handlers}
-                  ref={getMicroInteractions(`trailer-${trailer.id}`).rippleRef as unknown as React.RefObject<HTMLButtonElement>}
                 >
                   <div className="movie-trailer-item-icon">🎬</div>
                   <div className="movie-trailer-item-info">

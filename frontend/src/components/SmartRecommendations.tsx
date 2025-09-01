@@ -312,7 +312,7 @@ const SmartRecommendations: React.FC<SmartRecommendationsProps> = ({ userId, onM
             className={`filter-tab ${activeFilter === 'new-releases' ? 'active' : ''}`}
             onClick={() => setActiveFilter('new-releases')}
           >
-            New Releases ({recommendations.filter(r => new Date(r.movie.release_date).getFullYear() >= 2020).length})
+            New Releases ({recommendations.filter(r => r.movie.release_date && new Date(r.movie.release_date).getFullYear() >= 2020).length})
           </button>
           <button 
             className={`filter-tab ${activeFilter === 'hidden-gems' ? 'active' : ''}`}

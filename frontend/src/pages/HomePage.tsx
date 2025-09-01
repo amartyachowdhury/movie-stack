@@ -262,24 +262,7 @@ const HomePage: React.FC = () => {
 
       <div className="content-section">
         <SmartSearch 
-          onSearch={handleSearch} 
-          onSuggestionSelect={(suggestion) => {
-            console.log('Suggestion selected:', suggestion);
-            // Handle suggestion selection - could navigate to movie details or search
-            if (suggestion.type === 'movie') {
-              // Find the movie in our data and navigate to it
-              const movie = popularMovies.find(m => m.title === suggestion.title);
-              if (movie) {
-                handleMovieClick(movie);
-              }
-            } else {
-              // For genres, actors, directors - perform a search
-              handleSearch(suggestion.title, {});
-            }
-          }}
-          loading={searchLoading}
-          recentSearches={['The Dark Knight', 'Inception', 'Interstellar']}
-          popularSearches={['Action', 'Drama', 'Comedy', 'Sci-Fi']}
+          onSearch={(query: string) => handleSearch(query, {})} 
         />
         
         <div className="tab-navigation">

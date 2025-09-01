@@ -171,7 +171,7 @@ self.addEventListener('install', (event: any) => {
       return cache.addAll(STATIC_ASSETS);
     })
   );
-  self.skipWaiting();
+  (self as any).skipWaiting();
 });
 
 // Activate event - clean up old caches
@@ -188,7 +188,7 @@ self.addEventListener('activate', (event: any) => {
       );
     })
   );
-  self.clients.claim();
+  (self as any).clients.claim();
 });
 
 // Fetch event - implement caching strategies
@@ -331,7 +331,7 @@ self.addEventListener('push', (event: any) => {
   };
 
   event.waitUntil(
-    self.registration.showNotification('Movie Stack', options)
+    (self as any).registration.showNotification('Movie Stack', options)
   );
 });
 
@@ -341,7 +341,7 @@ self.addEventListener('notificationclick', (event: any) => {
 
   if (event.action === 'explore') {
     event.waitUntil(
-      clients.openWindow('/?tab=recommendations')
+      (self as any).clients.openWindow('/?tab=recommendations')
     );
   }
 });

@@ -39,18 +39,17 @@ function AppContent() {
   };
 
   useEffect(() => {
-    // Register service worker for PWA features (disabled for development)
-    // if (process.env.NODE_ENV === 'production') {
-    //   serviceWorker.register({
-    //     onSuccess: (registration) => {
-    //       console.log('Service Worker registered successfully:', registration);
-    //     },
-    //     onUpdate: (registration) => {
-    //       console.log('New content is available; please refresh.');
-    //       // You could show a notification to the user here
-    //     }
-    //   });
-    // }
+    // Register service worker for PWA features in production only
+    if (process.env.NODE_ENV === 'production') {
+      serviceWorker.register({
+        onSuccess: (registration) => {
+          console.log('Service Worker registered successfully:', registration);
+        },
+        onUpdate: (registration) => {
+          console.log('New content is available; please refresh.');
+        }
+      });
+    }
   }, []);
 
   return (

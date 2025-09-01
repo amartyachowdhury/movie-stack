@@ -180,7 +180,7 @@ const MovieDetailsPage: React.FC = () => {
           <div className="movie-rating-section">
             <div className="movie-rating">
               <span className="rating-label">TMDB Rating:</span>
-              <span className="rating-value">⭐ {movie.vote_average.toFixed(1)}</span>
+              <span className="rating-value">⭐ {movie.vote_average?.toFixed(1) || 'N/A'}</span>
             </div>
             
             <div className="user-rating">
@@ -361,7 +361,7 @@ const MovieDetailsPage: React.FC = () => {
       {/* Rating Analytics */}
       <RatingAnalytics
         movieId={parseInt(movieId!)}
-        tmdbRating={movie.vote_average}
+        tmdbRating={movie.vote_average || 0}
         userRating={userRating}
         totalRatings={movie.rating_count || 0}
         averageRating={movie.average_rating || 0}

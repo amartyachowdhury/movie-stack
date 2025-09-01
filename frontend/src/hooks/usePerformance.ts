@@ -114,7 +114,7 @@ export const usePerformance = (options: UsePerformanceOptions = {}) => {
   }, [trackPageLoad]);
 
   // Track memory usage
-  const trackMemoryUsage = useCallback(() => {
+  const trackMemoryUsageCallback = useCallback(() => {
     if (!trackMemoryUsage || !('memory' in performance)) return;
 
     const memory = (performance as any).memory;
@@ -124,7 +124,7 @@ export const usePerformance = (options: UsePerformanceOptions = {}) => {
   }, [trackMemoryUsage]);
 
   // Track network requests
-  const trackNetworkRequests = useCallback(() => {
+  const trackNetworkRequestsCallback = useCallback(() => {
     if (!trackNetworkRequests) return;
 
     if ('PerformanceObserver' in window) {
@@ -138,7 +138,7 @@ export const usePerformance = (options: UsePerformanceOptions = {}) => {
   }, [trackNetworkRequests]);
 
   // Track errors
-  const trackErrors = useCallback(() => {
+  const trackErrorsCallback = useCallback(() => {
     if (!trackErrors) return;
 
     const handleError = (event: ErrorEvent) => {
@@ -161,7 +161,7 @@ export const usePerformance = (options: UsePerformanceOptions = {}) => {
   }, [trackErrors]);
 
   // Track user interactions
-  const trackUserInteractions = useCallback(() => {
+  const trackUserInteractionsCallback = useCallback(() => {
     if (!trackUserInteractions) return;
 
     let firstInteraction = true;
@@ -246,16 +246,16 @@ export const usePerformance = (options: UsePerformanceOptions = {}) => {
   // Initialize performance tracking
   useEffect(() => {
     trackPageLoadPerformance();
-    trackMemoryUsage();
-    trackNetworkRequests();
+    trackMemoryUsageCallback();
+    trackNetworkRequestsCallback();
 
-    const errorCleanup = trackErrors();
-    const interactionCleanup = trackUserInteractions();
+    const errorCleanup = trackErrorsCallback();
+    const interactionCleanup = trackUserInteractionsCallback();
 
     // Periodic memory usage tracking
     let memoryInterval: NodeJS.Timeout;
     if (trackMemoryUsage) {
-      memoryInterval = setInterval(trackMemoryUsage, 30000); // Every 30 seconds
+      memoryInterval = setInterval(trackMemoryUsageCallback, 30000); // Every 30 seconds
     }
 
     // Report metrics on page unload
@@ -278,10 +278,10 @@ export const usePerformance = (options: UsePerformanceOptions = {}) => {
     };
   }, [
     trackPageLoadPerformance,
-    trackMemoryUsage,
-    trackNetworkRequests,
-    trackErrors,
-    trackUserInteractions,
+    trackMemoryUsageCallback,
+    trackNetworkRequestsCallback,
+    trackErrorsCallback,
+    trackUserInteractionsCallback,
     reportMetrics
   ]);
 

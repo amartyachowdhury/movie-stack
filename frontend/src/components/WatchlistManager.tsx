@@ -154,7 +154,7 @@ const WatchlistManager: React.FC<WatchlistManagerProps> = ({ userId, onMovieClic
         const priorityOrder = { high: 3, medium: 2, low: 1 };
         return priorityOrder[b.priority] - priorityOrder[a.priority];
       case 'rating':
-        return b.movie.vote_average - a.movie.vote_average;
+        return (b.movie.vote_average || 0) - (a.movie.vote_average || 0);
       case 'added':
       default:
         return new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime();
