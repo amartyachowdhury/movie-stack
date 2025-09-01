@@ -38,6 +38,11 @@ def create_app(config_name=None):
         app.register_blueprint(users.bp, url_prefix='/api/users')
         app.register_blueprint(auth.bp, url_prefix='/api/auth')
         app.register_blueprint(analytics.bp, url_prefix='/api/analytics')
+        
+        # Initialize analytics database after app context is available
+        with app.app_context():
+            from .api.analytics import init_analytics_db
+            init_analytics_db()
     except ImportError as e:
         app.logger.warning(f"Could not import blueprints: {e}")
         # Register a simple health check if blueprints fail

@@ -75,63 +75,63 @@ function AppContent() {
   }, [user]);
 
   return (
-    <Router>
-      <div className="App">
-        {/* Navigation Components */}
-        {/* <DesktopNavigation />
-        <MobileNavigation /> */}
-        
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/movie/:id" element={<MovieDetailsPage />} />
-          <Route path="/watchlist" element={
-            user ? <WatchlistManager userId={user.id} /> : <LoginForm onSwitchToRegister={handleSwitchToRegister} />
-          } />
-          <Route path="/recommendations" element={
-            user ? <SmartRecommendations userId={user.id} /> : <LoginForm onSwitchToRegister={handleSwitchToRegister} />
-          } />
-          <Route path="/analytics" element={
-            user ? <AnalyticsDashboard userId={user.id} onMovieClick={(movie) => navigate(`/movie/${movie.id}`)} /> : <LoginForm onSwitchToRegister={handleSwitchToRegister} />
-          } />
-          <Route path="/profile" element={
-            user ? <UserProfile /> : <LoginForm onSwitchToRegister={handleSwitchToRegister} />
-          } />
-          <Route path="/login" element={<LoginForm onSwitchToRegister={handleSwitchToRegister} />} />
-          <Route path="/register" element={<RegisterForm onSwitchToLogin={handleSwitchToLogin} />} />
-        </Routes>
+    <div className="App">
+      {/* Navigation Components */}
+      {/* <DesktopNavigation />
+      <MobileNavigation /> */}
+      
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/movie/:id" element={<MovieDetailsPage />} />
+        <Route path="/watchlist" element={
+          user ? <WatchlistManager userId={user.id} /> : <LoginForm onSwitchToRegister={handleSwitchToRegister} />
+        } />
+        <Route path="/recommendations" element={
+          user ? <SmartRecommendations userId={user.id} /> : <LoginForm onSwitchToRegister={handleSwitchToRegister} />
+        } />
+        <Route path="/analytics" element={
+          user ? <AnalyticsDashboard userId={user.id} onMovieClick={(movie) => navigate(`/movie/${movie.id}`)} /> : <LoginForm onSwitchToRegister={handleSwitchToRegister} />
+        } />
+        <Route path="/profile" element={
+          user ? <UserProfile /> : <LoginForm onSwitchToRegister={handleSwitchToRegister} />
+        } />
+        <Route path="/login" element={<LoginForm onSwitchToRegister={handleSwitchToRegister} />} />
+        <Route path="/register" element={<RegisterForm onSwitchToLogin={handleSwitchToLogin} />} />
+      </Routes>
 
-        {/* Theme Customizer Modal */}
-        <ThemeCustomizer 
-          isOpen={showThemeCustomizer} 
-          onClose={() => setShowThemeCustomizer(false)} 
-        />
+      {/* Theme Customizer Modal */}
+      <ThemeCustomizer 
+        isOpen={showThemeCustomizer} 
+        onClose={() => setShowThemeCustomizer(false)} 
+      />
 
-        {/* Toast Container */}
-        <ToastContainer position="top-right" maxToasts={3} />
+      {/* Toast Container */}
+      <ToastContainer position="top-right" maxToasts={3} />
 
-        {/* Global Theme Customizer Trigger */}
-        <button 
-          className="theme-customizer-trigger"
-          onClick={() => setShowThemeCustomizer(true)}
-          title="Customize Theme"
-        >
-          🎨
-        </button>
-      </div>
-    </Router>
+      {/* Global Theme Customizer Trigger */}
+      <button 
+        className="theme-customizer-trigger"
+        onClick={() => setShowThemeCustomizer(true)}
+        title="Customize Theme"
+      >
+        🎨
+      </button>
+    </div>
   );
 }
 
 function App() {
   return (
     <ErrorBoundary>
-      <ThemeProvider>
-        <AuthProvider>
-          <AnimationProvider>
-            <AppContent />
-          </AnimationProvider>
-        </AuthProvider>
-      </ThemeProvider>
+      <Router>
+        <ThemeProvider>
+          <AuthProvider>
+            <AnimationProvider>
+              <AppContent />
+            </AnimationProvider>
+          </AuthProvider>
+        </ThemeProvider>
+      </Router>
     </ErrorBoundary>
   );
 }

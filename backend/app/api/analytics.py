@@ -607,5 +607,4 @@ def get_system_health():
         current_app.logger.error(f"Error getting system health: {str(e)}")
         return jsonify({'status': 'unhealthy', 'error': str(e)}), 500
 
-# Initialize analytics database on startup
-init_analytics_db()
+# Note: Database initialization will be handled when the blueprint is registered

@@ -298,9 +298,11 @@ class AnalyticsService {
       // Send events to backend
       await this.sendEventsToBackend(events);
     } catch (error) {
-      console.error('Failed to send analytics events:', error);
-      // Re-add events to queue for retry
-      this.eventQueue.unshift(...events);
+      console.warn('Failed to send analytics events:', error);
+      // Re-add events to queue for retry, but limit retry attempts
+      if (events.length < 100) { // Prevent infinite retry loops
+        this.eventQueue.unshift(...events);
+      }
     }
   }
 
@@ -377,11 +379,14 @@ class AnalyticsService {
         });
 
         if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+          // Don't throw error for analytics failures, just log them
+          console.warn(`Analytics endpoint ${endpoint} returned ${response.status}: ${response.statusText}`);
+          return;
         }
       } catch (error) {
-        console.error(`Failed to send ${type} events:`, error);
-        throw error;
+        // Don't throw error for analytics failures, just log them
+        console.warn(`Failed to send ${type} events to ${endpoint}:`, error);
+        return;
       }
     }
   }
