@@ -136,6 +136,7 @@ class AnalyticsService {
         page_url: pageUrl,
         referrer: document.referrer,
         user_agent: navigator.userAgent,
+        session_id: this.sessionId,
         load_time: loadTime
       } as PageViewEvent
     };
@@ -156,7 +157,8 @@ class AnalyticsService {
       data: {
         action_type: actionType,
         action_data: actionData,
-        page_url: window.location.pathname
+        page_url: window.location.pathname,
+        session_id: this.sessionId
       } as UserActionEvent
     };
 
@@ -176,7 +178,8 @@ class AnalyticsService {
       data: {
         metric_type: metricType,
         metric_value: metricValue,
-        page_url: window.location.pathname
+        page_url: window.location.pathname,
+        session_id: this.sessionId
       } as PerformanceEvent
     };
 
@@ -196,7 +199,8 @@ class AnalyticsService {
       data: {
         query,
         results_count: resultsCount,
-        click_position: clickPosition
+        click_position: clickPosition,
+        session_id: this.sessionId
       } as SearchEvent
     };
 
@@ -222,7 +226,8 @@ class AnalyticsService {
         movie_id: movieId,
         interaction_type: interactionType,
         rating,
-        watchlist_action: watchlistAction
+        watchlist_action: watchlistAction,
+        session_id: this.sessionId
       } as MovieInteractionEvent
     };
 
@@ -360,6 +365,10 @@ class AnalyticsService {
         break;
       case AnalyticsEventType.MOVIE_INTERACTION:
         endpoint = '/api/analytics/track/movie-interaction';
+        payload = events.map(event => event.data);
+        break;
+      case AnalyticsEventType.SYSTEM_HEALTH:
+        endpoint = '/api/analytics/track/system-health';
         payload = events.map(event => event.data);
         break;
       default:

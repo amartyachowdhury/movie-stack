@@ -125,17 +125,22 @@ def track_pageview():
         conn = get_db_connection()
         cursor = conn.cursor()
         
+        # Validate required fields
+        page_url = data.get('page_url')
+        if not page_url:
+            return jsonify({'status': 'error', 'message': 'page_url is required'}), 422
+        
         cursor.execute('''
             INSERT INTO page_views (user_id, page_url, referrer, user_agent, ip_address, session_id, load_time)
             VALUES (?, ?, ?, ?, ?, ?, ?)
         ''', (
             user_id,
-            data.get('page_url'),
-            data.get('referrer'),
-            data.get('user_agent'),
-            request.remote_addr,
-            data.get('session_id'),
-            data.get('load_time')
+            page_url,
+            data.get('referrer') or None,
+            data.get('user_agent') or None,
+            request.remote_addr or None,
+            data.get('session_id') or None,
+            data.get('load_time') or None
         ))
         
         conn.commit()
@@ -187,15 +192,21 @@ def track_performance():
         conn = get_db_connection()
         cursor = conn.cursor()
         
+        # Validate required fields
+        metric_type = data.get('metric_type')
+        metric_value = data.get('metric_value')
+        if not metric_type or metric_value is None:
+            return jsonify({'status': 'error', 'message': 'metric_type and metric_value are required'}), 422
+        
         cursor.execute('''
             INSERT INTO performance_metrics (user_id, metric_type, metric_value, page_url, session_id)
             VALUES (?, ?, ?, ?, ?)
         ''', (
             user_id,
-            data.get('metric_type'),
-            data.get('metric_value'),
-            data.get('page_url'),
-            data.get('session_id')
+            metric_type,
+            metric_value,
+            data.get('page_url') or None,
+            data.get('session_id') or None
         ))
         
         conn.commit()
@@ -266,6 +277,34 @@ def track_movie_interaction():
     except Exception as e:
         current_app.logger.error(f"Error tracking movie interaction: {str(e)}")
         return jsonify({'status': 'error', 'message': 'Failed to track movie interaction'}), 500
+
+@bp.route('/track/system-health', methods=['POST'])
+@jwt_required(optional=True)
+def track_system_health():
+    """Track system health metrics"""
+    try:
+        data = request.get_json()
+        user_id = get_jwt_identity()
+        
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        cursor.execute('''
+            INSERT INTO system_health (metric_type, metric_value, status)
+            VALUES (?, ?, ?)
+        ''', (
+            data.get('metric_type'),
+            data.get('metric_value'),
+            data.get('status')
+        ))
+        
+        conn.commit()
+        conn.close()
+        
+        return jsonify({'status': 'success', 'message': 'System health tracked'}), 200
+    except Exception as e:
+        current_app.logger.error(f"Error tracking system health: {str(e)}")
+        return jsonify({'status': 'error', 'message': 'Failed to track system health'}), 500
 
 @bp.route('/dashboard/overview', methods=['GET'])
 @jwt_required()

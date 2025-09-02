@@ -85,7 +85,20 @@ const LazyImage: React.FC<LazyImageProps> = ({
     if (!isInView) return;
 
     const loadImage = () => {
-      if (enableProgressive) {
+      // Validate the source URL
+      if (!src || src === 'undefined' || src === 'null') {
+        console.warn('LazyImage: Invalid source URL:', src);
+        setHasError(true);
+        onError?.();
+        return;
+      }
+
+      // Check for malformed TMDB URLs
+      if (src.includes('image.tmdb.org') && !src.includes('/t/p/')) {
+        console.warn('LazyImage: Malformed TMDB URL detected:', src);
+      }
+
+      if (enableProgressive && src.includes('/w500')) {
         // Load low quality first, then high quality
         const lowQualitySrc = src.replace('/w500', '/w200');
         const img = new Image();

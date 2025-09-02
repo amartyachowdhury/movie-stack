@@ -5,8 +5,6 @@ const DYNAMIC_CACHE = 'movie-stack-dynamic-v1';
 
 const STATIC_ASSETS = [
   '/',
-  '/static/js/bundle.js',
-  '/static/css/main.css',
   '/manifest.json',
   '/favicon.ico',
   '/logo192.png',
@@ -24,7 +22,15 @@ self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(STATIC_CACHE).then((cache) => {
       console.log('Caching static assets');
-      return cache.addAll(STATIC_ASSETS);
+      // Use addAll with error handling for individual failures
+      return Promise.allSettled(
+        STATIC_ASSETS.map(url => 
+          cache.add(url).catch(error => {
+            console.warn(`Failed to cache ${url}:`, error);
+            return null;
+          })
+        )
+      );
     })
   );
   self.skipWaiting();
@@ -34,17 +40,29 @@ self.addEventListener('install', (event) => {
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
-      return Promise.all(
+      return Promise.allSettled(
         cacheNames.map((cacheName) => {
           if (cacheName !== STATIC_CACHE && cacheName !== DYNAMIC_CACHE) {
             console.log('Deleting old cache:', cacheName);
-            return caches.delete(cacheName);
+            return caches.delete(cacheName).catch(error => {
+              console.warn(`Failed to delete cache ${cacheName}:`, error);
+              return null;
+            });
           }
+          return Promise.resolve();
         })
       );
+    }).catch(error => {
+      console.error('Error during cache cleanup:', error);
     })
   );
-  self.clients.claim();
+  
+  // Claim clients with error handling
+  try {
+    self.clients.claim();
+  } catch (error) {
+    console.warn('Failed to claim clients:', error);
+  }
 });
 
 // Fetch event - implement caching strategies
@@ -126,8 +144,16 @@ self.addEventListener('fetch', (event) => {
 
   // Default: network-first strategy
   event.respondWith(
-    fetch(request).catch(() => {
-      return caches.match(request);
+    fetch(request).catch((error) => {
+      console.warn('Fetch failed, trying cache:', error);
+      return caches.match(request).catch((cacheError) => {
+        console.error('Cache match also failed:', cacheError);
+        // Return a basic offline response
+        return new Response('Offline - Please check your connection', {
+          status: 503,
+          statusText: 'Service Unavailable'
+        });
+      });
     })
   );
 });
@@ -199,5 +225,18 @@ self.addEventListener('notificationclick', (event) => {
     event.waitUntil(
       self.clients.openWindow('/?tab=recommendations')
     );
+  }
+});
+
+// Message handling to prevent message channel errors
+self.addEventListener('message', (event) => {
+  // Handle messages from the main thread
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+  
+  // Always respond to prevent message channel errors
+  if (event.ports && event.ports.length > 0) {
+    event.ports[0].postMessage({ status: 'received' });
   }
 });
