@@ -221,11 +221,13 @@ class MonitoringService {
     setInterval(() => {
       const sessionDuration = (Date.now() - this.sessionStartTime) / 1000;
       this.checkPerformanceThreshold('userSessionDuration', sessionDuration, 'User session duration exceeded threshold');
-    }, 60000); // Check every minute
+    }, 120000); // Check every 2 minutes
 
-    // Monitor user interactions
+    // Monitor user interactions with much higher threshold
     let interactionCount = 0;
-    const interactionThreshold = 100; // Alert if more than 100 interactions per minute
+    const interactionThreshold = 1000; // Increased to 1000 interactions per minute
+    let lastInteractionAlert = 0;
+    const interactionAlertCooldown = 600000; // 10 minutes between alerts
 
     const trackInteraction = () => {
       interactionCount++;
@@ -233,7 +235,9 @@ class MonitoringService {
         interactionCount--;
       }, 60000);
 
-      if (interactionCount > interactionThreshold) {
+      // Only alert if threshold exceeded and cooldown has passed
+      if (interactionCount > interactionThreshold && 
+          Date.now() - lastInteractionAlert > interactionAlertCooldown) {
         this.createAlert(
           MonitoringEventType.USER_BEHAVIOR_ALERT,
           AlertSeverity.MEDIUM,
@@ -244,13 +248,36 @@ class MonitoringService {
             threshold: interactionThreshold
           }
         );
+        lastInteractionAlert = Date.now();
       }
     };
 
-    // Track various user interactions
-    document.addEventListener('click', trackInteraction);
-    document.addEventListener('keydown', trackInteraction);
-    document.addEventListener('scroll', trackInteraction);
+    // Track various user interactions with throttling
+    let lastClickTime = 0;
+    let lastKeyTime = 0;
+    let lastScrollTime = 0;
+    const throttleDelay = 500; // 500ms throttle to reduce spam
+
+    document.addEventListener('click', () => {
+      if (Date.now() - lastClickTime > throttleDelay) {
+        trackInteraction();
+        lastClickTime = Date.now();
+      }
+    });
+    
+    document.addEventListener('keydown', () => {
+      if (Date.now() - lastKeyTime > throttleDelay) {
+        trackInteraction();
+        lastKeyTime = Date.now();
+      }
+    });
+    
+    document.addEventListener('scroll', () => {
+      if (Date.now() - lastScrollTime > throttleDelay) {
+        trackInteraction();
+        lastScrollTime = Date.now();
+      }
+    });
   }
 
   // Monitor security events
