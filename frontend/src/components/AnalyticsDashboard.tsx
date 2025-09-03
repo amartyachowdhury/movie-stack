@@ -90,6 +90,9 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ userId, onMovie
 
   const microInteractions = useMicroInteractions();
 
+  console.log('🔍 [AnalyticsDashboard] Component rendered with props:', { userId, onMovieClick });
+  console.log('🔍 [AnalyticsDashboard] Current state:', { loading, error, analyticsData: !!analyticsData });
+
   // Fetch analytics data
   const fetchAnalyticsData = async () => {
     try {
@@ -106,7 +109,15 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ userId, onMovie
       }
 
       const data = await response.json();
-      setAnalyticsData(data);
+      console.log('🔍 [AnalyticsDashboard] Raw API response:', data);
+      
+      if (data.status === 'success' && data.data) {
+        setAnalyticsData(data.data);
+        console.log('🔍 [AnalyticsDashboard] Set analytics data:', data.data);
+      } else {
+        console.error('🔍 [AnalyticsDashboard] Invalid data format:', data);
+        setError('Invalid data format received from server');
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch analytics data');
     } finally {
@@ -124,10 +135,12 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ userId, onMovie
         }
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        setRealTimeData(data);
-      }
+              if (response.ok) {
+          const data = await response.json();
+          if (data.status === 'success' && data.data) {
+            setRealTimeData(data.data);
+          }
+        }
     } catch (err) {
       console.error('Failed to fetch real-time data:', err);
     }
@@ -143,10 +156,12 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ userId, onMovie
         }
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        setUserBehaviorData(data);
-      }
+              if (response.ok) {
+          const data = await response.json();
+          if (data.status === 'success' && data.data) {
+            setUserBehaviorData(data.data);
+          }
+        }
     } catch (err) {
       console.error('Failed to fetch user behavior data:', err);
     }
@@ -162,10 +177,12 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ userId, onMovie
         }
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        setPerformanceData(data);
-      }
+              if (response.ok) {
+          const data = await response.json();
+          if (data.status === 'success' && data.data) {
+            setPerformanceData(data.data);
+          }
+        }
     } catch (err) {
       console.error('Failed to fetch performance data:', err);
     }
@@ -181,10 +198,12 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ userId, onMovie
         }
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        setBusinessData(data);
-      }
+              if (response.ok) {
+          const data = await response.json();
+          if (data.status === 'success' && data.data) {
+            setBusinessData(data.data);
+          }
+        }
     } catch (err) {
       console.error('Failed to fetch business data:', err);
     }
