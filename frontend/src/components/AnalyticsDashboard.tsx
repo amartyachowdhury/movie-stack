@@ -3,6 +3,8 @@ import { useAuth } from '../contexts/AuthContext';
 import { useMicroInteractions } from '../hooks/useMicroInteractions';
 import './AnalyticsDashboard.css';
 
+console.log('🔍 [AnalyticsDashboard] Module loaded successfully');
+
 interface AnalyticsData {
   // New API format
   total_page_views?: number;
