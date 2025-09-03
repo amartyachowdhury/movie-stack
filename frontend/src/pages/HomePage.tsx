@@ -197,63 +197,8 @@ const HomePage: React.FC = () => {
   };
 
   return (
-    <AnimatedPage 
-      className="home-page"
-      onAnimationComplete={endTransition}
-    >
-      <div className="user-navigation">
-        <div className="user-info">
-          {user && (
-            <>
-              <span className="welcome-text">Welcome, {user.username}!</span>
-              <div className="user-avatar">
-                {user.avatar_url ? (
-                  <img src={user.avatar_url} alt={user.username} />
-                ) : (
-                  <div className="avatar-placeholder">
-                    {user.username.charAt(0).toUpperCase()}
-                  </div>
-                )}
-              </div>
-              <div className="user-menu">
-                <button 
-                  className="nav-button"
-                  onClick={() => navigate('/watchlist')}
-                >
-                  📋 Watchlist
-                </button>
-                <button 
-                  className="nav-button"
-                  onClick={() => navigate('/recommendations')}
-                >
-                  🤖 AI Recommendations
-                </button>
-                <button 
-                  className="nav-button"
-                  onClick={() => navigate('/analytics')}
-                >
-                  📊 Analytics
-                </button>
-                <button 
-                  className="profile-button"
-                  onClick={() => navigate('/profile')}
-                >
-                  Profile
-                </button>
-                <button 
-                  className="logout-button"
-                  onClick={logout}
-                >
-                  Logout
-                </button>
-              </div>
-            </>
-          )}
-        </div>
-        <div className="theme-controls">
-          <ThemeToggle />
-        </div>
-      </div>
+    <AnimatedPage>
+      {/* Remove old navigation - now handled by IntegratedNavigation */}
       
       <HeroSection 
         title="Discover Amazing Movies"

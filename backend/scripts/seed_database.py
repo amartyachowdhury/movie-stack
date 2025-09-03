@@ -11,11 +11,6 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from app import create_app, db
 from app.models import User, Movie, Rating
 from datetime import datetime
-import hashlib
-
-def hash_password(password):
-    """Simple password hashing for development"""
-    return hashlib.sha256(password.encode()).hexdigest()
 
 def seed_database():
     """Seed the database with sample data"""
@@ -34,11 +29,11 @@ def seed_database():
         # Create sample users
         print("👥 Creating sample users...")
         users = [
-            User(username="alice", password=hash_password("password123")),
-            User(username="bob", password=hash_password("password123")),
-            User(username="charlie", password=hash_password("password123")),
-            User(username="diana", password=hash_password("password123")),
-            User(username="eve", password=hash_password("password123"))
+            User(username="alice", password="password123"),
+            User(username="bob", password="password123"),
+            User(username="charlie", password="password123"),
+            User(username="diana", password="password123"),
+            User(username="eve", password="password123")
         ]
         
         for user in users:

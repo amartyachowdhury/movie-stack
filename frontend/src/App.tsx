@@ -15,8 +15,7 @@ import MovieTrailers from './components/MovieTrailers';
 import ThemeCustomizer from './components/ThemeCustomizer';
 import AnalyticsDashboard from './components/AnalyticsDashboard';
 import ToastContainer from './components/ToastContainer';
-// import MobileNavigation from './components/navigation/MobileNavigation';
-// import DesktopNavigation from './components/navigation/DesktopNavigation';
+import IntegratedNavigation from './components/navigation/IntegratedNavigation';
 import './styles/design-tokens.css';
 import './styles/theme.css';
 import './styles/animations.css';
@@ -77,8 +76,7 @@ function AppContent() {
   return (
     <div className="App">
       {/* Navigation Components */}
-      {/* <DesktopNavigation />
-      <MobileNavigation /> */}
+      <IntegratedNavigation />
       
       <Routes>
         <Route path="/" element={<HomePage />} />
