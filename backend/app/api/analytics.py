@@ -115,7 +115,6 @@ def init_analytics_db():
     conn.close()
 
 @bp.route('/track/pageview', methods=['POST'])
-@jwt_required(optional=True)
 def track_pageview():
     """Track page view analytics"""
     try:
@@ -155,7 +154,6 @@ def track_pageview():
         return jsonify({'status': 'error', 'message': 'Failed to track page view'}), 500
 
 @bp.route('/track/action', methods=['POST'])
-@jwt_required(optional=True)
 def track_user_action():
     """Track user action analytics"""
     try:
@@ -188,7 +186,6 @@ def track_user_action():
         return jsonify({'status': 'error', 'message': 'Failed to track action'}), 500
 
 @bp.route('/track/performance', methods=['POST'])
-@jwt_required(optional=True)
 def track_performance():
     """Track performance metrics"""
     try:
@@ -227,12 +224,14 @@ def track_performance():
         return jsonify({'status': 'error', 'message': 'Failed to track performance'}), 500
 
 @bp.route('/track/search', methods=['POST'])
-@jwt_required(optional=True)
 def track_search():
     """Track search analytics"""
     try:
         data = request.get_json()
-        user_id = get_jwt_identity()
+        try:
+            user_id = get_jwt_identity()
+        except:
+            user_id = None
         
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -257,12 +256,14 @@ def track_search():
         return jsonify({'status': 'error', 'message': 'Failed to track search'}), 500
 
 @bp.route('/track/movie-interaction', methods=['POST'])
-@jwt_required(optional=True)
 def track_movie_interaction():
     """Track movie interaction analytics"""
     try:
         data = request.get_json()
-        user_id = get_jwt_identity()
+        try:
+            user_id = get_jwt_identity()
+        except:
+            user_id = None
         
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -288,7 +289,6 @@ def track_movie_interaction():
         return jsonify({'status': 'error', 'message': 'Failed to track movie interaction'}), 500
 
 @bp.route('/track/system-health', methods=['POST'])
-@jwt_required(optional=True)
 def track_system_health():
     """Track system health metrics"""
     try:
