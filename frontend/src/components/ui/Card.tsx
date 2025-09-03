@@ -1,39 +1,96 @@
 import React from 'react';
 import './Card.css';
 
-interface CardProps {
+export interface CardProps {
   children: React.ReactNode;
+  variant?: 'default' | 'elevated' | 'outlined' | 'interactive';
+  size?: 'sm' | 'md' | 'lg';
+  padding?: 'none' | 'sm' | 'md' | 'lg';
   className?: string;
-  variant?: 'default' | 'elevated' | 'outlined' | 'filled';
-  size?: 'small' | 'medium' | 'large';
   onClick?: () => void;
-  disabled?: boolean;
+  href?: string;
+  target?: string;
+  rel?: string;
 }
 
 const Card: React.FC<CardProps> = ({
   children,
-  className = '',
   variant = 'default',
-  size = 'medium',
+  size = 'md',
+  padding = 'md',
+  className = '',
   onClick,
-  disabled = false
+  href,
+  target,
+  rel,
+  ...props
 }) => {
-  const cardClasses = [
-    'card',
-    `card--${variant}`,
-    `card--${size}`,
-    onClick && !disabled ? 'card--clickable' : '',
-    disabled ? 'card--disabled' : '',
+  const baseClasses = 'card';
+  const variantClasses = `card--${variant}`;
+  const sizeClasses = `card--${size}`;
+  const paddingClasses = `card--padding-${padding}`;
+  const interactiveClasses = (onClick || href) ? 'card--interactive' : '';
+
+  const classes = [
+    baseClasses,
+    variantClasses,
+    sizeClasses,
+    paddingClasses,
+    interactiveClasses,
     className
   ].filter(Boolean).join(' ');
 
+  const handleClick = () => {
+    if (onClick) {
+      onClick();
+    }
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      handleClick();
+    }
+  };
+
+  // If href is provided, render as anchor
+  if (href) {
+    return (
+      <a
+        href={href}
+        target={target}
+        rel={rel}
+        className={classes}
+        onClick={handleClick}
+        onKeyDown={handleKeyDown}
+        tabIndex={0}
+        {...props}
+      >
+        {children}
+      </a>
+    );
+  }
+
+  // If onClick is provided, render as button
+  if (onClick) {
+    return (
+      <div
+        className={classes}
+        onClick={handleClick}
+        onKeyDown={handleKeyDown}
+        tabIndex={0}
+        role="button"
+        aria-label="Clickable card"
+        {...props}
+      >
+        {children}
+      </div>
+    );
+  }
+
+  // Default render as div
   return (
-    <div
-      className={cardClasses}
-      onClick={disabled ? undefined : onClick}
-      role={onClick ? 'button' : undefined}
-      tabIndex={onClick && !disabled ? 0 : undefined}
-    >
+    <div className={classes} {...props}>
       {children}
     </div>
   );

@@ -1,99 +1,84 @@
 import React from 'react';
 import './Button.css';
 
-export interface ButtonProps {
-  children: React.ReactNode;
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'success';
   size?: 'sm' | 'md' | 'lg' | 'xl';
-  disabled?: boolean;
   loading?: boolean;
-  fullWidth?: boolean;
   icon?: React.ReactNode;
   iconPosition?: 'left' | 'right';
-  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
-  type?: 'button' | 'submit' | 'reset';
-  className?: string;
-  'aria-label'?: string;
+  fullWidth?: boolean;
+  children: React.ReactNode;
 }
 
 const Button: React.FC<ButtonProps> = ({
-  children,
   variant = 'primary',
   size = 'md',
-  disabled = false,
   loading = false,
-  fullWidth = false,
   icon,
   iconPosition = 'left',
-  onClick,
-  type = 'button',
+  fullWidth = false,
   className = '',
-  'aria-label': ariaLabel,
+  disabled,
+  children,
   ...props
 }) => {
-  const baseClass = 'ui-button';
-  const variantClass = `ui-button--${variant}`;
-  const sizeClass = `ui-button--${size}`;
-  const widthClass = fullWidth ? 'ui-button--full-width' : '';
-  const loadingClass = loading ? 'ui-button--loading' : '';
-  const disabledClass = disabled ? 'ui-button--disabled' : '';
+  const baseClasses = 'btn';
+  const variantClasses = `btn--${variant}`;
+  const sizeClasses = `btn--${size}`;
+  const stateClasses = [
+    loading && 'btn--loading',
+    disabled && 'btn--disabled',
+    fullWidth && 'btn--full-width'
+  ].filter(Boolean).join(' ');
 
-  const buttonClasses = [
-    baseClass,
-    variantClass,
-    sizeClass,
-    widthClass,
-    loadingClass,
-    disabledClass,
+  const classes = [
+    baseClasses,
+    variantClasses,
+    sizeClasses,
+    stateClasses,
     className
   ].filter(Boolean).join(' ');
 
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    if (!disabled && !loading && onClick) {
-      onClick(event);
-    }
-  };
-
-  const renderIcon = () => {
-    if (!icon) return null;
-    
-    return (
-      <span className={`ui-button__icon ui-button__icon--${iconPosition}`}>
-        {icon}
-      </span>
-    );
-  };
-
-  const renderContent = () => {
-    if (loading) {
-      return (
-        <>
-          <span className="ui-button__spinner" />
-          <span className="ui-button__text">Loading...</span>
-        </>
-      );
-    }
-
-    return (
-      <>
-        {iconPosition === 'left' && renderIcon()}
-        <span className="ui-button__text">{children}</span>
-        {iconPosition === 'right' && renderIcon()}
-      </>
-    );
-  };
+  const isDisabled = disabled || loading;
 
   return (
     <button
-      type={type}
-      className={buttonClasses}
-      onClick={handleClick}
-      disabled={disabled || loading}
-      aria-label={ariaLabel}
-      aria-busy={loading}
+      className={classes}
+      disabled={isDisabled}
       {...props}
     >
-      {renderContent()}
+      {loading && (
+        <span className="btn__loader">
+          <svg className="btn__loader-spinner" viewBox="0 0 24 24">
+            <circle
+              className="btn__loader-circle"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="4"
+              fill="none"
+            />
+          </svg>
+        </span>
+      )}
+      
+      {!loading && icon && iconPosition === 'left' && (
+        <span className="btn__icon btn__icon--left">
+          {icon}
+        </span>
+      )}
+      
+      <span className="btn__content">
+        {children}
+      </span>
+      
+      {!loading && icon && iconPosition === 'right' && (
+        <span className="btn__icon btn__icon--right">
+          {icon}
+        </span>
+      )}
     </button>
   );
 };

@@ -1,142 +1,97 @@
 import React, { forwardRef } from 'react';
 import './Input.css';
 
-export interface InputProps {
-  type?: 'text' | 'email' | 'password' | 'search' | 'number' | 'tel' | 'url';
-  placeholder?: string;
-  value?: string;
-  defaultValue?: string;
-  disabled?: boolean;
-  required?: boolean;
-  readOnly?: boolean;
-  size?: 'sm' | 'md' | 'lg';
-  variant?: 'default' | 'outlined' | 'filled';
-  state?: 'default' | 'success' | 'error' | 'warning';
-  icon?: React.ReactNode;
-  iconPosition?: 'left' | 'right';
-  fullWidth?: boolean;
+export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
-  helperText?: string;
-  errorMessage?: string;
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onFocus?: (event: React.FocusEvent<HTMLInputElement>) => void;
-  onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
-  onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
+  error?: string;
+  hint?: string;
+  variant?: 'default' | 'outlined' | 'filled';
+  inputSize?: 'sm' | 'md' | 'lg';
+  leftIcon?: React.ReactNode;
+  rightIcon?: React.ReactNode;
+  fullWidth?: boolean;
   className?: string;
-  id?: string;
-  name?: string;
-  autoComplete?: string;
-  'aria-describedby'?: string;
-  'aria-label'?: string;
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(({
-  type = 'text',
-  placeholder,
-  value,
-  defaultValue,
-  disabled = false,
-  required = false,
-  readOnly = false,
-  size = 'md',
-  variant = 'default',
-  state = 'default',
-  icon,
-  iconPosition = 'left',
-  fullWidth = false,
   label,
-  helperText,
-  errorMessage,
-  onChange,
-  onFocus,
-  onBlur,
-  onKeyDown,
+  error,
+  hint,
+  variant = 'default',
+  inputSize = 'md',
+  leftIcon,
+  rightIcon,
+  fullWidth = false,
   className = '',
   id,
-  name,
-  autoComplete,
-  'aria-describedby': ariaDescribedby,
-  'aria-label': ariaLabel,
   ...props
 }, ref) => {
   const inputId = id || `input-${Math.random().toString(36).substr(2, 9)}`;
-  const helperId = helperText ? `${inputId}-helper` : undefined;
-  const errorId = errorMessage ? `${inputId}-error` : undefined;
+  const hasError = !!error;
+  
+  const baseClasses = 'input';
+  const variantClasses = `input--${variant}`;
+  const sizeClasses = `input--${inputSize}`;
+  const stateClasses = [
+    hasError && 'input--error',
+    fullWidth && 'input--full-width'
+  ].filter(Boolean).join(' ');
 
-  const baseClass = 'ui-input';
-  const sizeClass = `ui-input--${size}`;
-  const variantClass = `ui-input--${variant}`;
-  const stateClass = state !== 'default' ? `ui-input--${state}` : '';
-  const widthClass = fullWidth ? 'ui-input--full-width' : '';
-  const iconClass = icon ? `ui-input--with-icon ui-input--icon-${iconPosition}` : '';
-
-  const inputClasses = [
-    baseClass,
-    sizeClass,
-    variantClass,
-    stateClass,
-    widthClass,
-    iconClass,
+  const classes = [
+    baseClasses,
+    variantClasses,
+    sizeClasses,
+    stateClasses,
     className
   ].filter(Boolean).join(' ');
 
-  const describedBy = [ariaDescribedby, helperId, errorId].filter(Boolean).join(' ');
+  const inputClasses = [
+    'input__field',
+    `input__field--${variant}`,
+    `input__field--${inputSize}`,
+    hasError && 'input__field--error'
+  ].filter(Boolean).join(' ');
 
   return (
-    <div className="ui-input-wrapper">
+    <div className={classes}>
       {label && (
-        <label htmlFor={inputId} className="ui-input__label">
+        <label htmlFor={inputId} className="input__label">
           {label}
-          {required && <span className="ui-input__required">*</span>}
         </label>
       )}
       
-      <div className="ui-input__container">
-        {icon && iconPosition === 'left' && (
-          <span className="ui-input__icon ui-input__icon--left">
-            {icon}
+      <div className="input__wrapper">
+        {leftIcon && (
+          <span className="input__icon input__icon--left">
+            {leftIcon}
           </span>
         )}
         
         <input
           ref={ref}
           id={inputId}
-          type={type}
-          name={name}
-          value={value}
-          defaultValue={defaultValue}
-          placeholder={placeholder}
-          disabled={disabled}
-          required={required}
-          readOnly={readOnly}
-          autoComplete={autoComplete}
           className={inputClasses}
-          onChange={onChange}
-          onFocus={onFocus}
-          onBlur={onBlur}
-          onKeyDown={onKeyDown}
-          aria-describedby={describedBy || undefined}
-          aria-label={ariaLabel}
-          aria-invalid={state === 'error'}
+          aria-invalid={hasError}
+          aria-describedby={hint ? `${inputId}-hint` : undefined}
           {...props}
         />
         
-        {icon && iconPosition === 'right' && (
-          <span className="ui-input__icon ui-input__icon--right">
-            {icon}
+        {rightIcon && (
+          <span className="input__icon input__icon--right">
+            {rightIcon}
           </span>
         )}
       </div>
       
-      {helperText && !errorMessage && (
-        <p id={helperId} className="ui-input__helper-text">
-          {helperText}
+      {hint && !hasError && (
+        <p id={`${inputId}-hint`} className="input__hint">
+          {hint}
         </p>
       )}
       
-      {errorMessage && (
-        <p id={errorId} className="ui-input__error-message">
-          {errorMessage}
+      {hasError && (
+        <p className="input__error" role="alert">
+          {error}
         </p>
       )}
     </div>

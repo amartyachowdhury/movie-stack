@@ -256,8 +256,22 @@ const HomePage: React.FC = () => {
       </div>
       
       <HeroSection 
-        featuredMovies={popularMovies.slice(0, 5)} 
-        loading={popularLoading}
+        title="Discover Amazing Movies"
+        subtitle="Your Ultimate Movie Experience"
+        description="Explore thousands of movies, get personalized recommendations, and build your perfect watchlist. From blockbusters to hidden gems, find your next favorite film."
+        primaryAction={{
+          label: "Start Exploring",
+          onClick: () => setActiveTab('popular'),
+          variant: 'primary',
+          size: 'lg'
+        }}
+        secondaryAction={{
+          label: "View Watchlist",
+          onClick: () => navigate('/watchlist'),
+          variant: 'outline',
+          size: 'lg'
+        }}
+        backgroundImage="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
       />
 
       <div className="content-section">
