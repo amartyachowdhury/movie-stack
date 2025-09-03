@@ -343,32 +343,35 @@ class AnalyticsService {
       headers['Authorization'] = `Bearer ${token}`;
     }
 
+    // Get the backend API URL from environment or use default
+    const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001';
+    
     let endpoint = '';
     let payload: any = {};
 
     switch (type) {
       case AnalyticsEventType.PAGE_VIEW:
-        endpoint = '/api/analytics/track/pageview';
+        endpoint = `${API_BASE_URL}/api/analytics/track/pageview`;
         payload = events.map(event => event.data);
         break;
       case AnalyticsEventType.USER_ACTION:
-        endpoint = '/api/analytics/track/action';
+        endpoint = `${API_BASE_URL}/api/analytics/track/action`;
         payload = events.map(event => event.data);
         break;
       case AnalyticsEventType.PERFORMANCE:
-        endpoint = '/api/analytics/track/performance';
+        endpoint = `${API_BASE_URL}/api/analytics/track/performance`;
         payload = events.map(event => event.data);
         break;
       case AnalyticsEventType.SEARCH:
-        endpoint = '/api/analytics/track/search';
+        endpoint = `${API_BASE_URL}/api/analytics/track/search`;
         payload = events.map(event => event.data);
         break;
       case AnalyticsEventType.MOVIE_INTERACTION:
-        endpoint = '/api/analytics/track/movie-interaction';
+        endpoint = `${API_BASE_URL}/api/analytics/track/movie-interaction`;
         payload = events.map(event => event.data);
         break;
       case AnalyticsEventType.SYSTEM_HEALTH:
-        endpoint = '/api/analytics/track/system-health';
+        endpoint = `${API_BASE_URL}/api/analytics/track/system-health`;
         payload = events.map(event => event.data);
         break;
       default:
@@ -376,20 +379,31 @@ class AnalyticsService {
         return;
     }
 
-    // Send events in batches
-    for (let i = 0; i < payload.length; i += this.batchSize) {
-      const batch = payload.slice(i, i + this.batchSize);
+    // Send events individually (backend expects single objects, not arrays)
+    for (let i = 0; i < payload.length; i++) {
+      const eventData = payload[i];
+      
+      // DEBUG: Log what we're sending
+      console.log(`[DEBUG] Sending ${type} event to ${endpoint}:`, eventData);
       
       try {
         const response = await fetch(endpoint, {
           method: 'POST',
           headers,
-          body: JSON.stringify(batch.length === 1 ? batch[0] : batch)
+          body: JSON.stringify(eventData)
         });
 
         if (!response.ok) {
           // Don't throw error for analytics failures, just log them
           console.warn(`Analytics endpoint ${endpoint} returned ${response.status}: ${response.statusText}`);
+          
+          // DEBUG: Try to get error details
+          try {
+            const errorData = await response.json();
+            console.log(`[DEBUG] Error response:`, errorData);
+          } catch (e) {
+            console.log(`[DEBUG] Could not parse error response`);
+          }
           return;
         }
       } catch (error) {
@@ -443,7 +457,10 @@ class AnalyticsService {
       throw new Error('No authentication token found');
     }
 
-    const response = await fetch(`/api/analytics/dashboard/${endpoint}`, {
+    // Get the backend API URL from environment or use default
+    const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001';
+
+    const response = await fetch(`${API_BASE_URL}/api/analytics/dashboard/${endpoint}`, {
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'

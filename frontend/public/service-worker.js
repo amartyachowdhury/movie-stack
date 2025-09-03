@@ -70,37 +70,9 @@ self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
-  // Handle API requests with cache-first strategy
-  if (API_CACHE_PATTERNS.some(pattern => pattern.test(url.pathname))) {
-    event.respondWith(
-      caches.open(DYNAMIC_CACHE).then((cache) => {
-        return cache.match(request).then((response) => {
-          if (response) {
-            // Return cached response
-            return response;
-          }
-          
-          // Fetch from network and cache
-          return fetch(request).then((networkResponse) => {
-            cache.put(request, networkResponse.clone());
-            return networkResponse;
-          }).catch(() => {
-            // Return offline fallback for API requests
-            return new Response(
-              JSON.stringify({ 
-                error: 'No internet connection',
-                message: 'Please check your connection and try again'
-              }),
-              {
-                status: 503,
-                statusText: 'Service Unavailable',
-                headers: { 'Content-Type': 'application/json' }
-              }
-            );
-          });
-        });
-      })
-    );
+  // Let API requests pass through without interference
+  if (request.url.includes('/api/') || request.url.includes('localhost:5001')) {
+    event.respondWith(fetch(request));
     return;
   }
 
@@ -142,7 +114,7 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Default: network-first strategy
+  // Default: network-first strategy for other requests
   event.respondWith(
     fetch(request).catch((error) => {
       console.warn('Fetch failed, trying cache:', error);

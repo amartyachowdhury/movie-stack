@@ -120,7 +120,10 @@ def track_pageview():
     """Track page view analytics"""
     try:
         data = request.get_json()
-        user_id = get_jwt_identity()
+        try:
+            user_id = get_jwt_identity()
+        except:
+            user_id = None
         
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -157,7 +160,10 @@ def track_user_action():
     """Track user action analytics"""
     try:
         data = request.get_json()
-        user_id = get_jwt_identity()
+        try:
+            user_id = get_jwt_identity()
+        except:
+            user_id = None
         
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -187,7 +193,10 @@ def track_performance():
     """Track performance metrics"""
     try:
         data = request.get_json()
-        user_id = get_jwt_identity()
+        try:
+            user_id = get_jwt_identity()
+        except:
+            user_id = None
         
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -284,7 +293,10 @@ def track_system_health():
     """Track system health metrics"""
     try:
         data = request.get_json()
-        user_id = get_jwt_identity()
+        try:
+            user_id = get_jwt_identity()
+        except:
+            user_id = None
         
         conn = get_db_connection()
         cursor = conn.cursor()
