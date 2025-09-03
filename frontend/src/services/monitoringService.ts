@@ -283,29 +283,46 @@ class MonitoringService {
   // Monitor security events
   private monitorSecurityEvents(): void {
     // Monitor for suspicious activity
-    let rapidRequests = 0;
-    const rapidRequestThreshold = 10; // Alert if more than 10 requests in 1 second
+    this.monitorNetworkRequests();
+  }
 
-    const originalFetch = window.fetch;
-    window.fetch = async (...args) => {
-      rapidRequests++;
+  private monitorNetworkRequests(): void {
+    let requestCount = 0;
+    let lastRequestTime = 0;
+    const requestThreshold = 20; // Increased from 10
+    const timeWindow = 5000; // 5 seconds instead of 1 second
+    
+    const trackRequest = () => {
+      const now = Date.now();
+      requestCount++;
+      
+      // Reset counter after time window
       setTimeout(() => {
-        rapidRequests--;
-      }, 1000);
-
-      if (rapidRequests > rapidRequestThreshold) {
+        requestCount--;
+      }, timeWindow);
+      
+      // Only alert if we exceed threshold and haven't alerted recently
+      if (requestCount > requestThreshold && 
+          now - lastRequestTime > 30000) { // 30 second cooldown
         this.createAlert(
           MonitoringEventType.SECURITY_ALERT,
-          AlertSeverity.HIGH,
-          'Suspicious Activity Detected',
-          `Rapid API requests detected: ${rapidRequests} requests in 1 second`,
+          AlertSeverity.MEDIUM,
+          'High API Request Rate',
+          `Rapid API requests detected: ${requestCount} requests in ${timeWindow/1000} seconds`,
           {
-            requestCount: rapidRequests,
-            threshold: rapidRequestThreshold
+            requestCount,
+            threshold: requestThreshold,
+            timeWindow: timeWindow
           }
         );
+        lastRequestTime = now;
       }
+    };
 
+    // Monitor fetch requests
+    const originalFetch = window.fetch;
+    window.fetch = async (...args) => {
+      trackRequest();
       return originalFetch(...args);
     };
   }

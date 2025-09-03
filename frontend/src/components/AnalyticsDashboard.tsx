@@ -4,11 +4,20 @@ import { useMicroInteractions } from '../hooks/useMicroInteractions';
 import './AnalyticsDashboard.css';
 
 interface AnalyticsData {
-  page_views: Array<{ date: string; count: number }>;
-  user_actions: Array<{ action_type: string; count: number }>;
-  performance: Array<{ metric_type: string; avg_value: number; max_value: number }>;
-  popular_searches: Array<{ query: string; count: number }>;
-  movie_interactions: Array<{ interaction_type: string; count: number }>;
+  // New API format
+  total_page_views?: number;
+  total_performance_metrics?: number;
+  total_searches?: number;
+  total_movie_interactions?: number;
+  recent_page_views?: number;
+  timestamp?: string;
+  
+  // Old API format (fallback)
+  page_views?: Array<{ date: string; count: number }>;
+  user_actions?: Array<{ action_type: string; count: number }>;
+  performance?: Array<{ metric_type: string; avg_value: number; max_value: number }>;
+  popular_searches?: Array<{ query: string; count: number }>;
+  movie_interactions?: Array<{ interaction_type: string; count: number }>;
 }
 
 interface RealTimeData {
@@ -205,9 +214,9 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ userId, onMovie
   const metrics = useMemo(() => {
     if (!analyticsData) return null;
 
-    const totalPageViews = analyticsData.page_views.reduce((sum, pv) => sum + pv.count, 0);
-    const totalActions = analyticsData.user_actions.reduce((sum, action) => sum + action.count, 0);
-    const avgPerformance = analyticsData.performance.length > 0 
+    const totalPageViews = analyticsData.page_views?.reduce((sum, pv) => sum + pv.count, 0) || 0;
+    const totalActions = analyticsData.user_actions?.reduce((sum, action) => sum + action.count, 0) || 0;
+    const avgPerformance = analyticsData.performance && analyticsData.performance.length > 0 
       ? analyticsData.performance.reduce((sum, perf) => sum + perf.avg_value, 0) / analyticsData.performance.length 
       : 0;
 
@@ -215,7 +224,7 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ userId, onMovie
       totalPageViews,
       totalActions,
       avgPerformance: avgPerformance.toFixed(2),
-      uniqueSearches: analyticsData.popular_searches.length
+      uniqueSearches: analyticsData.popular_searches?.length || 0
     };
   }, [analyticsData]);
 

@@ -65,68 +65,45 @@ self.addEventListener('activate', (event) => {
   }
 });
 
-// Fetch event - implement caching strategies
+// Enhanced fetch event handler
 self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
-
-  // Let API requests pass through without interference
-  if (request.url.includes('/api/') || request.url.includes('localhost:5001')) {
+  
+  // Always let API requests pass through to network
+  if (request.url.includes('/api/') || 
+      request.url.includes('localhost:5001') ||
+      request.url.includes('localhost:3000/api/')) {
     event.respondWith(fetch(request));
     return;
   }
-
+  
   // Handle static assets with cache-first strategy
-  if (request.destination === 'script' || 
-      request.destination === 'style' || 
-      request.destination === 'image') {
+  if (STATIC_ASSETS.some(asset => request.url.includes(asset))) {
     event.respondWith(
-      caches.match(request).then((response) => {
-        return response || fetch(request);
-      })
+      caches.match(request)
+        .then((response) => response || fetch(request))
     );
     return;
   }
-
-  // Handle navigation requests with network-first strategy
-  if (request.mode === 'navigate') {
-    event.respondWith(
-      fetch(request).then((response) => {
-        // Cache successful navigation responses
-        if (response.status === 200) {
+  
+  // For other requests, use network-first strategy
+  event.respondWith(
+    fetch(request)
+      .then((response) => {
+        // Cache successful responses for static content
+        if (response.status === 200 && request.method === 'GET') {
           const responseClone = response.clone();
-          caches.open(DYNAMIC_CACHE).then((cache) => {
+          caches.open(CACHE_NAME).then((cache) => {
             cache.put(request, responseClone);
           });
         }
         return response;
-      }).catch(() => {
-        // Return cached navigation response if available
-        return caches.match(request).then((response) => {
-          if (response) {
-            return response;
-          }
-          // Return offline page
-          return caches.match('/');
-        });
       })
-    );
-    return;
-  }
-
-  // Default: network-first strategy for other requests
-  event.respondWith(
-    fetch(request).catch((error) => {
-      console.warn('Fetch failed, trying cache:', error);
-      return caches.match(request).catch((cacheError) => {
-        console.error('Cache match also failed:', cacheError);
-        // Return a basic offline response
-        return new Response('Offline - Please check your connection', {
-          status: 503,
-          statusText: 'Service Unavailable'
-        });
-      });
-    })
+      .catch(() => {
+        // Fallback to cache if network fails
+        return caches.match(request);
+      })
   );
 });
 
