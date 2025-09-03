@@ -96,9 +96,11 @@ const LazyImage: React.FC<LazyImageProps> = ({
       // Check for malformed TMDB URLs
       if (src.includes('image.tmdb.org') && !src.includes('/t/p/')) {
         console.warn('LazyImage: Malformed TMDB URL detected:', src);
+        // Disable progressive loading for malformed URLs
+        enableProgressive = false;
       }
 
-      if (enableProgressive && src.includes('/w500')) {
+      if (enableProgressive && src.includes('/w500') && src.includes('/t/p/')) {
         // Load low quality first, then high quality
         const lowQualitySrc = src.replace('/w500', '/w200');
         const img = new Image();
