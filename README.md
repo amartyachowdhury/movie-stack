@@ -1,239 +1,278 @@
-# Movie Stack - Recommendation Engine
+# 🎬 Movie Stack
 
-A full-stack movie recommendation system built with Flask, React, and Docker.
+A modern, full-stack movie recommendation application built with React, Flask, and industry-standard architecture patterns.
 
-## 🚀 Features
+## ✨ Features
 
-- **Smart Recommendations**: Collaborative and content-based filtering
-- **Movie Database**: Integration with TMDB API
-- **User Ratings**: Rate and review movies
-- **Modern UI**: React frontend with responsive design
-- **Dockerized**: Easy deployment and development
+- 🎭 **Movie Discovery**: Browse and search through thousands of movies
+- ⭐ **Smart Recommendations**: AI-powered personalized movie recommendations
+- 📊 **Analytics Dashboard**: Real-time user behavior and performance analytics
+- 👤 **User Management**: Secure authentication and user profiles
+- 📝 **Watchlist**: Save and manage your favorite movies
+- 🎨 **Modern UI**: Beautiful, responsive design with dark/light themes
+- 📱 **PWA Support**: Progressive Web App capabilities
+- 🔍 **Advanced Search**: Smart search with filters and suggestions
+- 📈 **Performance Monitoring**: Real-time application monitoring
+- 🛡️ **Security**: JWT authentication with role-based access control
 
 ## 🏗️ Architecture
 
-- **Backend**: Flask API with scikit-learn for ML
-- **Frontend**: React with modern UI components
-- **Database**: MySQL with SQLAlchemy ORM
-- **Cache**: Redis for performance optimization
-- **Proxy**: Nginx for routing and load balancing
+### Frontend (React + TypeScript)
+- **Feature-based architecture** for better maintainability
+- **Shared component library** for consistency
+- **Type-safe interfaces** throughout the application
+- **Modern React patterns** with hooks and context
 
-## 🐳 Quick Start with Docker
+### Backend (Flask + Python)
+- **Domain-driven design** for clean separation of concerns
+- **RESTful API** with comprehensive error handling
+- **JWT authentication** with refresh token support
+- **Database abstraction** with SQLAlchemy ORM
+
+### Infrastructure
+- **Docker containerization** for consistent deployments
+- **MySQL** for primary data storage
+- **SQLite** for analytics data
+- **Nginx** reverse proxy for production
+
+## 🚀 Quick Start
 
 ### Prerequisites
+- Node.js 18+
+- Python 3.9+
+- Docker & Docker Compose
+- Git
 
-- Docker and Docker Compose installed
-- TMDB API key (get one at [themoviedb.org](https://www.themoviedb.org/documentation/api))
-- MySQL port 3308 available (or change in docker-compose.yml)
+### Installation
 
-### 1. Clone and Setup
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/your-username/movie-stack.git
+   cd movie-stack
+   ```
 
-```bash
-git clone <your-repo-url>
-cd movie-stack
-```
+2. **Set up environment**
+   ```bash
+   cp env.example .env
+   # Edit .env with your configuration
+   ```
 
-### 2. Environment Configuration
+3. **Start the application**
+   ```bash
+   docker-compose -f infrastructure/docker/docker-compose.dev.yml up -d
+   ```
 
-Create a `.env` file in the root directory:
+4. **Access the application**
+   - Frontend: http://localhost:3000
+   - Backend API: http://localhost:5001
+   - Database: localhost:3306
 
-```bash
-# Copy the template
-cp .env.example .env
-
-# Edit with your TMDB API key
-# ⚠️ IMPORTANT: Never commit your .env file to version control!
-TMDB_API_KEY=your_tmdb_api_key_here
-SECRET_KEY=your_secret_key_here
-```
-
-### 3. Development Mode
-
-```bash
-# Start all services with hot reloading
-docker-compose -f docker-compose.dev.yml up --build
-
-# Or start in background
-docker-compose -f docker-compose.dev.yml up -d --build
-```
-
-### 4. Production Mode
-
-```bash
-# Build and start production services
-docker-compose up --build
-
-# Or start in background
-docker-compose up -d --build
-```
-
-## 🌐 Access Points
-
-- **Frontend**: http://localhost:3000 (dev) or http://localhost (prod)
-- **Backend API**: http://localhost:5000
-- **Database**: localhost:5432
-- **Redis**: localhost:6379
+### Demo Credentials
+- **Username**: `demo_user`
+- **Password**: `demo_password`
 
 ## 📁 Project Structure
 
 ```
 movie-stack/
-├── app/                    # Flask backend
-│   ├── __init__.py        # App configuration
-│   ├── models.py          # Database models
-│   └── routes.py          # API endpoints
-├── movie-stack-frontend/   # React frontend
-├── docker/                # Docker configurations
-│   ├── nginx.conf         # Nginx reverse proxy
-│   └── init.sql           # Database initialization
-├── Dockerfile.backend     # Backend container
-├── Dockerfile.frontend    # Frontend container
-├── docker-compose.yml     # Production orchestration
-├── docker-compose.dev.yml # Development orchestration
-└── requirements.txt       # Python dependencies
+├── frontend/                 # React frontend application
+│   ├── src/
+│   │   ├── features/        # Feature-based modules
+│   │   ├── shared/          # Shared components and utilities
+│   │   ├── core/            # Core application logic
+│   │   └── assets/          # Static assets
+│   └── public/              # Public assets
+├── backend/                 # Flask backend application
+│   ├── app/
+│   │   ├── domains/         # Business domains
+│   │   ├── infrastructure/  # Infrastructure layer
+│   │   └── middleware/      # Application middleware
+│   └── tests/               # Backend tests
+├── infrastructure/          # Infrastructure and deployment
+│   ├── docker/             # Docker configurations
+│   ├── kubernetes/         # Kubernetes manifests
+│   └── terraform/          # Infrastructure as code
+├── docs/                   # Documentation
+└── tests/                  # End-to-end tests
 ```
 
-## 🔧 Development
-
-### Backend Development
-
-```bash
-# Access backend container
-docker exec -it movie-stack-backend-dev bash
-
-# Run database migrations
-python -c "from app import db; db.create_all()"
-
-# Test API endpoints
-curl http://localhost:5000/api/movies
-```
+## 🛠️ Development
 
 ### Frontend Development
-
 ```bash
-# Access frontend container
-docker exec -it movie-stack-frontend-dev bash
-
-# Install new dependencies
-npm install package-name
-
-# Build for production
-npm run build
+cd frontend
+npm install
+npm start
 ```
 
-## 🗄️ Database Management
-
-### Initialize Database
-
+### Backend Development
 ```bash
-# Create tables
-docker exec -it movie-stack-backend-dev python -c "from app import db; db.create_all()"
+cd backend
+pip install -r requirements.txt
+flask run
 ```
 
-### Database Access
-
+### Running Tests
 ```bash
-# Connect to PostgreSQL
-docker exec -it movie-stack-db-dev psql -U postgres -d movie_stack
+# Frontend tests
+cd frontend
+npm test
+
+# Backend tests
+cd backend
+python -m pytest
+
+# E2E tests
+npm run test:e2e
 ```
 
-## 🔍 API Endpoints
+## 📚 Documentation
 
-### Movies
-- `GET /api/movies` - List movies with pagination
-- `GET /api/movies/<id>` - Get movie details
-- `GET /api/movies/search?query=<search>` - Search movies
+- [Architecture Overview](docs/ARCHITECTURE.md)
+- [Development Guide](docs/DEVELOPMENT.md)
+- [API Documentation](docs/API.md)
+- [Deployment Guide](docs/DEPLOYMENT.md)
+- [Contributing Guidelines](docs/CONTRIBUTING.md)
 
-### Recommendations
-- `GET /api/recommendations/collaborative/<user_id>` - User-based recommendations
-- `GET /api/recommendations/content/<movie_id>` - Content-based recommendations
-
-### Ratings
-- `POST /api/movies/<id>/rate` - Rate a movie
-
-## 🚀 Deployment
-
-### Production Deployment
-
-1. **Build and push images**:
-```bash
-docker-compose build
-docker-compose push
-```
-
-2. **Deploy to production server**:
-```bash
-docker-compose -f docker-compose.prod.yml up -d
-```
+## 🔧 Configuration
 
 ### Environment Variables
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `TMDB_API_KEY` | TMDB API key | Required |
-| `DATABASE_URL` | Database connection string | `sqlite:///movie_stack.db` |
-| `SECRET_KEY` | Flask secret key | `dev-secret-key` |
-| `FLASK_ENV` | Flask environment | `development` |
+#### Frontend (.env)
+```bash
+REACT_APP_API_URL=http://localhost:5001
+REACT_APP_ENABLE_ANALYTICS=true
+REACT_APP_DEBUG=true
+```
+
+#### Backend (.env)
+```bash
+FLASK_ENV=development
+DATABASE_URL=mysql://user:password@localhost/movie_stack
+SECRET_KEY=your-secret-key
+TMDB_API_KEY=your-tmdb-api-key
+```
+
+## 🚀 Deployment
+
+### Docker Deployment
+```bash
+# Production build
+docker-compose -f infrastructure/docker/docker-compose.yml up -d
+
+# Development build
+docker-compose -f infrastructure/docker/docker-compose.dev.yml up -d
+```
+
+### Kubernetes Deployment
+```bash
+kubectl apply -f infrastructure/kubernetes/
+```
 
 ## 🧪 Testing
 
-```bash
-# Run backend tests
-docker exec -it movie-stack-backend-dev python -m pytest
+### Test Coverage
+- **Frontend**: Unit tests for components and hooks
+- **Backend**: Unit and integration tests for APIs
+- **E2E**: End-to-end tests for critical user flows
 
-# Run frontend tests
-docker exec -it movie-stack-frontend-dev npm test
+### Running Tests
+```bash
+# All tests
+npm run test:all
+
+# Frontend only
+npm run test:frontend
+
+# Backend only
+npm run test:backend
 ```
 
 ## 📊 Monitoring
 
-### Health Checks
+### Analytics
+- Real-time user behavior tracking
+- Performance metrics monitoring
+- Error tracking and reporting
+- System health monitoring
 
-- Backend: http://localhost:5000/
-- Frontend: http://localhost:3000
-- Database: Check container logs
+### Logging
+- Structured logging with correlation IDs
+- Centralized log aggregation
+- Real-time log monitoring
+- Error alerting
 
-### Logs
+## 🔒 Security
 
-```bash
-# View all logs
-docker-compose logs
+### Authentication
+- JWT-based authentication
+- Refresh token rotation
+- Role-based access control
+- Session management
 
-# View specific service logs
-docker-compose logs backend
-docker-compose logs frontend
-```
+### Data Protection
+- Input validation and sanitization
+- SQL injection prevention
+- XSS protection
+- CSRF protection
 
 ## 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-## 📝 License
+See [CONTRIBUTING.md](docs/CONTRIBUTING.md) for detailed guidelines.
 
-This project is licensed under the MIT License.
+## 📄 License
 
-## 🆘 Troubleshooting
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-### Common Issues
+## 🙏 Acknowledgments
 
-1. **Port conflicts**: Change ports in docker-compose files
-2. **Database connection**: Check PostgreSQL container status
-3. **API key issues**: Verify TMDB_API_KEY in .env file
-4. **Build failures**: Clear Docker cache with `docker system prune`
+- [The Movie Database (TMDB)](https://www.themoviedb.org/) for movie data
+- [React](https://reactjs.org/) for the frontend framework
+- [Flask](https://flask.palletsprojects.com/) for the backend framework
+- [Docker](https://www.docker.com/) for containerization
 
-### Reset Everything
+## 📞 Support
 
-```bash
-# Stop and remove all containers
-docker-compose down -v
+- 📧 Email: support@moviestack.com
+- 💬 Discord: [Join our community](https://discord.gg/moviestack)
+- 📖 Documentation: [docs.moviestack.com](https://docs.moviestack.com)
+- 🐛 Issues: [GitHub Issues](https://github.com/your-username/movie-stack/issues)
 
-# Remove all images
-docker system prune -a
+## 🗺️ Roadmap
 
-# Rebuild from scratch
-docker-compose up --build
-```
+### Phase 1 (Current)
+- ✅ Core movie browsing and search
+- ✅ User authentication and profiles
+- ✅ Basic recommendations
+- ✅ Analytics dashboard
+
+### Phase 2 (Next)
+- 🔄 Advanced recommendation algorithms
+- 🔄 Social features (reviews, ratings)
+- 🔄 Mobile app (React Native)
+- 🔄 Real-time notifications
+
+### Phase 3 (Future)
+- 📋 AI-powered content curation
+- 📋 Multi-language support
+- 📋 Advanced analytics and insights
+- 📋 Integration with streaming services
+
+---
+
+<div align="center">
+  <p>Made with ❤️ by the Movie Stack Team</p>
+  <p>
+    <a href="https://github.com/your-username/movie-stack">⭐ Star us on GitHub</a>
+    •
+    <a href="https://twitter.com/moviestack">🐦 Follow us on Twitter</a>
+    •
+    <a href="https://moviestack.com">🌐 Visit our website</a>
+  </p>
+</div>
