@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Card } from './ui';
+import { Button, Card } from '../shared/components/ui';
 import './HeroSection.css';
 
 interface HeroSectionProps {

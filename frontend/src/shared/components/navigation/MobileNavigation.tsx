@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
-import { useAnimation } from '../../contexts/AnimationContext';
+import { useAuth } from '../../../features/auth/AuthContext';
+import { useAnimation } from '../../AnimationContext';
 import { useMicroInteractions } from '../../hooks/useMicroInteractions';
 import './MobileNavigation.css';
 

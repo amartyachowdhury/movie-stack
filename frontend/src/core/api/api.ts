@@ -1,4 +1,4 @@
-import { Movie } from '../components/MovieCard';
+import { Movie, MovieDetails } from '../../shared/types';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || '';
 
@@ -55,8 +55,8 @@ class ApiService {
     };
   }
 
-  async getMovieDetails(movieId: number): Promise<Movie> {
-    const response = await this.request<ApiResponse<Movie>>(`/api/movies/${movieId}`);
+  async getMovieDetails(movieId: number): Promise<MovieDetails> {
+    const response = await this.request<ApiResponse<MovieDetails>>(`/api/movies/${movieId}`);
     return response.data;
   }
 

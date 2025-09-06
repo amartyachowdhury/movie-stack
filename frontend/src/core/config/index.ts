@@ -87,15 +87,4 @@ export const DEV_CONFIG = {
   MOCK_API: process.env.REACT_APP_MOCK_API === 'true',
 } as const;
 
-// ===== EXPORT ALL CONFIG =====
-export {
-  ENV,
-  API_CONFIG,
-  AUTH_CONFIG,
-  THEME_CONFIG,
-  CACHE_CONFIG,
-  ANALYTICS_CONFIG,
-  MONITORING_CONFIG,
-  PERFORMANCE_CONFIG,
-  DEV_CONFIG,
-};
+// All configs are already exported above

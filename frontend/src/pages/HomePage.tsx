@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
-import { useAnimation } from '../contexts/AnimationContext';
-import MovieGrid from '../components/MovieGrid';
-import SmartSearch from '../components/SmartSearch';
-import ThemeToggle from '../components/ThemeToggle';
-import HeroSection from '../components/HeroSection';
-import AnimatedPage from '../components/AnimatedPage';
-import { useMovies } from '../hooks/useMovies';
-import { useRecommendations } from '../hooks/useRecommendations';
-import { Movie } from '../components/MovieCard';
+import { useAuth } from '../features/auth/AuthContext';
+import { useAnimation } from '../shared/AnimationContext';
+import MovieGrid from '../features/movies/components/MovieGrid';
+import SmartSearch from '../features/search/components/SmartSearch';
+import ThemeToggle from '../shared/components/ThemeToggle';
+import HeroSection from './HeroSection';
+import AnimatedPage from '../shared/components/AnimatedPage';
+import { useMovies } from '../features/movies/hooks/useMovies';
+import { useRecommendations } from '../features/recommendations/hooks/useRecommendations';
+import { Movie } from '../shared/types';
 import './HomePage.css';
 
 const HomePage: React.FC = () => {
@@ -144,7 +144,7 @@ const HomePage: React.FC = () => {
   };
 
   const handleMovieClick = (movie: Movie) => {
-    const movieId = movie.id || movie.tmdb_id;
+    const movieId = movie.id;
     if (movieId) {
       navigate(`/movie/${movieId}`);
     }

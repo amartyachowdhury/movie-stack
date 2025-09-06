@@ -1,42 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import MovieCard from '../components/MovieCard';
-import { Movie } from '../components/MovieCard';
-import RatingAnalytics from '../components/RatingAnalytics';
-import MovieReviews from '../components/MovieReviews';
-import apiService from '../services/api';
+import MovieCard from '../features/movies/components/MovieCard';
+import { Movie, MovieDetails } from '../shared/types';
+import RatingAnalytics from '../features/analytics/components/RatingAnalytics';
+import MovieReviews from '../features/movies/components/MovieReviews';
+import apiService from '../core/api/api';
 import './MovieDetailsPage.css';
 
-interface MovieDetails extends Movie {
-  runtime?: number;
-  budget?: number;
-  revenue?: number;
-  status?: string;
-  original_language?: string;
-  rating_count?: number;
-  average_rating?: number;
-  production_companies?: Array<{
-    name: string;
-    logo_path?: string;
-  }>;
-  genres?: Array<{
-    id: number;
-    name: string;
-  }>;
-  cast?: Array<{
-    id: number;
-    name: string;
-    character: string;
-    profile_path?: string;
-  }>;
-  crew?: Array<{
-    id: number;
-    name: string;
-    job: string;
-    department: string;
-  }>;
-  similar_movies?: Movie[];
-}
 
 const MovieDetailsPage: React.FC = () => {
   const { movieId } = useParams<{ movieId: string }>();
@@ -332,12 +302,12 @@ const MovieDetailsPage: React.FC = () => {
               <div className="similar-movies-grid">
                 {movie.similar_movies.slice(0, 6).map((similarMovie) => (
                   <MovieCard
-                    key={similarMovie.tmdb_id || similarMovie.id}
+                    key={similarMovie.id}
                     movie={{
                       ...similarMovie,
-                      id: similarMovie.tmdb_id || similarMovie.id
+                      id: similarMovie.id
                     }}
-                    onMovieClick={(movie) => navigate(`/movie/${movie.id || movie.tmdb_id}`)}
+                    onMovieClick={(movie) => navigate(`/movie/${movie.id}`)}
                     showRating={false}
                   />
                 ))}

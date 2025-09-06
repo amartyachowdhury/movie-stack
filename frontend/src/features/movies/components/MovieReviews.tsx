@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Movie } from './MovieCard';
+import { Movie } from '../../../shared/types';
 import './MovieReviews.css';
 
 interface Review {

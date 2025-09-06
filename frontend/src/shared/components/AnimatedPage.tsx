@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { useAnimation } from '../contexts/AnimationContext';
+import { useAnimation } from '../AnimationContext';
 import './AnimatedPage.css';
 
 interface AnimatedPageProps {

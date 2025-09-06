@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import MovieCard from './MovieCard';
-import { Movie } from './MovieCard';
+import MovieCard from '../../movies/components/MovieCard';
+import { Movie } from '../../../shared/types';
 import './WatchlistManager.css';
 
 interface WatchlistItem {
@@ -44,7 +44,14 @@ const WatchlistManager: React.FC<WatchlistManagerProps> = ({ userId, onMovieClic
             overview: 'The story of American scientist J. Robert Oppenheimer and his role in the development of the atomic bomb.',
             poster_path: '/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg',
             vote_average: 8.1,
-            release_date: '2023-07-21'
+            vote_count: 5000,
+            release_date: '2023-07-21',
+            genre_ids: [18, 36],
+            adult: false,
+            original_language: 'en',
+            original_title: 'Oppenheimer',
+            popularity: 95.2,
+            video: false
           },
           addedAt: '2024-01-15T10:30:00Z',
           priority: 'high',
@@ -59,7 +66,14 @@ const WatchlistManager: React.FC<WatchlistManagerProps> = ({ userId, onMovieClic
             overview: 'The incredible tale about the fantastical evolution of Bella Baxter.',
             poster_path: '/kCGlIMHnOm8JPXq3rXM6c5wMxcT.jpg',
             vote_average: 7.8,
-            release_date: '2023-12-08'
+            vote_count: 3000,
+            release_date: '2023-12-08',
+            genre_ids: [35, 18, 14],
+            adult: false,
+            original_language: 'en',
+            original_title: 'Poor Things',
+            popularity: 78.5,
+            video: false
           },
           addedAt: '2024-01-10T14:20:00Z',
           priority: 'medium',
@@ -75,7 +89,14 @@ const WatchlistManager: React.FC<WatchlistManagerProps> = ({ userId, onMovieClic
             overview: 'Paul Atreides unites with Chani and the Fremen.',
             poster_path: '/8b8R8l88Qje9dn9OE8PY05Nxl1X.jpg',
             vote_average: 8.4,
-            release_date: '2024-03-01'
+            vote_count: 4000,
+            release_date: '2024-03-01',
+            genre_ids: [878, 18, 12],
+            adult: false,
+            original_language: 'en',
+            original_title: 'Dune: Part Two',
+            popularity: 96.8,
+            video: false
           },
           addedAt: '2024-01-05T09:15:00Z',
           priority: 'high',

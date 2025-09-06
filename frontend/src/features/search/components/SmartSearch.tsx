@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { useMicroInteractions } from '../hooks/useMicroInteractions';
+import { useMicroInteractions } from '../../../shared/hooks/useMicroInteractions';
 import './SmartSearch.css';
 
 interface SearchSuggestion {

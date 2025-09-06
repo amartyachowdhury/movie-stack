@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Movie } from '../components/MovieCard';
-import { PaginatedResponse } from '../services/api';
-import apiService from '../services/api';
+import { Movie } from '../../../shared/types';
+import { PaginatedResponse } from '../../../core/api/api';
+import apiService from '../../../core/api/api';
 
 interface UseMoviesOptions {
   initialPage?: number;

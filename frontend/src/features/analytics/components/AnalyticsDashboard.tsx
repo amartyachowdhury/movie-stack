@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useAuth } from '../contexts/AuthContext';
-import { useMicroInteractions } from '../hooks/useMicroInteractions';
+import { useAuth } from '../../auth/AuthContext';
+import { useMicroInteractions } from '../../../shared/hooks/useMicroInteractions';
 import './AnalyticsDashboard.css';
 
 console.log('🔍 [AnalyticsDashboard] Module loaded successfully');

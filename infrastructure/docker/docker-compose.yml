@@ -4,7 +4,7 @@ services:
   # Backend API
   backend:
     build:
-      context: .
+      context: ../..
       dockerfile: infrastructure/docker/Dockerfile.backend
     container_name: movie-stack-backend
     ports:
@@ -17,8 +17,8 @@ services:
       - TMDB_API_KEY=${TMDB_API_KEY}
       - REDIS_URL=redis://redis:6379/0
     volumes:
-      - ./backend:/app
-      - ./instance:/app/instance
+      - ../../backend:/app
+      - ../../instance:/app/instance
     depends_on:
       - db
       - redis
@@ -35,7 +35,7 @@ services:
   # Frontend React App
   frontend:
     build:
-      context: .
+      context: ../..
       dockerfile: infrastructure/docker/Dockerfile.frontend
     container_name: movie-stack-frontend
     ports:
@@ -63,7 +63,7 @@ services:
       - MYSQL_ROOT_PASSWORD=rootpassword
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./infrastructure/docker/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "3308:3306"
     networks:

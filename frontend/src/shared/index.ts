@@ -11,7 +11,7 @@ export { default as ThemeToggle } from './components/ThemeToggle';
 export { default as ThemeCustomizer } from './components/ThemeCustomizer';
 
 // Contexts
-export { AuthProvider, useAuth } from './AuthContext';
+export { AuthProvider, useAuth } from '../features/auth/AuthContext';
 export { ThemeProvider, useTheme } from './ThemeContext';
 export { AnimationProvider, useAnimation } from './AnimationContext';
 

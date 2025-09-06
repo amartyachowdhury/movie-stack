@@ -45,6 +45,21 @@ export interface MovieDetails extends Movie {
   production_companies: ProductionCompany[];
   production_countries: ProductionCountry[];
   spoken_languages: SpokenLanguage[];
+  cast?: Array<{
+    id: number;
+    name: string;
+    character: string;
+    profile_path?: string;
+  }>;
+  crew?: Array<{
+    id: number;
+    name: string;
+    job: string;
+    department: string;
+  }>;
+  similar_movies?: Movie[];
+  rating_count?: number;
+  average_rating?: number;
 }
 
 export interface Genre {
@@ -319,41 +334,4 @@ export interface WatchlistRequest {
 }
 
 // ===== EXPORT ALL TYPES =====
-export type {
-  User,
-  AuthUser,
-  Movie,
-  MovieDetails,
-  Genre,
-  ProductionCompany,
-  ProductionCountry,
-  SpokenLanguage,
-  Rating,
-  CreateRatingRequest,
-  SearchParams,
-  SearchResults,
-  RecommendationRequest,
-  Recommendation,
-  AnalyticsEvent,
-  PageViewEvent,
-  ActionEvent,
-  PerformanceEvent,
-  SearchEvent,
-  MovieInteractionEvent,
-  SystemHealthEvent,
-  ApiResponse,
-  PaginatedResponse,
-  LoginFormData,
-  RegisterFormData,
-  Theme,
-  BaseComponentProps,
-  ButtonProps,
-  InputProps,
-  CardProps,
-  AppError,
-  ValidationError,
-  LoadingState,
-  NavigationItem,
-  WatchlistItem,
-  WatchlistRequest,
-};
+// All types are already exported above

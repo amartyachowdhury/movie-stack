@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import MovieCard, { Movie } from './MovieCard';
+import MovieCard from './MovieCard';
+import { Movie } from '../../../shared/types';
 import './MovieGrid.css';
 
 interface MovieGridProps {
@@ -116,7 +117,7 @@ const MovieGrid: React.FC<MovieGridProps> = ({
           <div key={columnIndex} className="movie-grid-column">
             {getColumnMovies(columnIndex).map((movie, index) => (
               <div
-                key={movie.id || movie.tmdb_id || index}
+                key={movie.id || index}
                 className="movie-grid-item"
                 style={{ animationDelay: getStaggerDelay(index) }}
               >
@@ -124,7 +125,7 @@ const MovieGrid: React.FC<MovieGridProps> = ({
                   movie={movie}
                   onMovieClick={onMovieClick}
                   showRating={showRating}
-                  userRating={userRatings[movie.id || movie.tmdb_id || 0]}
+                  userRating={userRatings[movie.id || 0]}
                   onRateMovie={onRateMovie}
                 />
               </div>

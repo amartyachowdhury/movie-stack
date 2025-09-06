@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import MovieCard from './MovieCard';
-import { Movie } from './MovieCard';
+import MovieCard from '../../movies/components/MovieCard';
+import { Movie } from '../../../shared/types';
 import './SmartRecommendations.css';
 
 interface RecommendationReason {
@@ -45,7 +45,14 @@ const SmartRecommendations: React.FC<SmartRecommendationsProps> = ({ userId, onM
             overview: 'A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O.',
             poster_path: '/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg',
             vote_average: 8.8,
-            release_date: '2010-07-16'
+            vote_count: 25000,
+            release_date: '2010-07-16',
+            genre_ids: [28, 878, 53],
+            adult: false,
+            original_language: 'en',
+            original_title: 'Inception',
+            popularity: 85.5,
+            video: false
           },
           score: 0.94,
           matchPercentage: 94,
@@ -77,7 +84,14 @@ const SmartRecommendations: React.FC<SmartRecommendationsProps> = ({ userId, onM
             overview: 'A writer encounters the owner of an aging high-class hotel, who tells him of his early years serving as a lobby boy in the hotel\'s glorious years under an exceptional concierge.',
             poster_path: '/eWdyYQreja6F6B1RSr9y3H9MQvO.jpg',
             vote_average: 8.1,
-            release_date: '2014-03-07'
+            vote_count: 18000,
+            release_date: '2014-03-07',
+            genre_ids: [35, 18, 80],
+            adult: false,
+            original_language: 'en',
+            original_title: 'The Grand Budapest Hotel',
+            popularity: 75.2,
+            video: false
           },
           score: 0.87,
           matchPercentage: 87,
@@ -103,7 +117,14 @@ const SmartRecommendations: React.FC<SmartRecommendationsProps> = ({ userId, onM
             overview: 'Greed and class discrimination threaten the newly formed symbiotic relationship between the wealthy Park family and the destitute Kim clan.',
             poster_path: '/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg',
             vote_average: 8.6,
-            release_date: '2019-10-11'
+            vote_count: 22000,
+            release_date: '2019-10-11',
+            genre_ids: [53, 18, 35],
+            adult: false,
+            original_language: 'ko',
+            original_title: '기생충',
+            popularity: 92.1,
+            video: false
           },
           score: 0.83,
           matchPercentage: 83,
@@ -129,7 +150,14 @@ const SmartRecommendations: React.FC<SmartRecommendationsProps> = ({ userId, onM
             overview: 'During her family\'s move to the suburbs, a sullen 10-year-old girl wanders into a world ruled by gods, witches, and spirits, where humans are changed into beasts.',
             poster_path: '/39wmItIWsg5sZMyRUHLkWBcuVCM.jpg',
             vote_average: 8.6,
-            release_date: '2001-07-20'
+            vote_count: 15000,
+            release_date: '2001-07-20',
+            genre_ids: [16, 14, 12],
+            adult: false,
+            original_language: 'ja',
+            original_title: '千と千尋の神隠し',
+            popularity: 88.3,
+            video: false
           },
           score: 0.79,
           matchPercentage: 79,
@@ -155,7 +183,14 @@ const SmartRecommendations: React.FC<SmartRecommendationsProps> = ({ userId, onM
             overview: 'As Harvard student Mark Zuckerberg creates the social networking site that would become known as Facebook, he is sued by the twins who claimed he stole their idea.',
             poster_path: '/n0ybibhJtQdrm9q8e0cNQ2jq9j8.jpg',
             vote_average: 7.8,
-            release_date: '2010-10-01'
+            vote_count: 12000,
+            release_date: '2010-10-01',
+            genre_ids: [18, 36],
+            adult: false,
+            original_language: 'en',
+            original_title: 'The Social Network',
+            popularity: 65.4,
+            video: false
           },
           score: 0.76,
           matchPercentage: 76,

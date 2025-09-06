@@ -1,33 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from './contexts/AuthContext';
-import { ThemeProvider } from './contexts/ThemeContext';
-import { AnimationProvider } from './contexts/AnimationContext';
-import ErrorBoundary from './components/ErrorBoundary';
+import { AuthProvider, useAuth } from './features/auth/AuthContext';
+import { ThemeProvider } from './shared/ThemeContext';
+import { AnimationProvider } from './shared/AnimationContext';
+import ErrorBoundary from './shared/components/ErrorBoundary';
 import HomePage from './pages/HomePage';
 import MovieDetailsPage from './pages/MovieDetailsPage';
-import UserProfile from './components/UserProfile';
-import LoginForm from './components/LoginForm';
-import RegisterForm from './components/RegisterForm';
-import WatchlistManager from './components/WatchlistManager';
-import SmartRecommendations from './components/SmartRecommendations';
-import MovieTrailers from './components/MovieTrailers';
-import ThemeCustomizer from './components/ThemeCustomizer';
-import AnalyticsDashboard from './components/AnalyticsDashboard';
-import ToastContainer from './components/ToastContainer';
-import IntegratedNavigation from './components/navigation/IntegratedNavigation';
-import './styles/design-tokens.css';
-import './styles/theme.css';
-import './styles/animations.css';
+import UserProfile from './features/user/components/UserProfile';
+import LoginForm from './features/auth/components/LoginForm';
+import RegisterForm from './features/auth/components/RegisterForm';
+import WatchlistManager from './features/watchlist/components/WatchlistManager';
+import SmartRecommendations from './features/recommendations/components/SmartRecommendations';
+import MovieTrailers from './features/movies/components/MovieTrailers';
+import ThemeCustomizer from './shared/components/ThemeCustomizer';
+import AnalyticsDashboard from './features/analytics/components/AnalyticsDashboard';
+import ToastContainer from './shared/components/ToastContainer';
+import IntegratedNavigation from './shared/components/navigation/IntegratedNavigation';
+import './shared/design-tokens.css';
+import './shared/theme.css';
+import './shared/animations.css';
 import './App.css';
 
 // Register service worker for PWA functionality
 import * as serviceWorker from './serviceWorker';
 
 // Analytics and Monitoring Services
-import analyticsService from './services/analyticsService';
-import monitoringService from './services/monitoringService';
-import { trackCommonActions } from './services/analyticsService';
+import analyticsService from './features/analytics/services/analyticsService';
+import monitoringService from './features/analytics/services/monitoringService';
+import { trackCommonActions } from './features/analytics/services/analyticsService';
 
 function AppContent() {
   const { user } = useAuth();

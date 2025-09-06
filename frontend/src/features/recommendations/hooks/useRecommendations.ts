@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
-import { Movie } from '../components/MovieCard';
-import { RecommendationResponse } from '../services/api';
-import apiService from '../services/api';
+import { Movie } from '../../../shared/types';
+import { RecommendationResponse } from '../../../core/api/api';
+import apiService from '../../../core/api/api';
 
 export const useRecommendations = () => {
   const [recommendations, setRecommendations] = useState<Movie[]>([]);

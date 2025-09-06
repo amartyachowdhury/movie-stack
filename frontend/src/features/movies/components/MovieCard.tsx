@@ -1,18 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import MovieTrailer from './MovieTrailer';
-import LazyImage from './LazyImage';
+import LazyImage from '../../../shared/components/LazyImage';
+import { Movie } from '../../../shared/types';
 import './MovieCard.css';
-
-export interface Movie {
-  id?: number;
-  tmdb_id?: number;
-  title: string;
-  overview?: string;
-  poster_path?: string;
-  release_date?: string;
-  vote_average?: number;
-  genre_ids?: number[];
-}
 
 interface MovieCardProps {
   movie: Movie;
@@ -66,7 +56,7 @@ const MovieCard: React.FC<MovieCardProps> = ({
 
   const handleRatingChange = (rating: number) => {
     if (onRateMovie) {
-      const movieId = movie.id || movie.tmdb_id || 0;
+      const movieId = movie.id || 0;
       if (movieId) {
         onRateMovie(movieId, rating);
       }
@@ -207,7 +197,7 @@ const MovieCard: React.FC<MovieCardProps> = ({
       {/* Movie Trailer Modal */}
       {showTrailer && (
         <MovieTrailer
-          movieId={movie.id || movie.tmdb_id || 0}
+          movieId={movie.id || 0}
           movieTitle={movie.title || 'Unknown Movie'}
           isOpen={showTrailer}
           onClose={() => setShowTrailer(false)}

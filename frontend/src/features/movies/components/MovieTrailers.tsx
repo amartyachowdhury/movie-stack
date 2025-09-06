@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Movie } from './MovieCard';
+import { Movie } from '../../../shared/types';
 import './MovieTrailers.css';
 
 interface Trailer {
