@@ -344,7 +344,7 @@ class AnalyticsService {
     }
 
     // Get the backend API URL from environment or use default
-    const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001';
+    const API_BASE_URL = process.env.REACT_APP_API_URL || '/api';
     
     let endpoint = '';
     let payload: any = {};
@@ -458,7 +458,7 @@ class AnalyticsService {
     }
 
     // Get the backend API URL from environment or use default
-    const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001';
+    const API_BASE_URL = process.env.REACT_APP_API_URL || '/api';
 
     const response = await fetch(`${API_BASE_URL}/api/analytics/dashboard/${endpoint}`, {
       headers: {

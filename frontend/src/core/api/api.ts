@@ -1,6 +1,6 @@
 import { Movie, MovieDetails } from '../../shared/types';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || '';
+const API_BASE_URL = process.env.REACT_APP_API_URL || '/api';
 
 export interface ApiResponse<T> {
   success: boolean;
