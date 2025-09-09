@@ -47,7 +47,7 @@ class ApiService {
   // Movies API
   async getMovies(page: number = 1, perPage: number = 20): Promise<PaginatedResponse<Movie>> {
     const response = await this.request<ApiResponse<{ movies: Movie[]; pagination: any }>>(
-      `/api/movies/?page=${page}&per_page=${perPage}`
+      `/movies/?page=${page}&per_page=${perPage}`
     );
     return {
       items: response.data.movies,
@@ -56,12 +56,12 @@ class ApiService {
   }
 
   async getMovieDetails(movieId: number): Promise<MovieDetails> {
-    const response = await this.request<ApiResponse<MovieDetails>>(`/api/movies/${movieId}`);
+    const response = await this.request<ApiResponse<MovieDetails>>(`/movies/${movieId}`);
     return response.data;
   }
 
   async searchMovies(query: string, page: number = 1, filters?: any): Promise<PaginatedResponse<Movie>> {
-    let url = `/api/movies/search?query=${encodeURIComponent(query)}&page=${page}`;
+    let url = `/movies/search?query=${encodeURIComponent(query)}&page=${page}`;
     
     if (filters) {
       if (filters.genre) url += `&genre=${encodeURIComponent(filters.genre)}`;
@@ -85,7 +85,7 @@ class ApiService {
 
   async getPopularMovies(page: number = 1): Promise<PaginatedResponse<Movie>> {
     const response = await this.request<ApiResponse<{ results: Movie[] }>>(
-      `/api/movies/popular?page=${page}`
+      `/movies/popular?page=${page}`
     );
     return {
       items: response.data.results,
@@ -101,7 +101,7 @@ class ApiService {
   }
 
   async rateMovie(movieId: number, rating: number, userId: number = 1): Promise<void> {
-    await this.request(`/api/movies/${movieId}/rate`, {
+    await this.request(`/movies/${movieId}/rate`, {
       method: 'POST',
       body: JSON.stringify({ rating, user_id: userId }),
     });
@@ -110,38 +110,38 @@ class ApiService {
   // Recommendations API
   async getCollaborativeRecommendations(userId: number = 1): Promise<RecommendationResponse> {
     const response = await this.request<ApiResponse<RecommendationResponse>>(
-      `/api/recommendations/collaborative/${userId}`
+      `/recommendations/collaborative/${userId}`
     );
     return response.data;
   }
 
   async getContentBasedRecommendations(userId: number = 1): Promise<RecommendationResponse> {
     const response = await this.request<ApiResponse<RecommendationResponse>>(
-      `/api/recommendations/content-based/${userId}`
+      `/recommendations/content-based/${userId}`
     );
     return response.data;
   }
 
   async getHybridRecommendations(userId: number = 1): Promise<RecommendationResponse> {
     const response = await this.request<ApiResponse<RecommendationResponse>>(
-      `/api/recommendations/hybrid/${userId}`
+      `/recommendations/hybrid/${userId}`
     );
     return response.data;
   }
 
   // Users API
   async getUsers(): Promise<any[]> {
-    const response = await this.request<ApiResponse<any[]>>('/api/users/');
+    const response = await this.request<ApiResponse<any[]>>('/users/');
     return response.data;
   }
 
   async getUserDetails(userId: number): Promise<any> {
-    const response = await this.request<ApiResponse<any>>(`/api/users/${userId}`);
+    const response = await this.request<ApiResponse<any>>(`/users/${userId}`);
     return response.data;
   }
 
   async getUserRatings(userId: number): Promise<any[]> {
-    const response = await this.request<ApiResponse<any[]>>(`/api/users/${userId}/ratings`);
+    const response = await this.request<ApiResponse<any[]>>(`/users/${userId}/ratings`);
     return response.data;
   }
 
