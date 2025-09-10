@@ -2,7 +2,7 @@
 Movie model for Movie Stack
 """
 from datetime import datetime
-from app import db
+from app.database import db
 
 # Association table for user favorites
 user_favorites = db.Table('user_favorites',

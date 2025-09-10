@@ -2,7 +2,7 @@
 User model for Movie Stack
 """
 from datetime import datetime
-from app import db
+from app.database import db
 
 class User(db.Model):
     """User model for storing user information"""

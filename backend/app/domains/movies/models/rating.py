@@ -2,7 +2,7 @@
 Rating model for Movie Stack
 """
 from datetime import datetime
-from app import db
+from app.database import db
 
 class Rating(db.Model):
     """Rating model for storing user movie ratings"""
