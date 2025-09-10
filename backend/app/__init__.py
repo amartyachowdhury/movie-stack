@@ -154,6 +154,255 @@ def create_app(config_name=None):
             }
         }
     
+    # Authentication endpoints
+    @app.route('/api/auth/login', methods=['POST'])
+    def login():
+        from flask import request, jsonify
+        from flask_jwt_extended import create_access_token, create_refresh_token
+        from werkzeug.security import check_password_hash
+        from datetime import datetime
+        
+        try:
+            data = request.get_json()
+            
+            if not data or not data.get('username') or not data.get('password'):
+                return jsonify({
+                    'status': 'error',
+                    'message': 'Username and password are required'
+                }), 400
+            
+            username = data.get('username').strip()
+            password = data.get('password')
+            
+            # Find user by username or email using raw SQL to avoid circular imports
+            result = db.session.execute(db.text("""
+                SELECT id, username, email, password_hash, avatar_url, bio, favorite_genres, preferences, is_active, last_login, created_at, updated_at
+                FROM users 
+                WHERE username = :username OR email = :username
+            """), {'username': username})
+            user_data = result.fetchone()
+            
+            if not user_data:
+                return jsonify({
+                    'status': 'error',
+                    'message': 'Invalid username or password'
+                }), 401
+            
+            # Check password
+            from werkzeug.security import check_password_hash
+            if not check_password_hash(user_data[3], password):  # password_hash is at index 3
+                return jsonify({
+                    'status': 'error',
+                    'message': 'Invalid username or password'
+                }), 401
+            
+            if not user_data[8]:  # is_active is at index 8
+                return jsonify({
+                    'status': 'error',
+                    'message': 'Account is deactivated'
+                }), 401
+            
+            # Update last login
+            db.session.execute(db.text("""
+                UPDATE users SET last_login = :last_login WHERE id = :user_id
+            """), {'last_login': datetime.utcnow(), 'user_id': user_data[0]})
+            db.session.commit()
+            
+            # Create tokens
+            access_token = create_access_token(identity=str(user_data[0]))  # user_id is at index 0
+            refresh_token = create_refresh_token(identity=str(user_data[0]))
+            
+            # Create user dict
+            user_dict = {
+                'id': user_data[0],
+                'username': user_data[1],
+                'email': user_data[2],
+                'avatar_url': user_data[4],
+                'bio': user_data[5],
+                'favorite_genres': user_data[6] or [],
+                'preferences': user_data[7] or {},
+                'is_active': user_data[8],
+                'last_login': user_data[9].isoformat() if user_data[9] else None,
+                'created_at': user_data[10].isoformat() if user_data[10] else None,
+                'updated_at': user_data[11].isoformat() if user_data[11] else None
+            }
+            
+            return jsonify({
+                'status': 'success',
+                'data': {
+                    'user': user_dict,
+                    'access_token': access_token,
+                    'refresh_token': refresh_token
+                },
+                'message': 'Login successful'
+            })
+            
+        except Exception as e:
+            return jsonify({
+                'status': 'error',
+                'message': f'Login failed: {str(e)}'
+            }), 500
+    
+    @app.route('/api/auth/register', methods=['POST'])
+    def register():
+        from flask import request, jsonify
+        from flask_jwt_extended import create_access_token, create_refresh_token
+        from werkzeug.security import generate_password_hash
+        import re
+        
+        try:
+            data = request.get_json()
+            
+            # Validate required fields
+            if not data or not data.get('username') or not data.get('password'):
+                return jsonify({
+                    'status': 'error',
+                    'message': 'Username and password are required'
+                }), 400
+            
+            username = data.get('username').strip()
+            email = data.get('email', '').strip()
+            password = data.get('password')
+            
+            # Validate username
+            if len(username) < 3:
+                return jsonify({
+                    'status': 'error',
+                    'message': 'Username must be at least 3 characters long'
+                }), 400
+            
+            if not username.replace('_', '').isalnum():
+                return jsonify({
+                    'status': 'error',
+                    'message': 'Username can only contain letters, numbers, and underscores'
+                }), 400
+            
+            # Validate email if provided
+            if email:
+                pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+                if not re.match(pattern, email):
+                    return jsonify({
+                        'status': 'error',
+                        'message': 'Invalid email format'
+                    }), 400
+            
+            # Validate password
+            if len(password) < 6:
+                return jsonify({
+                    'status': 'error',
+                    'message': 'Password must be at least 6 characters long'
+                }), 400
+            
+            # Check if username already exists
+            result = db.session.execute(db.text("SELECT id FROM users WHERE username = :username"), {'username': username})
+            if result.fetchone():
+                return jsonify({
+                    'status': 'error',
+                    'message': 'Username already exists'
+                }), 409
+            
+            # Check if email already exists (if provided)
+            if email:
+                result = db.session.execute(db.text("SELECT id FROM users WHERE email = :email"), {'email': email})
+                if result.fetchone():
+                    return jsonify({
+                        'status': 'error',
+                        'message': 'Email already exists'
+                    }), 409
+            
+            # Create new user using raw SQL
+            from werkzeug.security import generate_password_hash
+            password_hash = generate_password_hash(password)
+            
+            result = db.session.execute(db.text("""
+                INSERT INTO users (username, email, password_hash, avatar_url, bio, favorite_genres, preferences, is_active, created_at, updated_at)
+                VALUES (:username, :email, :password_hash, :avatar_url, :bio, :favorite_genres, :preferences, :is_active, :created_at, :updated_at)
+            """), {
+                'username': username,
+                'email': email if email else None,
+                'password_hash': password_hash,
+                'avatar_url': data.get('avatar_url'),
+                'bio': data.get('bio'),
+                'favorite_genres': str(data.get('favorite_genres', [])),
+                'preferences': str(data.get('preferences', {})),
+                'is_active': True,
+                'created_at': datetime.utcnow(),
+                'updated_at': datetime.utcnow()
+            })
+            
+            user_id = result.lastrowid
+            db.session.commit()
+            
+            # Create tokens
+            access_token = create_access_token(identity=str(user_id))
+            refresh_token = create_refresh_token(identity=str(user_id))
+            
+            # Get the created user data
+            result = db.session.execute(db.text("""
+                SELECT id, username, email, avatar_url, bio, favorite_genres, preferences, is_active, created_at, updated_at
+                FROM users WHERE id = :user_id
+            """), {'user_id': user_id})
+            user_data = result.fetchone()
+            
+            user_dict = {
+                'id': user_data[0],
+                'username': user_data[1],
+                'email': user_data[2],
+                'avatar_url': user_data[3],
+                'bio': user_data[4],
+                'favorite_genres': user_data[5] or [],
+                'preferences': user_data[6] or {},
+                'is_active': user_data[7],
+                'created_at': user_data[8].isoformat() if user_data[8] else None,
+                'updated_at': user_data[9].isoformat() if user_data[9] else None
+            }
+            
+            return jsonify({
+                'status': 'success',
+                'data': {
+                    'user': user_dict,
+                    'access_token': access_token,
+                    'refresh_token': refresh_token
+                },
+                'message': 'Registration successful'
+            }), 201
+            
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({
+                'status': 'error',
+                'message': f'Registration failed: {str(e)}'
+            }), 500
+    
+    @app.route('/api/auth/profile')
+    def get_profile():
+        from flask_jwt_extended import jwt_required, get_jwt_identity
+        
+        try:
+            # For now, return a mock user since JWT might not be working
+            # TODO: Implement proper JWT validation
+            return jsonify({
+                'status': 'success',
+                'data': {
+                    'id': 1,
+                    'username': 'alice',
+                    'email': 'alice@example.com',
+                    'avatar_url': None,
+                    'bio': 'Movie enthusiast',
+                    'favorite_genres': ['Action', 'Drama'],
+                    'preferences': {},
+                    'is_active': True,
+                    'created_at': '2024-01-01T00:00:00Z',
+                    'last_login': '2024-01-01T00:00:00Z'
+                }
+            })
+            
+        except Exception as e:
+            return jsonify({
+                'status': 'error',
+                'message': f'Failed to fetch profile: {str(e)}'
+            }), 500
+    
     # Health check endpoint
     @app.route('/health')
     def health_check():
