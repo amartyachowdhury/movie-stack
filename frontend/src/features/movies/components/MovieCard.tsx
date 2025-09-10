@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import MovieTrailer from './MovieTrailer';
 import LazyImage from '../../../shared/components/LazyImage';
 import { Movie } from '../../../shared/types';
+import { PLACEHOLDER_MOVIE_IMAGE } from '../../../shared/constants/placeholderImage';
 import './MovieCard.css';
 
 interface MovieCardProps {
@@ -33,7 +34,7 @@ const MovieCard: React.FC<MovieCardProps> = ({
   // Determine the poster URL
   const getPosterUrl = () => {
     if (imageError || shouldShowPlaceholder) {
-      return '/placeholder-movie.svg';
+      return PLACEHOLDER_MOVIE_IMAGE;
     }
     return `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
   };
@@ -107,7 +108,7 @@ const MovieCard: React.FC<MovieCardProps> = ({
           src={getPosterUrl()}
           alt={movie.title || 'Movie poster'}
           className="movie-poster-image"
-          placeholder="/placeholder-movie.svg"
+          placeholder={PLACEHOLDER_MOVIE_IMAGE}
           enableProgressive={true}
           enableBlur={true}
           enableFade={true}

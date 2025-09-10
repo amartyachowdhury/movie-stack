@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useMicroInteractions } from '../../../shared/hooks/useMicroInteractions';
+import { PLACEHOLDER_MOVIE_IMAGE } from '../../../shared/constants/placeholderImage';
 import './SmartSearch.css';
 
 interface SearchSuggestion {
@@ -58,7 +59,7 @@ const SmartSearch: React.FC<SmartSearchProps> = ({
             title: `${searchQuery} Movie`,
             type: 'movie',
             year: 2023,
-            poster: '/placeholder-movie.svg'
+            poster: PLACEHOLDER_MOVIE_IMAGE
           },
           {
             id: '2',

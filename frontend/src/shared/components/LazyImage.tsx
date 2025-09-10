@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useMicroInteractions } from '../hooks/useMicroInteractions';
+import { PLACEHOLDER_MOVIE_IMAGE } from '../constants/placeholderImage';
 import './LazyImage.css';
 
 interface LazyImageProps {
@@ -21,7 +22,7 @@ interface LazyImageProps {
 const LazyImage: React.FC<LazyImageProps> = ({
   src,
   alt,
-  placeholder = '/placeholder-movie.svg',
+  placeholder = PLACEHOLDER_MOVIE_IMAGE,
   className = '',
   width,
   height,
