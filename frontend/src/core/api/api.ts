@@ -46,11 +46,11 @@ class ApiService {
 
   // Movies API
   async getMovies(page: number = 1, perPage: number = 20): Promise<PaginatedResponse<Movie>> {
-    const response = await this.request<ApiResponse<{ movies: Movie[]; pagination: any }>>(
+    const response = await this.request<ApiResponse<{ items: Movie[]; pagination: any }>>(
       `/movies/?page=${page}&per_page=${perPage}`
     );
     return {
-      items: response.data.movies,
+      items: response.data.items || [],
       pagination: response.data.pagination
     };
   }
@@ -69,34 +69,20 @@ class ApiService {
       if (filters.minRating) url += `&min_rating=${encodeURIComponent(filters.minRating)}`;
     }
     
-    const response = await this.request<ApiResponse<{ results: Movie[] }>>(url);
+    const response = await this.request<ApiResponse<{ items: Movie[]; pagination: any }>>(url);
     return {
-      items: response.data.results,
-      pagination: {
-        page: page,
-        pages: 1,
-        per_page: 20,
-        total: response.data.results.length,
-        has_next: false,
-        has_prev: false
-      }
+      items: response.data.items || [],
+      pagination: response.data.pagination
     };
   }
 
   async getPopularMovies(page: number = 1): Promise<PaginatedResponse<Movie>> {
-    const response = await this.request<ApiResponse<{ results: Movie[] }>>(
+    const response = await this.request<ApiResponse<{ items: Movie[]; pagination: any }>>(
       `/movies/popular?page=${page}`
     );
     return {
-      items: response.data.results,
-      pagination: {
-        page: page,
-        pages: 1,
-        per_page: 20,
-        total: response.data.results.length,
-        has_next: false,
-        has_prev: false
-      }
+      items: response.data.items || [],
+      pagination: response.data.pagination
     };
   }
 

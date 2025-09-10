@@ -335,25 +335,25 @@ const SmartRecommendations: React.FC<SmartRecommendationsProps> = ({ userId, onM
             className={`filter-tab ${activeFilter === 'all' ? 'active' : ''}`}
             onClick={() => setActiveFilter('all')}
           >
-            All Recommendations ({recommendations.length})
+            All Recommendations ({recommendations?.length || 0})
           </button>
           <button 
             className={`filter-tab ${activeFilter === 'high-confidence' ? 'active' : ''}`}
             onClick={() => setActiveFilter('high-confidence')}
           >
-            High Confidence ({recommendations.filter(r => r.score >= 0.85).length})
+            High Confidence ({recommendations?.filter(r => r.score >= 0.85).length || 0})
           </button>
           <button 
             className={`filter-tab ${activeFilter === 'new-releases' ? 'active' : ''}`}
             onClick={() => setActiveFilter('new-releases')}
           >
-            New Releases ({recommendations.filter(r => r.movie.release_date && new Date(r.movie.release_date).getFullYear() >= 2020).length})
+            New Releases ({recommendations?.filter(r => r.movie.release_date && new Date(r.movie.release_date).getFullYear() >= 2020).length || 0})
           </button>
           <button 
             className={`filter-tab ${activeFilter === 'hidden-gems' ? 'active' : ''}`}
             onClick={() => setActiveFilter('hidden-gems')}
           >
-            Hidden Gems ({recommendations.filter(r => r.reasons.some(reason => reason.type === 'hidden-gems')).length})
+            Hidden Gems ({recommendations?.filter(r => r.reasons.some(reason => reason.type === 'hidden-gems')).length || 0})
           </button>
         </div>
       </div>
@@ -409,7 +409,7 @@ const SmartRecommendations: React.FC<SmartRecommendationsProps> = ({ userId, onM
         ))}
       </div>
 
-      {filteredRecommendations.length === 0 && (
+      {(!filteredRecommendations || filteredRecommendations.length === 0) && (
         <div className="no-recommendations">
           <div className="no-recommendations-icon">🤖</div>
           <h3>No recommendations found</h3>

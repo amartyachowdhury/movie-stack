@@ -227,7 +227,7 @@ const MovieCollections: React.FC<MovieCollectionsProps> = ({ onMovieClick }) => 
         ))}
       </div>
 
-      {filteredCollections.length === 0 && (
+      {(!filteredCollections || filteredCollections.length === 0) && (
         <div className="no-collections">
           <div className="no-collections-icon">🎬</div>
           <h3>No collections found</h3>

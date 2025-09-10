@@ -182,7 +182,7 @@ const SmartSearch: React.FC<SmartSearchProps> = ({
           </div>
 
           {/* Suggestions */}
-          {filteredSuggestions.length > 0 && (
+          {filteredSuggestions && filteredSuggestions.length > 0 && (
             <div className="suggestions-section">
               <h4 className="suggestions-title">Suggestions</h4>
               {filteredSuggestions.map(suggestion => (
@@ -209,7 +209,7 @@ const SmartSearch: React.FC<SmartSearchProps> = ({
           )}
 
           {/* Recent Searches */}
-          {recentSearches.length > 0 && (
+          {recentSearches && recentSearches.length > 0 && (
             <div className="suggestions-section">
               <h4 className="suggestions-title">Recent Searches</h4>
               {recentSearches.map((search, index) => (
@@ -228,7 +228,7 @@ const SmartSearch: React.FC<SmartSearchProps> = ({
           )}
 
           {/* Popular Searches */}
-          {popularSearches.length > 0 && (
+          {popularSearches && popularSearches.length > 0 && (
             <div className="suggestions-section">
               <h4 className="suggestions-title">Popular Searches</h4>
               {popularSearches.map((search, index) => (
@@ -247,7 +247,7 @@ const SmartSearch: React.FC<SmartSearchProps> = ({
           )}
 
           {/* No Results */}
-          {query.length >= 2 && filteredSuggestions.length === 0 && !isLoading && (
+          {query.length >= 2 && (!filteredSuggestions || filteredSuggestions.length === 0) && !isLoading && (
             <div className="no-results">
               <div className="no-results-icon">🔍</div>
               <div className="no-results-text">No results found for "{query}"</div>

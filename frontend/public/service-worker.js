@@ -1,5 +1,5 @@
 // Movie Stack Service Worker
-const CACHE_VERSION = Date.now().toString();
+const CACHE_VERSION = '1.0.0';
 const CACHE_NAME = `movie-stack-v${CACHE_VERSION}`;
 const STATIC_CACHE = `movie-stack-static-v${CACHE_VERSION}`;
 const DYNAMIC_CACHE = `movie-stack-dynamic-v${CACHE_VERSION}`;
@@ -34,7 +34,8 @@ self.addEventListener('install', (event) => {
       );
     })
   );
-  self.skipWaiting();
+  // Don't automatically skip waiting - let the old service worker finish
+  // self.skipWaiting();
 });
 
 // Activate event - clean up old caches

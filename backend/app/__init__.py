@@ -84,6 +84,23 @@ def create_app(config_name=None):
                 }
             }
         
+        @app.route('/api/movies/search')
+        def search_movies():
+            return {
+                'status': 'success',
+                'data': {
+                    'items': [],
+                    'pagination': {
+                        'page': 1,
+                        'pages': 1,
+                        'per_page': 20,
+                        'total': 0,
+                        'has_next': False,
+                        'has_prev': False
+                    }
+                }
+            }
+        
         # Analytics endpoints
         @app.route('/api/analytics/health')
         def analytics_health():
@@ -100,6 +117,37 @@ def create_app(config_name=None):
         @app.route('/api/analytics/track/system-health', methods=['POST'])
         def track_system_health():
             return {'status': 'success', 'message': 'System health event tracked'}
+        
+        # Recommendations endpoints
+        @app.route('/api/recommendations/collaborative/<int:user_id>')
+        def get_collaborative_recommendations(user_id):
+            return {
+                'status': 'success',
+                'data': {
+                    'recommendations': [],
+                    'algorithm': 'collaborative_filtering'
+                }
+            }
+        
+        @app.route('/api/recommendations/content-based/<int:user_id>')
+        def get_content_based_recommendations(user_id):
+            return {
+                'status': 'success',
+                'data': {
+                    'recommendations': [],
+                    'algorithm': 'content_based'
+                }
+            }
+        
+        @app.route('/api/recommendations/hybrid/<int:user_id>')
+        def get_hybrid_recommendations(user_id):
+            return {
+                'status': 'success',
+                'data': {
+                    'recommendations': [],
+                    'algorithm': 'hybrid'
+                }
+            }
     
     # Health check endpoint
     @app.route('/health')

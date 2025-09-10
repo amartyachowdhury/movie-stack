@@ -221,7 +221,7 @@ const WatchlistManager: React.FC<WatchlistManagerProps> = ({ userId, onMovieClic
       <div className="watchlist-header">
         <div className="header-info">
           <h2>My Watchlist</h2>
-          <p>{watchlist.length} movies • {watchlist.filter(item => !item.watched).length} unwatched</p>
+          <p>{watchlist?.length || 0} movies • {watchlist?.filter(item => !item.watched).length || 0} unwatched</p>
         </div>
         <button 
           className="add-movie-button"
@@ -238,25 +238,25 @@ const WatchlistManager: React.FC<WatchlistManagerProps> = ({ userId, onMovieClic
             className={`filter-tab ${activeTab === 'all' ? 'active' : ''}`}
             onClick={() => setActiveTab('all')}
           >
-            All ({watchlist.length})
+            All ({watchlist?.length || 0})
           </button>
           <button 
             className={`filter-tab ${activeTab === 'unwatched' ? 'active' : ''}`}
             onClick={() => setActiveTab('unwatched')}
           >
-            Unwatched ({watchlist.filter(item => !item.watched).length})
+            Unwatched ({watchlist?.filter(item => !item.watched).length || 0})
           </button>
           <button 
             className={`filter-tab ${activeTab === 'watched' ? 'active' : ''}`}
             onClick={() => setActiveTab('watched')}
           >
-            Watched ({watchlist.filter(item => item.watched).length})
+            Watched ({watchlist?.filter(item => item.watched).length || 0})
           </button>
           <button 
             className={`filter-tab ${activeTab === 'high-priority' ? 'active' : ''}`}
             onClick={() => setActiveTab('high-priority')}
           >
-            High Priority ({watchlist.filter(item => item.priority === 'high').length})
+            High Priority ({watchlist?.filter(item => item.priority === 'high').length || 0})
           </button>
         </div>
 
@@ -285,7 +285,7 @@ const WatchlistManager: React.FC<WatchlistManagerProps> = ({ userId, onMovieClic
       </div>
 
       <div className="watchlist-content">
-        {sortedWatchlist.length === 0 ? (
+        {(!sortedWatchlist || sortedWatchlist.length === 0) ? (
           <div className="empty-watchlist">
             <div className="empty-icon">🎬</div>
             <h3>Your watchlist is empty</h3>
