@@ -105,6 +105,7 @@ backend/app/
    - Add tests in `__tests__` directory
 
 3. **Test your changes**
+
    ```bash
    # Frontend tests
    cd frontend
@@ -116,6 +117,7 @@ backend/app/
    ```
 
 4. **Commit and push**
+
    ```bash
    git add .
    git commit -m "feat: add your feature description"
@@ -145,6 +147,7 @@ backend/app/
 #### Creating a New Component
 
 1. **Create component file**
+
    ```typescript
    // features/movies/components/MovieCard.tsx
    import React from 'react';
@@ -165,6 +168,7 @@ backend/app/
    ```
 
 2. **Create component styles**
+
    ```css
    /* features/movies/components/MovieCard.css */
    .movie-card {
@@ -173,6 +177,7 @@ backend/app/
    ```
 
 3. **Add to feature exports**
+
    ```typescript
    // features/movies/index.ts
    export { MovieCard } from './components/MovieCard';
@@ -181,6 +186,7 @@ backend/app/
 #### Creating a Custom Hook
 
 1. **Create hook file**
+
    ```typescript
    // features/movies/hooks/useMovies.ts
    import { useState, useEffect } from 'react';
@@ -217,6 +223,7 @@ backend/app/
 #### Creating a New API Endpoint
 
 1. **Create controller**
+
    ```python
    # domains/movies/controllers/movies.py
    from flask import Blueprint, request, jsonify
@@ -243,6 +250,7 @@ backend/app/
    ```
 
 2. **Create service**
+
    ```python
    # domains/movies/services/movie_service.py
    from ..repositories.movie_repository import MovieRepository
@@ -256,6 +264,7 @@ backend/app/
    ```
 
 3. **Create repository**
+
    ```python
    # domains/movies/repositories/movie_repository.py
    from ...infrastructure.database import db

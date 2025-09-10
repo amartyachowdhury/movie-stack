@@ -29,7 +29,7 @@ Movie Stack is a modern, full-stack movie recommendation application built with 
 
 The frontend follows a **feature-based architecture** pattern:
 
-```
+```text
 frontend/src/
 ├── features/                 # Feature modules
 │   ├── auth/                # Authentication feature
@@ -75,7 +75,7 @@ frontend/src/
 
 The backend follows **Domain-Driven Design** principles:
 
-```
+```text
 backend/app/
 ├── domains/               # Business domains
 │   ├── auth/             # Authentication domain
@@ -247,6 +247,7 @@ backend/app/
 ## Future Considerations
 
 ### Planned Improvements
+
 - **Microservices architecture** for better scalability
 - **GraphQL API** for more flexible data fetching
 - **Real-time features** with WebSocket integration
@@ -255,6 +256,7 @@ backend/app/
 - **Search optimization** with Elasticsearch
 
 ### Technology Evolution
+
 - **React Server Components** for better performance
 - **Edge computing** for global performance
 - **AI/ML integration** for better recommendations
