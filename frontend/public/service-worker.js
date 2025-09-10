@@ -1,7 +1,8 @@
 // Movie Stack Service Worker
-const CACHE_NAME = 'movie-stack-v1';
-const STATIC_CACHE = 'movie-stack-static-v1';
-const DYNAMIC_CACHE = 'movie-stack-dynamic-v1';
+const CACHE_VERSION = Date.now().toString();
+const CACHE_NAME = `movie-stack-v${CACHE_VERSION}`;
+const STATIC_CACHE = `movie-stack-static-v${CACHE_VERSION}`;
+const DYNAMIC_CACHE = `movie-stack-dynamic-v${CACHE_VERSION}`;
 
 const STATIC_ASSETS = [
   '/',
@@ -42,14 +43,12 @@ self.addEventListener('activate', (event) => {
     caches.keys().then((cacheNames) => {
       return Promise.allSettled(
         cacheNames.map((cacheName) => {
-          if (cacheName !== STATIC_CACHE && cacheName !== DYNAMIC_CACHE) {
-            console.log('Deleting old cache:', cacheName);
-            return caches.delete(cacheName).catch(error => {
-              console.warn(`Failed to delete cache ${cacheName}:`, error);
-              return null;
-            });
-          }
-          return Promise.resolve();
+          // Clear ALL old caches to force fresh content
+          console.log('Deleting cache:', cacheName);
+          return caches.delete(cacheName).catch(error => {
+            console.warn(`Failed to delete cache ${cacheName}:`, error);
+            return null;
+          });
         })
       );
     }).catch(error => {
@@ -179,13 +178,17 @@ self.addEventListener('notificationclick', (event) => {
 
 // Message handling to prevent message channel errors
 self.addEventListener('message', (event) => {
-  // Handle messages from the main thread
-  if (event.data && event.data.type === 'SKIP_WAITING') {
-    self.skipWaiting();
-  }
-  
-  // Always respond to prevent message channel errors
-  if (event.ports && event.ports.length > 0) {
-    event.ports[0].postMessage({ status: 'received' });
+  try {
+    // Handle messages from the main thread
+    if (event.data && event.data.type === 'SKIP_WAITING') {
+      self.skipWaiting();
+    }
+    
+    // Always respond to prevent message channel errors
+    if (event.ports && event.ports.length > 0) {
+      event.ports[0].postMessage({ status: 'received' });
+    }
+  } catch (error) {
+    console.warn('Service worker message handling error:', error);
   }
 });

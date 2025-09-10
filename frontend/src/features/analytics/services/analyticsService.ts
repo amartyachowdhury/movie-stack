@@ -351,27 +351,27 @@ class AnalyticsService {
 
     switch (type) {
       case AnalyticsEventType.PAGE_VIEW:
-        endpoint = `${API_BASE_URL}/api/analytics/track/pageview`;
+        endpoint = `${API_BASE_URL}/analytics/track/pageview`;
         payload = events.map(event => event.data);
         break;
       case AnalyticsEventType.USER_ACTION:
-        endpoint = `${API_BASE_URL}/api/analytics/track/action`;
+        endpoint = `${API_BASE_URL}/analytics/track/action`;
         payload = events.map(event => event.data);
         break;
       case AnalyticsEventType.PERFORMANCE:
-        endpoint = `${API_BASE_URL}/api/analytics/track/performance`;
+        endpoint = `${API_BASE_URL}/analytics/track/performance`;
         payload = events.map(event => event.data);
         break;
       case AnalyticsEventType.SEARCH:
-        endpoint = `${API_BASE_URL}/api/analytics/track/search`;
+        endpoint = `${API_BASE_URL}/analytics/track/search`;
         payload = events.map(event => event.data);
         break;
       case AnalyticsEventType.MOVIE_INTERACTION:
-        endpoint = `${API_BASE_URL}/api/analytics/track/movie-interaction`;
+        endpoint = `${API_BASE_URL}/analytics/track/movie-interaction`;
         payload = events.map(event => event.data);
         break;
       case AnalyticsEventType.SYSTEM_HEALTH:
-        endpoint = `${API_BASE_URL}/api/analytics/track/system-health`;
+        endpoint = `${API_BASE_URL}/analytics/track/system-health`;
         payload = events.map(event => event.data);
         break;
       default:
@@ -460,7 +460,7 @@ class AnalyticsService {
     // Get the backend API URL from environment or use default
     const API_BASE_URL = process.env.REACT_APP_API_URL || '/api';
 
-    const response = await fetch(`${API_BASE_URL}/api/analytics/dashboard/${endpoint}`, {
+    const response = await fetch(`${API_BASE_URL}/analytics/dashboard/${endpoint}`, {
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'

@@ -62,6 +62,12 @@ function AppContent() {
         onUpdate: (registration) => {
           console.log('New content is available; please refresh.');
           analyticsService.trackSystemHealth('service_worker_update', 1, 'available');
+          
+          // Automatically update the service worker
+          if (registration.waiting) {
+            registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+            window.location.reload();
+          }
         }
       });
     }

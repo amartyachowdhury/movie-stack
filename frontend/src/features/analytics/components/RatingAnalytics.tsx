@@ -122,7 +122,7 @@ const RatingAnalytics: React.FC<RatingAnalyticsProps> = ({
         )}
       </div>
 
-      {totalRatings > 0 && Object.keys(ratingDistribution).length > 0 && (
+      {totalRatings > 0 && ratingDistribution && Object.keys(ratingDistribution).length > 0 && (
         <div className="rating-distribution">
           <h4>Rating Distribution</h4>
           <div className="distribution-bars">
