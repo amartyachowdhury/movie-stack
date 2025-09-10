@@ -246,7 +246,10 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ isOpen, onClose }) =>
                     className={`scheme-card ${selectedScheme === scheme.id ? 'selected' : ''}`}
                     onClick={() => applyPresetScheme(scheme)}
                   >
-                    <div className="scheme-preview" style={{ backgroundColor: scheme.colors.background }}>
+                    <div 
+                      className="scheme-preview" 
+                      style={{ backgroundColor: scheme.colors.background }}
+                    >
                       <div className="scheme-icon">{scheme.preview}</div>
                       <div className="scheme-colors">
                         <div 
@@ -278,12 +281,16 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ isOpen, onClose }) =>
               <div className="color-picker-group">
                 <label>Primary Color</label>
                 <div className="color-picker">
+                  <label htmlFor="primary-color-picker" className="sr-only">Primary Color Picker</label>
                   <input
+                    id="primary-color-picker"
                     type="color"
                     value={customPrimary}
                     onChange={(e) => setCustomPrimary(e.target.value)}
                   />
+                  <label htmlFor="primary-color-text" className="sr-only">Primary Color Text Input</label>
                   <input
+                    id="primary-color-text"
                     type="text"
                     value={customPrimary}
                     onChange={(e) => setCustomPrimary(e.target.value)}
@@ -295,12 +302,16 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ isOpen, onClose }) =>
               <div className="color-picker-group">
                 <label>Secondary Color</label>
                 <div className="color-picker">
+                  <label htmlFor="secondary-color-picker" className="sr-only">Secondary Color Picker</label>
                   <input
+                    id="secondary-color-picker"
                     type="color"
                     value={customSecondary}
                     onChange={(e) => setCustomSecondary(e.target.value)}
                   />
+                  <label htmlFor="secondary-color-text" className="sr-only">Secondary Color Text Input</label>
                   <input
+                    id="secondary-color-text"
                     type="text"
                     value={customSecondary}
                     onChange={(e) => setCustomSecondary(e.target.value)}
@@ -312,12 +323,16 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ isOpen, onClose }) =>
               <div className="color-picker-group">
                 <label>Accent Color</label>
                 <div className="color-picker">
+                  <label htmlFor="accent-color-picker" className="sr-only">Accent Color Picker</label>
                   <input
+                    id="accent-color-picker"
                     type="color"
                     value={customAccent}
                     onChange={(e) => setCustomAccent(e.target.value)}
                   />
+                  <label htmlFor="accent-color-text" className="sr-only">Accent Color Text Input</label>
                   <input
+                    id="accent-color-text"
                     type="text"
                     value={customAccent}
                     onChange={(e) => setCustomAccent(e.target.value)}
@@ -354,8 +369,9 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ isOpen, onClose }) =>
           {activeTab === 'advanced' && (
             <div className="advanced-section">
               <div className="setting-group">
-                <label>Animation Speed</label>
+                <label htmlFor="animation-speed-select">Animation Speed</label>
                 <select 
+                  id="animation-speed-select"
                   value={animationSpeed} 
                   onChange={(e) => setAnimationSpeed(e.target.value as any)}
                 >
@@ -366,8 +382,9 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ isOpen, onClose }) =>
               </div>
 
               <div className="setting-group">
-                <label>Border Radius</label>
+                <label htmlFor="border-radius-select">Border Radius</label>
                 <select 
+                  id="border-radius-select"
                   value={borderRadius} 
                   onChange={(e) => setBorderRadius(e.target.value as any)}
                 >
@@ -379,8 +396,9 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ isOpen, onClose }) =>
               </div>
 
               <div className="setting-group">
-                <label>Shadow Intensity</label>
+                <label htmlFor="shadow-intensity-select">Shadow Intensity</label>
                 <select 
+                  id="shadow-intensity-select"
                   value={shadowIntensity} 
                   onChange={(e) => setShadowIntensity(e.target.value as any)}
                 >

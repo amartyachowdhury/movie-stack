@@ -19,6 +19,7 @@ This repository contains sensitive information that should **NEVER** be committe
    - Delete the old one
 
 2. **Remove the secret from git history**
+
    ```bash
    # Remove the secret from the last commit
    git reset --soft HEAD~1
@@ -34,6 +35,7 @@ This repository contains sensitive information that should **NEVER** be committe
 ### **Proper Secret Management**
 
 #### **1. Use Environment Variables**
+
 ```bash
 # Create a .env file (never commit this!)
 cp env.example .env
@@ -44,6 +46,7 @@ SECRET_KEY=your_real_secret_key_here
 ```
 
 #### **2. Use Docker Secrets (Production)**
+
 ```yaml
 # docker-compose.yml
 services:
@@ -60,6 +63,7 @@ secrets:
 ```
 
 #### **3. Use Cloud Secret Management**
+
 - **AWS**: AWS Secrets Manager
 - **Azure**: Azure Key Vault
 - **Google Cloud**: Secret Manager
@@ -68,6 +72,7 @@ secrets:
 ### **Current Security Status**
 
 ✅ **Fixed Issues:**
+
 - Removed hardcoded TMDB API key from docker-compose.yml
 - Added .gitignore to prevent .env files from being committed
 - Created env.example template

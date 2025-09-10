@@ -1,7 +1,7 @@
 """
 Movie Stack Backend Application Factory
 """
-from flask import Flask
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 import os
@@ -57,54 +57,232 @@ def create_app(config_name=None):
     
     @app.route('/api/movies/popular')
     def get_popular_movies():
-        return {
-            'status': 'success',
-            'data': {
-                'items': [],
-                'pagination': {
-                    'page': 1,
-                    'pages': 1,
-                    'per_page': 20,
-                    'total': 0,
-                    'has_next': False,
-                    'has_prev': False
+        try:
+            # Get query parameters
+            page = int(request.args.get('page', 1))
+            per_page = int(request.args.get('per_page', 20))
+            offset = (page - 1) * per_page
+            
+            # Query movies from database
+            result = db.session.execute(db.text("""
+                SELECT id, tmdb_id, title, overview, genres, release_date, poster_path, 
+                       backdrop_path, vote_average, vote_count, popularity, adult, 
+                       original_language, original_title, video, created_at, updated_at
+                FROM movies 
+                ORDER BY popularity DESC, vote_average DESC
+                LIMIT :limit OFFSET :offset
+            """), {'limit': per_page, 'offset': offset})
+            
+            movies = []
+            for row in result:
+                movies.append({
+                    'id': row[0],
+                    'tmdb_id': row[1],
+                    'title': row[2],
+                    'overview': row[3],
+                    'genres': row[4],
+                    'release_date': row[5].isoformat() if row[5] else None,
+                    'poster_path': row[6],
+                    'backdrop_path': row[7],
+                    'vote_average': float(row[8]) if row[8] else 0.0,
+                    'vote_count': row[9],
+                    'popularity': float(row[10]) if row[10] else 0.0,
+                    'adult': bool(row[11]),
+                    'original_language': row[12],
+                    'original_title': row[13],
+                    'video': bool(row[14]),
+                    'created_at': row[15].isoformat() if row[15] else None,
+                    'updated_at': row[16].isoformat() if row[16] else None
+                })
+            
+            # Get total count
+            count_result = db.session.execute(db.text("SELECT COUNT(*) FROM movies"))
+            total = count_result.scalar()
+            
+            return {
+                'status': 'success',
+                'data': {
+                    'items': movies,
+                    'pagination': {
+                        'page': page,
+                        'pages': (total + per_page - 1) // per_page,
+                        'per_page': per_page,
+                        'total': total,
+                        'has_next': offset + per_page < total,
+                        'has_prev': page > 1
+                    }
                 }
             }
-        }
+        except Exception as e:
+            return {
+                'status': 'error',
+                'message': f'Failed to fetch popular movies: {str(e)}'
+            }, 500
     
     @app.route('/api/movies/')
     def get_movies():
-        return {
-            'status': 'success',
-            'data': {
-                'items': [],
-                'pagination': {
-                    'page': 1,
-                    'pages': 1,
-                    'per_page': 20,
-                    'total': 0,
-                    'has_next': False,
-                    'has_prev': False
+        try:
+            # Get query parameters
+            page = int(request.args.get('page', 1))
+            per_page = int(request.args.get('per_page', 20))
+            offset = (page - 1) * per_page
+            
+            # Query movies from database
+            result = db.session.execute(db.text("""
+                SELECT id, tmdb_id, title, overview, genres, release_date, poster_path, 
+                       backdrop_path, vote_average, vote_count, popularity, adult, 
+                       original_language, original_title, video, created_at, updated_at
+                FROM movies 
+                ORDER BY created_at DESC
+                LIMIT :limit OFFSET :offset
+            """), {'limit': per_page, 'offset': offset})
+            
+            movies = []
+            for row in result:
+                movies.append({
+                    'id': row[0],
+                    'tmdb_id': row[1],
+                    'title': row[2],
+                    'overview': row[3],
+                    'genres': row[4],
+                    'release_date': row[5].isoformat() if row[5] else None,
+                    'poster_path': row[6],
+                    'backdrop_path': row[7],
+                    'vote_average': float(row[8]) if row[8] else 0.0,
+                    'vote_count': row[9],
+                    'popularity': float(row[10]) if row[10] else 0.0,
+                    'adult': bool(row[11]),
+                    'original_language': row[12],
+                    'original_title': row[13],
+                    'video': bool(row[14]),
+                    'created_at': row[15].isoformat() if row[15] else None,
+                    'updated_at': row[16].isoformat() if row[16] else None
+                })
+            
+            # Get total count
+            count_result = db.session.execute(db.text("SELECT COUNT(*) FROM movies"))
+            total = count_result.scalar()
+            
+            return {
+                'status': 'success',
+                'data': {
+                    'items': movies,
+                    'pagination': {
+                        'page': page,
+                        'pages': (total + per_page - 1) // per_page,
+                        'per_page': per_page,
+                        'total': total,
+                        'has_next': offset + per_page < total,
+                        'has_prev': page > 1
+                    }
                 }
             }
-        }
+        except Exception as e:
+            return {
+                'status': 'error',
+                'message': f'Failed to fetch movies: {str(e)}'
+            }, 500
     
     @app.route('/api/movies/search')
     def search_movies():
-        return {
-            'status': 'success',
-            'data': {
-                'items': [],
-                'pagination': {
-                    'page': 1,
-                    'pages': 1,
-                    'per_page': 20,
-                    'total': 0,
-                    'has_next': False,
-                    'has_prev': False
+        try:
+            # Get query parameters
+            query = request.args.get('query', '').strip()
+            page = int(request.args.get('page', 1))
+            per_page = int(request.args.get('per_page', 20))
+            offset = (page - 1) * per_page
+            
+            if not query:
+                return {
+                    'status': 'success',
+                    'data': {
+                        'items': [],
+                        'pagination': {
+                            'page': 1,
+                            'pages': 1,
+                            'per_page': 20,
+                            'total': 0,
+                            'has_next': False,
+                            'has_prev': False
+                        }
+                    }
+                }
+            
+            # Search movies in database
+            search_term = f'%{query}%'
+            result = db.session.execute(db.text("""
+                SELECT id, tmdb_id, title, overview, genres, release_date, poster_path, 
+                       backdrop_path, vote_average, vote_count, popularity, adult, 
+                       original_language, original_title, video, created_at, updated_at
+                FROM movies 
+                WHERE title LIKE :search_term 
+                   OR overview LIKE :search_term 
+                   OR genres LIKE :search_term
+                ORDER BY 
+                    CASE 
+                        WHEN title LIKE :exact_term THEN 1
+                        WHEN title LIKE :search_term THEN 2
+                        ELSE 3
+                    END,
+                    vote_average DESC
+                LIMIT :limit OFFSET :offset
+            """), {
+                'search_term': search_term,
+                'exact_term': f'{query}%',
+                'limit': per_page, 
+                'offset': offset
+            })
+            
+            movies = []
+            for row in result:
+                movies.append({
+                    'id': row[0],
+                    'tmdb_id': row[1],
+                    'title': row[2],
+                    'overview': row[3],
+                    'genres': row[4],
+                    'release_date': row[5].isoformat() if row[5] else None,
+                    'poster_path': row[6],
+                    'backdrop_path': row[7],
+                    'vote_average': float(row[8]) if row[8] else 0.0,
+                    'vote_count': row[9],
+                    'popularity': float(row[10]) if row[10] else 0.0,
+                    'adult': bool(row[11]),
+                    'original_language': row[12],
+                    'original_title': row[13],
+                    'video': bool(row[14]),
+                    'created_at': row[15].isoformat() if row[15] else None,
+                    'updated_at': row[16].isoformat() if row[16] else None
+                })
+            
+            # Get total count for search
+            count_result = db.session.execute(db.text("""
+                SELECT COUNT(*) FROM movies 
+                WHERE title LIKE :search_term 
+                   OR overview LIKE :search_term 
+                   OR genres LIKE :search_term
+            """), {'search_term': search_term})
+            total = count_result.scalar()
+            
+            return {
+                'status': 'success',
+                'data': {
+                    'items': movies,
+                    'pagination': {
+                        'page': page,
+                        'pages': (total + per_page - 1) // per_page,
+                        'per_page': per_page,
+                        'total': total,
+                        'has_next': offset + per_page < total,
+                        'has_prev': page > 1
+                    }
                 }
             }
-        }
+        except Exception as e:
+            return {
+                'status': 'error',
+                'message': f'Failed to search movies: {str(e)}'
+            }, 500
     
     # Analytics endpoints
     @app.route('/api/analytics/health')

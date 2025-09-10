@@ -11,11 +11,10 @@ import LoginForm from './features/auth/components/LoginForm';
 import RegisterForm from './features/auth/components/RegisterForm';
 import WatchlistManager from './features/watchlist/components/WatchlistManager';
 import SmartRecommendations from './features/recommendations/components/SmartRecommendations';
-import MovieTrailers from './features/movies/components/MovieTrailers';
 import ThemeCustomizer from './shared/components/ThemeCustomizer';
 import AnalyticsDashboard from './features/analytics/components/AnalyticsDashboard';
 import ToastContainer from './shared/components/ToastContainer';
-import IntegratedNavigation from './shared/components/navigation/IntegratedNavigation';
+import ModernNavigation from './shared/components/navigation/ModernNavigation';
 import './shared/design-tokens.css';
 import './shared/theme.css';
 import './shared/animations.css';
@@ -27,7 +26,6 @@ import * as serviceWorker from './serviceWorker';
 // Analytics and Monitoring Services
 import analyticsService from './features/analytics/services/analyticsService';
 import monitoringService from './features/analytics/services/monitoringService';
-import { trackCommonActions } from './features/analytics/services/analyticsService';
 
 function AppContent() {
   const { user } = useAuth();
@@ -79,7 +77,7 @@ function AppContent() {
   return (
     <div className="App">
       {/* Navigation Components */}
-      <IntegratedNavigation />
+      <ModernNavigation />
       
       <Routes>
         <Route path="/" element={<HomePage />} />

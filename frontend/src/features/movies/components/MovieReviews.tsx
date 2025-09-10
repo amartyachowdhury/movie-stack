@@ -359,8 +359,9 @@ const MovieReviews: React.FC<MovieReviewsProps> = ({ movie, userId, onClose }) =
           <div className="reviews-content">
             <div className="reviews-filters">
               <div className="filter-group">
-                <label>Sort by:</label>
+                <label htmlFor="sort-reviews-select">Sort by:</label>
                 <select 
+                  id="sort-reviews-select"
                   value={sortBy} 
                   onChange={(e) => setSortBy(e.target.value as any)}
                   className="sort-select"
@@ -371,8 +372,9 @@ const MovieReviews: React.FC<MovieReviewsProps> = ({ movie, userId, onClose }) =
                 </select>
               </div>
               <div className="filter-group">
-                <label>Filter by rating:</label>
+                <label htmlFor="filter-rating-select">Filter by rating:</label>
                 <select 
+                  id="filter-rating-select"
                   value={filterRating || ''} 
                   onChange={(e) => setFilterRating(e.target.value ? parseInt(e.target.value) : null)}
                   className="filter-select"

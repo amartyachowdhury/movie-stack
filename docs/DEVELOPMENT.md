@@ -12,22 +12,26 @@
 ### Environment Setup
 
 1. **Clone the repository**
+
    ```bash
    git clone <repository-url>
    cd movie-stack
    ```
 
 2. **Copy environment file**
+
    ```bash
    cp env.example .env
    ```
 
 3. **Start development environment**
+
    ```bash
    docker-compose -f infrastructure/docker/docker-compose.dev.yml up -d
    ```
 
 4. **Install dependencies**
+
    ```bash
    # Frontend
    cd frontend
@@ -42,7 +46,7 @@
 
 ### Frontend Structure
 
-```
+```text
 frontend/src/
 ├── features/              # Feature-based modules
 │   ├── auth/             # Authentication
@@ -68,7 +72,7 @@ frontend/src/
 
 ### Backend Structure
 
-```
+```text
 backend/app/
 ├── domains/              # Business domains
 │   ├── auth/            # Authentication domain
@@ -89,6 +93,7 @@ backend/app/
 ### Feature Development
 
 1. **Create feature branch**
+
    ```bash
    git checkout -b feature/your-feature-name
    ```

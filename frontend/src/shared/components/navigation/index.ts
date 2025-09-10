@@ -6,5 +6,8 @@ export { default as DesktopNavigation } from './DesktopNavigation';
 // Mobile Navigation
 export { default as MobileNavigation } from './MobileNavigation';
 
-// Integrated Navigation (New)
+// Modern Navigation (Industry Standard)
+export { default as ModernNavigation } from './ModernNavigation';
+
+// Integrated Navigation (Legacy)
 export { default as IntegratedNavigation } from './IntegratedNavigation';

@@ -191,6 +191,15 @@ const WatchlistManager: React.FC<WatchlistManagerProps> = ({ userId, onMovieClic
     }
   };
 
+  const getPriorityLevel = (priority: string) => {
+    switch (priority) {
+      case 'high': return 'high';
+      case 'medium': return 'medium';
+      case 'low': return 'low';
+      default: return 'low';
+    }
+  };
+
   const getPriorityLabel = (priority: string) => {
     switch (priority) {
       case 'high': return 'High Priority';
@@ -271,7 +280,9 @@ const WatchlistManager: React.FC<WatchlistManagerProps> = ({ userId, onMovieClic
             <span className="search-icon">🔍</span>
           </div>
 
+          <label htmlFor="sort-select" className="sr-only">Sort Watchlist</label>
           <select 
+            id="sort-select"
             value={sortBy} 
             onChange={(e) => setSortBy(e.target.value as any)}
             className="sort-select"
@@ -302,7 +313,7 @@ const WatchlistManager: React.FC<WatchlistManagerProps> = ({ userId, onMovieClic
             {sortedWatchlist.map(item => (
               <div key={item.id} className="watchlist-item">
                 <div className="item-header">
-                  <div className="priority-badge" style={{ backgroundColor: getPriorityColor(item.priority) }}>
+                  <div className={`priority-badge priority-badge--${getPriorityLevel(item.priority)}`}>
                     {getPriorityLabel(item.priority)}
                   </div>
                   <div className="item-actions">
@@ -393,8 +404,9 @@ const WatchlistManager: React.FC<WatchlistManagerProps> = ({ userId, onMovieClic
             <h3>Edit Watchlist Item</h3>
             <div className="edit-form">
               <div className="form-group">
-                <label>Priority</label>
+                <label htmlFor="priority-select">Priority</label>
                 <select 
+                  id="priority-select"
                   value={selectedMovie.priority}
                   onChange={(e) => updatePriority(selectedMovie.id, e.target.value as any)}
                 >

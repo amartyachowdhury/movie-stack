@@ -241,6 +241,12 @@ const SmartRecommendations: React.FC<SmartRecommendationsProps> = ({ userId, onM
     return '#6b7280'; // Gray
   };
 
+  const getConfidenceLevel = (score: number) => {
+    if (score >= 0.9) return 'high';
+    if (score >= 0.8) return 'medium';
+    return 'low';
+  };
+
   const getConfidenceLabel = (score: number) => {
     if (score >= 0.9) return 'Excellent Match';
     if (score >= 0.8) return 'Great Match';
@@ -364,8 +370,7 @@ const SmartRecommendations: React.FC<SmartRecommendationsProps> = ({ userId, onM
             <div className="recommendation-header">
               <div className="match-info">
                 <div 
-                  className="confidence-badge"
-                  style={{ backgroundColor: getConfidenceColor(recommendation.score) }}
+                  className={`confidence-badge confidence-badge--${getConfidenceLevel(recommendation.score)}`}
                 >
                   {recommendation.matchPercentage}% Match
                 </div>

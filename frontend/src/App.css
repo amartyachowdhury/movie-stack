@@ -23,11 +23,21 @@ body {
   /* Ensure proper layout flow */
   display: flex;
   flex-direction: column;
+  
+  /* Add padding top to account for fixed navigation */
+  padding-top: 72px; /* --nav-height */
 }
 
 /* Ensure content flows properly below navigation */
-.App > *:not(.integrated-navigation) {
+.App > *:not(.modern-navigation) {
   flex: 1;
+}
+
+/* Mobile padding adjustment */
+@media (max-width: 768px) {
+  .App {
+    padding-top: 64px; /* --nav-height-mobile */
+  }
 }
 
 /* Theme Customizer Trigger */

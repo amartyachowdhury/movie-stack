@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../AuthContext';
-import './LoginForm.css';
+import './RegisterForm.css';
 
 interface RegisterFormProps {
   onSwitchToLogin: () => void;
@@ -174,17 +174,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSwitchToLogin, onSuccess 
               placeholder="Tell us about yourself..."
               rows={3}
               disabled={isLoading}
-              style={{
-                width: '100%',
-                padding: '12px 16px',
-                border: '2px solid #e2e8f0',
-                borderRadius: '8px',
-                fontSize: '16px',
-                transition: 'all 0.2s ease',
-                boxSizing: 'border-box',
-                resize: 'vertical',
-                fontFamily: 'inherit'
-              }}
+              className="form-input"
             />
           </div>
           

@@ -82,8 +82,8 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ userId, onMovie
   
   // Simple test render to see if component mounts
   return (
-    <div className="analytics-dashboard" style={{ padding: '20px', backgroundColor: '#f0f0f0' }}>
-      <h1 style={{ color: 'red', fontSize: '24px' }}>🔍 ANALYTICS DASHBOARD TEST - WORKING!</h1>
+    <div className="analytics-dashboard">
+      <h1>🔍 ANALYTICS DASHBOARD TEST - WORKING!</h1>
       <p>✅ Component is rendering successfully!</p>
       <p>📊 User ID: {userId}</p>
       <p>🕒 Timestamp: {new Date().toLocaleTimeString()}</p>
@@ -93,18 +93,11 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ userId, onMovie
           console.log('🔍 [AnalyticsDashboard] Test button clicked!');
           alert('Component is working! Check console for logs.');
         }}
-        style={{ 
-          padding: '10px 20px', 
-          backgroundColor: 'green', 
-          color: 'white', 
-          border: 'none', 
-          borderRadius: '5px',
-          cursor: 'pointer'
-        }}
+        className="test-button"
       >
         🎯 Test Button - Click Me!
       </button>
-      <div style={{ marginTop: '20px', padding: '10px', backgroundColor: 'yellow', border: '2px solid orange' }}>
+      <div className="test-section">
         <strong>If you can see this, the component is working!</strong>
       </div>
     </div>

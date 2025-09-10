@@ -8,7 +8,7 @@ Movie Stack is a modern, full-stack movie recommendation application built with 
 
 ### High-Level Architecture
 
-```
+```text
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │   Frontend      │    │   Backend       │    │   External      │
 │   (React)       │◄──►│   (Flask)       │◄──►│   APIs          │
@@ -96,7 +96,7 @@ backend/app/
 └── exceptions/           # Custom exceptions
 ```
 
-### Key Architectural Principles
+### Implementation Principles
 
 1. **Domain Separation**: Each business domain is isolated and self-contained
 2. **Layered Architecture**: Clear separation between controllers, services, and repositories
@@ -126,6 +126,7 @@ backend/app/
 ## Technology Stack
 
 ### Frontend
+
 - **React 18** - UI framework
 - **TypeScript** - Type safety
 - **CSS-in-JS** - Styling with design tokens
@@ -133,6 +134,7 @@ backend/app/
 - **Custom Hooks** - State management and side effects
 
 ### Backend
+
 - **Flask** - Web framework
 - **SQLAlchemy** - ORM
 - **MySQL** - Primary database
@@ -141,6 +143,7 @@ backend/app/
 - **Marshmallow** - Serialization
 
 ### Infrastructure
+
 - **Docker** - Containerization
 - **Docker Compose** - Local development
 - **Nginx** - Reverse proxy
@@ -149,12 +152,14 @@ backend/app/
 ## Security Architecture
 
 ### Authentication & Authorization
+
 - **JWT-based authentication** with refresh tokens
 - **Role-based access control** (RBAC)
 - **Session management** with secure storage
 - **CSRF protection** for state-changing operations
 
 ### Data Protection
+
 - **Input validation** at all layers
 - **SQL injection prevention** through ORM
 - **XSS protection** through React's built-in escaping
@@ -163,12 +168,14 @@ backend/app/
 ## Performance Architecture
 
 ### Frontend Performance
+
 - **Code splitting** by features
 - **Lazy loading** of components and images
 - **Caching strategies** for API responses
 - **Optimistic updates** for better UX
 
 ### Backend Performance
+
 - **Database indexing** for query optimization
 - **Connection pooling** for database connections
 - **Caching layer** for frequently accessed data
@@ -177,12 +184,14 @@ backend/app/
 ## Monitoring & Analytics
 
 ### Application Monitoring
+
 - **Real-time performance monitoring**
 - **Error tracking and reporting**
 - **User behavior analytics**
 - **System health monitoring**
 
 ### Infrastructure Monitoring
+
 - **Container health checks**
 - **Database performance monitoring**
 - **API response time tracking**
@@ -191,12 +200,14 @@ backend/app/
 ## Scalability Considerations
 
 ### Horizontal Scaling
+
 - **Stateless backend design** for easy scaling
 - **Database read replicas** for read-heavy workloads
 - **CDN integration** for static asset delivery
 - **Load balancing** for traffic distribution
 
 ### Vertical Scaling
+
 - **Efficient database queries** with proper indexing
 - **Memory optimization** for large datasets
 - **CPU optimization** for compute-intensive operations
@@ -205,12 +216,14 @@ backend/app/
 ## Development Workflow
 
 ### Code Organization
+
 - **Feature-based development** for frontend
 - **Domain-driven development** for backend
 - **Shared component library** for consistency
 - **Type-safe interfaces** between layers
 
 ### Quality Assurance
+
 - **Unit testing** for business logic
 - **Integration testing** for API endpoints
 - **End-to-end testing** for user workflows
@@ -219,11 +232,13 @@ backend/app/
 ## Deployment Architecture
 
 ### Environment Separation
+
 - **Development** - Local development with hot reload
 - **Staging** - Production-like environment for testing
 - **Production** - Optimized and monitored environment
 
 ### Infrastructure as Code
+
 - **Docker containers** for consistent deployments
 - **Environment-specific configurations**
 - **Automated deployment pipelines**

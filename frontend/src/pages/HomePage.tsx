@@ -248,8 +248,9 @@ const HomePage: React.FC = () => {
 
         {activeTab === 'recommendations' && (
           <div className="algorithm-selector">
-            <label>Recommendation Algorithm:</label>
+            <label htmlFor="algorithm-select">Recommendation Algorithm:</label>
             <select
+              id="algorithm-select"
               value={selectedAlgorithm}
               onChange={(e) => setSelectedAlgorithm(e.target.value as any)}
             >
