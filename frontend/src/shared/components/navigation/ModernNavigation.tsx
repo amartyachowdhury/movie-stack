@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../features/auth';
-import { useAnimation, useMicroInteractions } from '../../../shared/hooks';
+import { useAnimation } from '../../AnimationContext';
 import './ModernNavigation.css';
 
 interface NavigationItem {
@@ -144,11 +144,10 @@ const ModernNavigation: React.FC<ModernNavigationProps> = ({ className = '' }) =
 
   // Handle navigation
   const handleNavigation = useCallback((path: string) => {
-    startTransition(() => {
-      navigate(path);
-      setIsMobileMenuOpen(false);
-      setActiveDropdown(null);
-    });
+    startTransition(path, 'forward', 'fade');
+    navigate(path);
+    setIsMobileMenuOpen(false);
+    setActiveDropdown(null);
   }, [navigate, startTransition]);
 
   // Handle search
@@ -175,17 +174,6 @@ const ModernNavigation: React.FC<ModernNavigationProps> = ({ className = '' }) =
     }, 150);
   }, []);
 
-  // Get micro-interactions
-  const getMicroInteractions = useCallback((itemId: string) => {
-    return useMicroInteractions({
-      hoverDelay: 0,
-      animationDuration: 200,
-      enableRipple: true,
-      enableHover: true,
-      enablePress: true,
-      enableFocus: true
-    });
-  }, []);
 
   // Filter navigation items based on auth status
   const visibleItems = navigationItems.filter(item => 
@@ -206,7 +194,6 @@ const ModernNavigation: React.FC<ModernNavigationProps> = ({ className = '' }) =
             className="modern-navigation__brand-button"
             onClick={() => handleNavigation('/')}
             aria-label="Go to homepage"
-            {...getMicroInteractions('brand')}
           >
             <div className="modern-navigation__brand-icon">
               🎬
@@ -230,7 +217,6 @@ const ModernNavigation: React.FC<ModernNavigationProps> = ({ className = '' }) =
                   aria-label={item.description || item.label}
                   aria-current={isActiveRoute(item.path) ? 'page' : undefined}
                   role="menuitem"
-                  {...getMicroInteractions(item.id)}
                 >
                   <span className="modern-navigation__nav-icon">
                     {item.icon}
@@ -290,7 +276,6 @@ const ModernNavigation: React.FC<ModernNavigationProps> = ({ className = '' }) =
               className="modern-navigation__search-toggle"
               onClick={() => setShowSearch(true)}
               aria-label="Open search"
-              {...getMicroInteractions('search-toggle')}
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <circle cx="11" cy="11" r="8"/>
@@ -309,7 +294,6 @@ const ModernNavigation: React.FC<ModernNavigationProps> = ({ className = '' }) =
                 onClick={() => setActiveDropdown(activeDropdown === 'user' ? null : 'user')}
                 aria-label="User menu"
                 aria-expanded={activeDropdown === 'user' ? 'true' : 'false'}
-                {...getMicroInteractions('user-menu')}
               >
                 <div className="modern-navigation__user-avatar">
                   {user.avatar_url ? (
@@ -359,7 +343,6 @@ const ModernNavigation: React.FC<ModernNavigationProps> = ({ className = '' }) =
                   <button
                     className="modern-navigation__user-action"
                     onClick={() => handleNavigation('/profile')}
-                    {...getMicroInteractions('profile')}
                   >
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
@@ -371,7 +354,6 @@ const ModernNavigation: React.FC<ModernNavigationProps> = ({ className = '' }) =
                   <button
                     className="modern-navigation__user-action"
                     onClick={() => handleNavigation('/analytics')}
-                    {...getMicroInteractions('analytics')}
                   >
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <path d="M3 3v18h18"/>
@@ -385,7 +367,6 @@ const ModernNavigation: React.FC<ModernNavigationProps> = ({ className = '' }) =
                   <button
                     className="modern-navigation__user-action modern-navigation__user-action--danger"
                     onClick={logout}
-                    {...getMicroInteractions('logout')}
                   >
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
@@ -402,14 +383,12 @@ const ModernNavigation: React.FC<ModernNavigationProps> = ({ className = '' }) =
               <button
                 className="modern-navigation__auth-button modern-navigation__auth-button--login"
                 onClick={() => handleNavigation('/login')}
-                {...getMicroInteractions('login')}
               >
                 Sign In
               </button>
               <button
                 className="modern-navigation__auth-button modern-navigation__auth-button--register"
                 onClick={() => handleNavigation('/register')}
-                {...getMicroInteractions('register')}
               >
                 Sign Up
               </button>
@@ -423,7 +402,6 @@ const ModernNavigation: React.FC<ModernNavigationProps> = ({ className = '' }) =
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           aria-label="Toggle mobile menu"
           aria-expanded={isMobileMenuOpen ? 'true' : 'false'}
-          {...getMicroInteractions('mobile-toggle')}
         >
           <span className={`modern-navigation__hamburger ${
             isMobileMenuOpen ? 'modern-navigation__hamburger--open' : ''
@@ -476,7 +454,6 @@ const ModernNavigation: React.FC<ModernNavigationProps> = ({ className = '' }) =
                   }`}
                   onClick={() => handleNavigation(item.path)}
                   aria-current={isActiveRoute(item.path) ? 'page' : undefined}
-                  {...getMicroInteractions(`mobile-${item.id}`)}
                 >
                   <span className="modern-navigation__mobile-nav-icon">
                     {item.icon}
@@ -532,7 +509,6 @@ const ModernNavigation: React.FC<ModernNavigationProps> = ({ className = '' }) =
                 <button
                   className="modern-navigation__mobile-user-action"
                   onClick={() => handleNavigation('/profile')}
-                  {...getMicroInteractions('mobile-profile')}
                 >
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
@@ -544,7 +520,6 @@ const ModernNavigation: React.FC<ModernNavigationProps> = ({ className = '' }) =
                 <button
                   className="modern-navigation__mobile-user-action modern-navigation__mobile-user-action--danger"
                   onClick={logout}
-                  {...getMicroInteractions('mobile-logout')}
                 >
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
@@ -560,14 +535,12 @@ const ModernNavigation: React.FC<ModernNavigationProps> = ({ className = '' }) =
               <button
                 className="modern-navigation__mobile-auth-button modern-navigation__mobile-auth-button--login"
                 onClick={() => handleNavigation('/login')}
-                {...getMicroInteractions('mobile-login')}
               >
                 Sign In
               </button>
               <button
                 className="modern-navigation__mobile-auth-button modern-navigation__mobile-auth-button--register"
                 onClick={() => handleNavigation('/register')}
-                {...getMicroInteractions('mobile-register')}
               >
                 Sign Up
               </button>
