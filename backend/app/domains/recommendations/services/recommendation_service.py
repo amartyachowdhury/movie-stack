@@ -2,7 +2,9 @@
 Recommendation Service
 """
 from typing import List, Dict
-from app.models import Movie, Rating, User
+from ...domains.movies.models.movie import Movie
+from ...domains.movies.models.rating import Rating
+from ...domains.users.models.user import User
 from app import db
 from collections import defaultdict
 import numpy as np

@@ -2,7 +2,8 @@
 Movies API endpoints
 """
 from flask import Blueprint, request, jsonify, current_app
-from app.models import Movie, Rating
+from ..models.movie import Movie
+from ..models.rating import Rating
 from app.services.tmdb_service import TMDBService
 from app.utils.pagination import paginate
 from app.utils.response import success_response, error_response

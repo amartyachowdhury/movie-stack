@@ -3,7 +3,9 @@ Users API endpoints
 """
 from flask import Blueprint, request, current_app
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from app.models import User, Rating, Movie
+from ..models.user import User
+from ...domains.movies.models.rating import Rating
+from ...domains.movies.models.movie import Movie
 from app.utils.response import success_response, error_response
 from app import db
 from werkzeug.security import generate_password_hash, check_password_hash

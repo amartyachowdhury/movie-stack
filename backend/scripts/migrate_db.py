@@ -9,7 +9,9 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from app import create_app, db
-from app.models import User, Movie, Rating
+from app.domains.users.models.user import User
+from app.domains.movies.models.movie import Movie
+from app.domains.movies.models.rating import Rating
 
 def migrate_database():
     """Migrate database to new structure"""

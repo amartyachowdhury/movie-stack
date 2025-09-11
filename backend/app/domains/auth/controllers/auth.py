@@ -6,7 +6,7 @@ from flask_jwt_extended import create_access_token, create_refresh_token, jwt_re
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
 from app import db
-from app.models import User
+from ...domains.users.models.user import User
 from app.utils.response import success_response, error_response
 import re
 

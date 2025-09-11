@@ -2,7 +2,9 @@
 Recommendations API endpoints
 """
 from flask import Blueprint, request, current_app
-from app.models import Movie, Rating, User
+from ...domains.movies.models.movie import Movie
+from ...domains.movies.models.rating import Rating
+from ...domains.users.models.user import User
 from app.services.recommendation_service import RecommendationService
 from app.utils.response import success_response, error_response
 from collections import defaultdict

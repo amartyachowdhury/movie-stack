@@ -29,6 +29,17 @@ def create_app(config_name=None):
     jwt.init_app(app)
     CORS(app)
     
+    # Import models to ensure they're registered with SQLAlchemy
+    # This is needed even when blueprints are disabled
+    with app.app_context():
+        try:
+            from .domains.users.models.user import User
+            from .domains.movies.models.movie import Movie
+            from .domains.movies.models.rating import Rating
+            app.logger.info("Models imported successfully")
+        except ImportError as e:
+            app.logger.warning(f"Could not import models: {e}")
+    
     # Register blueprints with error handling - temporarily disabled due to circular imports
     # TODO: Fix circular imports in controllers and re-enable blueprints
     try:
@@ -282,6 +293,55 @@ def create_app(config_name=None):
             return {
                 'status': 'error',
                 'message': f'Failed to search movies: {str(e)}'
+            }, 500
+    
+    @app.route('/api/movies/<int:movie_id>')
+    def get_movie_details(movie_id):
+        try:
+            # Query movie from database
+            result = db.session.execute(db.text("""
+                SELECT id, tmdb_id, title, overview, genres, release_date, poster_path, 
+                       backdrop_path, vote_average, vote_count, popularity, adult, 
+                       original_language, original_title, video, created_at, updated_at
+                FROM movies 
+                WHERE id = :movie_id
+            """), {'movie_id': movie_id})
+            
+            row = result.fetchone()
+            if not row:
+                return {
+                    'status': 'error',
+                    'message': 'Movie not found'
+                }, 404
+            
+            movie = {
+                'id': row[0],
+                'tmdb_id': row[1],
+                'title': row[2],
+                'overview': row[3],
+                'genres': row[4],
+                'release_date': row[5].isoformat() if row[5] else None,
+                'poster_path': row[6],
+                'backdrop_path': row[7],
+                'vote_average': float(row[8]) if row[8] else 0.0,
+                'vote_count': row[9],
+                'popularity': float(row[10]) if row[10] else 0.0,
+                'adult': bool(row[11]),
+                'original_language': row[12],
+                'original_title': row[13],
+                'video': bool(row[14]),
+                'created_at': row[15].isoformat() if row[15] else None,
+                'updated_at': row[16].isoformat() if row[16] else None
+            }
+            
+            return {
+                'status': 'success',
+                'data': movie
+            }
+        except Exception as e:
+            return {
+                'status': 'error',
+                'message': f'Failed to fetch movie details: {str(e)}'
             }, 500
     
     # Analytics endpoints
