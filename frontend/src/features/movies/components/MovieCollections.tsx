@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import MovieCard from './MovieCard';
 import { Movie } from '../../../shared/types';
+import { PLACEHOLDER_MOVIE_IMAGE } from '../../../shared/constants/placeholderImage';
 import './MovieCollections.css';
 
 interface Collection {
@@ -188,7 +189,7 @@ const MovieCollections: React.FC<MovieCollectionsProps> = ({ onMovieClick }) => 
                       alt={movie.title}
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
-                        target.src = '/placeholder-movie.jpg';
+                        target.src = PLACEHOLDER_MOVIE_IMAGE;
                       }}
                     />
                   </div>

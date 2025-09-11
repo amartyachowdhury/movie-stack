@@ -4,6 +4,7 @@ import MovieCard from '../features/movies/components/MovieCard';
 import { Movie, MovieDetails } from '../shared/types';
 import RatingAnalytics from '../features/analytics/components/RatingAnalytics';
 import MovieReviews from '../features/movies/components/MovieReviews';
+import { PLACEHOLDER_MOVIE_IMAGE } from '../shared/constants/placeholderImage';
 import apiService from '../core/api/api';
 import './MovieDetailsPage.css';
 
@@ -125,7 +126,7 @@ const MovieDetailsPage: React.FC = () => {
       <div className="movie-header">
         <div className="movie-poster">
           <img
-            src={movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : '/placeholder-movie.jpg'}
+            src={movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : PLACEHOLDER_MOVIE_IMAGE}
             alt={movie.title}
           />
         </div>
