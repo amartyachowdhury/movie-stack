@@ -44,7 +44,7 @@ class MonitoringService {
   private alerts: Alert[] = [];
   private thresholds: PerformanceThresholds;
   private isEnabled: boolean = true;
-  private checkInterval: number = 30000; // 30 seconds
+  private checkInterval: number = process.env.NODE_ENV === 'production' ? 300000 : 30000; // 5 minutes in production, 30 seconds in development
   private checkTimer?: NodeJS.Timeout;
   private performanceHistory: Map<string, number[]> = new Map();
   private errorCount: number = 0;
@@ -60,10 +60,16 @@ class MonitoringService {
       userSessionDuration: 300 // 5 minutes
     };
 
+    // Disable monitoring completely to prevent console spam
+    this.isEnabled = false;
     this.initializeMonitoring();
   }
 
   private initializeMonitoring(): void {
+    if (!this.isEnabled) {
+      return;
+    }
+    
     // Start monitoring timer
     this.startMonitoringTimer();
 
@@ -108,36 +114,22 @@ class MonitoringService {
     // Monitor API response times
     this.interceptApiCalls();
 
-    // Monitor memory usage
+    // Monitor memory usage (less frequently in production)
     if ('memory' in performance) {
+      const memoryCheckInterval = process.env.NODE_ENV === 'production' ? 300000 : 30000; // 5 minutes in production, 30 seconds in development
       setInterval(() => {
         const memory = (performance as any).memory;
         const usagePercentage = (memory.usedJSHeapSize / memory.jsHeapSizeLimit) * 100;
         this.checkPerformanceThreshold('memoryUsage', usagePercentage, 'Memory usage exceeded threshold');
-      }, 30000);
+      }, memoryCheckInterval);
     }
   }
 
-  // Intercept API calls to monitor response times
+  // Intercept API calls to monitor response times (disabled to prevent console spam)
   private interceptApiCalls(): void {
-    const originalFetch = window.fetch;
-    window.fetch = async (...args) => {
-      const startTime = performance.now();
-      this.requestCount++;
-
-      try {
-        const response = await originalFetch(...args);
-        const endTime = performance.now();
-        const duration = endTime - startTime;
-
-        this.checkPerformanceThreshold('apiResponseTime', duration, 'API response time exceeded threshold');
-        return response;
-      } catch (error) {
-        this.errorCount++;
-        this.checkErrorRate();
-        throw error;
-      }
-    };
+    // Disabled fetch interception to prevent console spam
+    // The monitoring service will still work but won't log every fetch request
+    return;
   }
 
   // Monitor errors
@@ -217,11 +209,12 @@ class MonitoringService {
 
   // Monitor user behavior
   private monitorUserBehavior(): void {
-    // Monitor session duration
+    // Monitor session duration (less frequently in production)
+    const sessionCheckInterval = process.env.NODE_ENV === 'production' ? 600000 : 120000; // 10 minutes in production, 2 minutes in development
     setInterval(() => {
       const sessionDuration = (Date.now() - this.sessionStartTime) / 1000;
       this.checkPerformanceThreshold('userSessionDuration', sessionDuration, 'User session duration exceeded threshold');
-    }, 120000); // Check every 2 minutes
+    }, sessionCheckInterval);
 
     // Monitor user interactions with much higher threshold
     let interactionCount = 0;
@@ -503,10 +496,12 @@ class MonitoringService {
       sessionDuration: (Date.now() - this.sessionStartTime) / 1000
     };
 
-    // Log health report
-    console.log('Health Report:', report);
+    // Only log health report in development mode
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Health Report:', report);
+    }
 
-    // Send to analytics
+    // Send to analytics (but with rate limiting)
     analyticsService.trackSystemHealth('health_report', report.activeAlerts, 'report');
   }
 

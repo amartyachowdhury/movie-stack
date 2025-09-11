@@ -15,9 +15,9 @@ import ThemeCustomizer from './shared/components/ThemeCustomizer';
 import AnalyticsDashboard from './features/analytics/components/AnalyticsDashboard';
 import ToastContainer from './shared/components/ToastContainer';
 import ModernNavigation from './shared/components/navigation/ModernNavigation';
-import './shared/design-tokens.css';
-import './shared/theme.css';
-import './shared/animations.css';
+import './styles/themes/design-tokens.css';
+import './styles/themes/theme.css';
+import './styles/globals/animations.css';
 import './App.css';
 
 // Register service worker for PWA functionality

@@ -1,195 +1,66 @@
-// Movie Stack Service Worker
-const CACHE_VERSION = '1.0.0';
-const CACHE_NAME = `movie-stack-v${CACHE_VERSION}`;
-const STATIC_CACHE = `movie-stack-static-v${CACHE_VERSION}`;
-const DYNAMIC_CACHE = `movie-stack-dynamic-v${CACHE_VERSION}`;
+// Simplified Movie Stack Service Worker
+const CACHE_NAME = 'movie-stack-v1';
 
-const STATIC_ASSETS = [
-  '/',
-  '/manifest.json',
-  '/favicon.ico',
-  '/logo192.png',
-  '/logo512.png'
-];
-
-const API_CACHE_PATTERNS = [
-  /\/api\/movies\/popular/,
-  /\/api\/movies\/search/,
-  /\/api\/movies\/\d+/
-];
-
-// Install event - cache static assets
+// Install event - basic caching
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(STATIC_CACHE).then((cache) => {
-      console.log('Caching static assets');
-      // Use addAll with error handling for individual failures
-      return Promise.allSettled(
-        STATIC_ASSETS.map(url => 
-          cache.add(url).catch(error => {
-            console.warn(`Failed to cache ${url}:`, error);
-            return null;
-          })
-        )
-      );
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.addAll([
+        '/',
+        '/manifest.json',
+        '/favicon.ico'
+      ]);
     })
   );
-  // Don't automatically skip waiting - let the old service worker finish
-  // self.skipWaiting();
+  // Skip waiting to activate immediately
+  self.skipWaiting();
 });
 
 // Activate event - clean up old caches
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
-      return Promise.allSettled(
+      return Promise.all(
         cacheNames.map((cacheName) => {
-          // Clear ALL old caches to force fresh content
-          console.log('Deleting cache:', cacheName);
-          return caches.delete(cacheName).catch(error => {
-            console.warn(`Failed to delete cache ${cacheName}:`, error);
-            return null;
-          });
+          if (cacheName !== CACHE_NAME) {
+            return caches.delete(cacheName);
+          }
         })
       );
-    }).catch(error => {
-      console.error('Error during cache cleanup:', error);
     })
   );
-  
-  // Claim clients with error handling
-  try {
-    self.clients.claim();
-  } catch (error) {
-    console.warn('Failed to claim clients:', error);
-  }
+  // Take control of all clients immediately
+  self.clients.claim();
 });
 
-// Enhanced fetch event handler
+// Simplified fetch event - basic caching without complex message handling
 self.addEventListener('fetch', (event) => {
-  const { request } = event;
-  const url = new URL(request.url);
-  
-  // Always let API requests pass through to network
-  if (request.url.includes('/api/') || 
-      request.url.includes('localhost:5001') ||
-      request.url.includes('localhost:3000/api/')) {
-    event.respondWith(fetch(request));
+  // Only handle GET requests
+  if (event.request.method !== 'GET') {
     return;
   }
-  
-  // Handle static assets with cache-first strategy
-  if (STATIC_ASSETS.some(asset => request.url.includes(asset))) {
-    event.respondWith(
-      caches.match(request)
-        .then((response) => response || fetch(request))
-    );
+
+  // Skip analytics and monitoring requests to prevent spam
+  const url = new URL(event.request.url);
+  if (url.pathname.includes('/api/analytics/') || 
+      url.pathname.includes('/api/monitoring/')) {
     return;
   }
-  
-  // For other requests, use network-first strategy
+
   event.respondWith(
-    fetch(request)
-      .then((response) => {
-        // Cache successful responses for static content
-        if (response.status === 200 && request.method === 'GET') {
-          const responseClone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(request, responseClone);
-          });
-        }
+    caches.match(event.request).then((response) => {
+      // Return cached version if available
+      if (response) {
         return response;
-      })
-      .catch(() => {
-        // Fallback to cache if network fails
-        return caches.match(request);
-      })
-  );
-});
-
-// Background sync for offline actions
-self.addEventListener('sync', (event) => {
-  if (event.tag === 'background-sync') {
-    event.waitUntil(doBackgroundSync());
-  }
-});
-
-async function doBackgroundSync() {
-  try {
-    // Sync any pending offline actions
-    const pendingActions = await getPendingActions();
-    for (const action of pendingActions) {
-      await syncAction(action);
-    }
-  } catch (error) {
-    console.error('Background sync failed:', error);
-  }
-}
-
-async function getPendingActions() {
-  // Get pending actions from IndexedDB
-  return [];
-}
-
-async function syncAction(action) {
-  // Sync individual action
-  console.log('Syncing action:', action);
-}
-
-// Push notification handling
-self.addEventListener('push', (event) => {
-  const options = {
-    body: event.data ? event.data.text() : 'New movie recommendations available!',
-    icon: '/logo192.png',
-    badge: '/logo192.png',
-    vibrate: [100, 50, 100],
-    data: {
-      dateOfArrival: Date.now(),
-      primaryKey: 1
-    },
-    actions: [
-      {
-        action: 'explore',
-        title: 'View Recommendations',
-        icon: '/logo192.png'
-      },
-      {
-        action: 'close',
-        title: 'Close',
-        icon: '/logo192.png'
       }
-    ]
-  };
-
-  event.waitUntil(
-    self.registration.showNotification('Movie Stack', options)
+      
+      // Otherwise fetch from network
+      return fetch(event.request).catch(() => {
+        // Return offline fallback for navigation requests
+        if (event.request.mode === 'navigate') {
+          return caches.match('/');
+        }
+      });
+    })
   );
-});
-
-// Notification click handling
-self.addEventListener('notificationclick', (event) => {
-  event.notification.close();
-
-  if (event.action === 'explore') {
-    event.waitUntil(
-      self.clients.openWindow('/?tab=recommendations')
-    );
-  }
-});
-
-// Message handling to prevent message channel errors
-self.addEventListener('message', (event) => {
-  try {
-    // Handle messages from the main thread
-    if (event.data && event.data.type === 'SKIP_WAITING') {
-      self.skipWaiting();
-    }
-    
-    // Always respond to prevent message channel errors
-    if (event.ports && event.ports.length > 0) {
-      event.ports[0].postMessage({ status: 'received' });
-    }
-  } catch (error) {
-    console.warn('Service worker message handling error:', error);
-  }
 });

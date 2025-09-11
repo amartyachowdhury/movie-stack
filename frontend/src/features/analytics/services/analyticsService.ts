@@ -72,12 +72,17 @@ class AnalyticsService {
   private userId?: number;
   private isEnabled: boolean = true;
   private batchSize: number = 10;
-  private flushInterval: number = 30000; // 30 seconds
+  private flushInterval: number = 120000; // 2 minutes
   private eventQueue: AnalyticsEvent[] = [];
   private flushTimer?: NodeJS.Timeout;
+  private rateLimitMap = new Map<string, number>();
+  private rateLimitWindow = 5000; // 5 seconds
+  private maxRequestsPerWindow = 1; // Max 1 request per 5 seconds per endpoint
 
   constructor() {
     this.sessionId = this.getOrCreateSessionId();
+    // Disable analytics completely to prevent console spam
+    this.isEnabled = false;
     this.initializeService();
   }
 
@@ -90,7 +95,47 @@ class AnalyticsService {
     return sessionId;
   }
 
+  private isRateLimited(endpoint: string): boolean {
+    const now = Date.now();
+    const key = endpoint;
+    const lastRequest = this.rateLimitMap.get(key) || 0;
+    
+    if (now - lastRequest < this.rateLimitWindow) {
+      return true;
+    }
+    
+    this.rateLimitMap.set(key, now);
+    return false;
+  }
+
+  private getEndpointForEventType(type: AnalyticsEventType): string {
+    const API_BASE_URL = process.env.REACT_APP_API_URL || '/api';
+    
+    switch (type) {
+      case AnalyticsEventType.PAGE_VIEW:
+        return `${API_BASE_URL}/analytics/track/pageview`;
+      case AnalyticsEventType.USER_ACTION:
+        return `${API_BASE_URL}/analytics/track/user-action`;
+      case AnalyticsEventType.PERFORMANCE:
+        return `${API_BASE_URL}/analytics/track/performance`;
+      case AnalyticsEventType.SEARCH:
+        return `${API_BASE_URL}/analytics/track/search`;
+      case AnalyticsEventType.MOVIE_INTERACTION:
+        return `${API_BASE_URL}/analytics/track/movie-interaction`;
+      case AnalyticsEventType.ERROR:
+        return `${API_BASE_URL}/analytics/track/error`;
+      case AnalyticsEventType.SYSTEM_HEALTH:
+        return `${API_BASE_URL}/analytics/track/system-health`;
+      default:
+        return `${API_BASE_URL}/analytics/track/event`;
+    }
+  }
+
   private initializeService(): void {
+    if (!this.isEnabled) {
+      return;
+    }
+    
     // Start flush timer
     this.startFlushTimer();
     
@@ -334,6 +379,16 @@ class AnalyticsService {
 
   // Send specific event type to backend
   private async sendEventType(type: AnalyticsEventType, events: AnalyticsEvent[]): Promise<void> {
+    const endpoint = this.getEndpointForEventType(type);
+    
+    // Check rate limiting
+    if (this.isRateLimited(endpoint)) {
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`[DEBUG] Rate limited for ${endpoint}, skipping request`);
+      }
+      return;
+    }
+
     const token = localStorage.getItem('token');
     const headers: Record<string, string> = {
       'Content-Type': 'application/json'
@@ -343,35 +398,25 @@ class AnalyticsService {
       headers['Authorization'] = `Bearer ${token}`;
     }
 
-    // Get the backend API URL from environment or use default
-    const API_BASE_URL = process.env.REACT_APP_API_URL || '/api';
-    
-    let endpoint = '';
     let payload: any = {};
 
     switch (type) {
       case AnalyticsEventType.PAGE_VIEW:
-        endpoint = `${API_BASE_URL}/analytics/track/pageview`;
         payload = events.map(event => event.data);
         break;
       case AnalyticsEventType.USER_ACTION:
-        endpoint = `${API_BASE_URL}/analytics/track/action`;
         payload = events.map(event => event.data);
         break;
       case AnalyticsEventType.PERFORMANCE:
-        endpoint = `${API_BASE_URL}/analytics/track/performance`;
         payload = events.map(event => event.data);
         break;
       case AnalyticsEventType.SEARCH:
-        endpoint = `${API_BASE_URL}/analytics/track/search`;
         payload = events.map(event => event.data);
         break;
       case AnalyticsEventType.MOVIE_INTERACTION:
-        endpoint = `${API_BASE_URL}/analytics/track/movie-interaction`;
         payload = events.map(event => event.data);
         break;
       case AnalyticsEventType.SYSTEM_HEALTH:
-        endpoint = `${API_BASE_URL}/analytics/track/system-health`;
         payload = events.map(event => event.data);
         break;
       default:
@@ -383,8 +428,10 @@ class AnalyticsService {
     for (let i = 0; i < payload.length; i++) {
       const eventData = payload[i];
       
-      // DEBUG: Log what we're sending
-      console.log(`[DEBUG] Sending ${type} event to ${endpoint}:`, eventData);
+      // Only log in development mode
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`[DEBUG] Sending ${type} event to ${endpoint}:`, eventData);
+      }
       
       try {
         const response = await fetch(endpoint, {

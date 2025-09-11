@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useMicroInteractions } from '../hooks/useMicroInteractions';
-import { PLACEHOLDER_MOVIE_IMAGE } from '../constants/placeholderImage';
+import { PLACEHOLDER_MOVIE_IMAGE } from '../../config/constants/placeholderImage';
 import './LazyImage.css';
 
 interface LazyImageProps {
