@@ -4,7 +4,7 @@ import MovieCard from '../features/movies/components/MovieCard';
 import { Movie, MovieDetails } from '../shared/types';
 import RatingAnalytics from '../features/analytics/components/RatingAnalytics';
 import MovieReviews from '../features/movies/components/MovieReviews';
-import { PLACEHOLDER_MOVIE_IMAGE } from '../shared/constants/placeholderImage';
+import { PLACEHOLDER_MOVIE_IMAGE } from '../config/constants/placeholderImage';
 import apiService from '../core/api/api';
 import './MovieDetailsPage.css';
 

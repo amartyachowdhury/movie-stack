@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import MovieTrailer from './MovieTrailer';
 import LazyImage from '../../../shared/components/LazyImage';
 import { Movie } from '../../../shared/types';
-import { PLACEHOLDER_MOVIE_IMAGE } from '../../../shared/constants/placeholderImage';
+import { PLACEHOLDER_MOVIE_IMAGE } from '../../../config/constants/placeholderImage';
 import './MovieCard.css';
 
 interface MovieCardProps {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useMicroInteractions } from '../../../shared/hooks/useMicroInteractions';
-import { PLACEHOLDER_MOVIE_IMAGE } from '../../../shared/constants/placeholderImage';
+import { PLACEHOLDER_MOVIE_IMAGE } from '../../../config/constants/placeholderImage';
 import './SmartSearch.css';
 
 interface SearchSuggestion {
