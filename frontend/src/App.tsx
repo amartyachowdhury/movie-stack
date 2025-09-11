@@ -23,9 +23,8 @@ import './App.css';
 // Register service worker for PWA functionality
 import * as serviceWorker from './serviceWorker';
 
-// Analytics and Monitoring Services
+// Analytics Service (Monitoring disabled to prevent console spam)
 import analyticsService from './features/analytics/services/analyticsService';
-import monitoringService from './features/analytics/services/monitoringService';
 
 function AppContent() {
   const { user } = useAuth();
@@ -70,7 +69,6 @@ function AppContent() {
     // Cleanup on unmount
     return () => {
       analyticsService.destroy();
-      monitoringService.destroy();
     };
   }, [user]);
 
