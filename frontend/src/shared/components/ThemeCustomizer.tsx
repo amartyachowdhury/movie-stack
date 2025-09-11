@@ -248,7 +248,7 @@ const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ isOpen, onClose }) =>
                   >
                     <div 
                       className="scheme-preview" 
-                      style={{ backgroundColor: scheme.colors.background }}
+                      style={{ '--scheme-bg-color': scheme.colors.background } as React.CSSProperties}
                     >
                       <div className="scheme-icon">{scheme.preview}</div>
                       <div className="scheme-colors">

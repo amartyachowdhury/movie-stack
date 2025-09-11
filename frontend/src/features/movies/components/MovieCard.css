@@ -118,6 +118,7 @@
   font-size: var(--text-base);
   cursor: pointer;
   transition: all var(--duration-200) var(--ease-out);
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   display: flex;
   align-items: center;
@@ -149,6 +150,7 @@
   justify-content: center;
   cursor: pointer;
   transition: all var(--duration-300) var(--ease-out);
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   animation: play-button-pulse 0.6s var(--ease-out);
 }
