@@ -53,13 +53,17 @@ A modern, full-stack movie recommendation application built with React, Flask, a
 
 2. **Set up environment**
    ```bash
-   cp env.example .env
-   # Edit .env with your configuration
+   cp docker/env.example docker/.env
+   # Edit docker/.env with your configuration
    ```
 
 3. **Start the application**
    ```bash
-   docker-compose -f infrastructure/docker/docker-compose.dev.yml up -d
+   # Using the convenient script (from project root)
+   ./docker.sh dev
+   
+   # Or navigate to docker directory
+   cd docker && ./scripts/docker-dev.sh dev
    ```
 
 4. **Access the application**

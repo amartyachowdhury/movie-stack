@@ -30,7 +30,7 @@ COPY frontend/public/placeholder-movie.svg /usr/share/nginx/html/
 COPY frontend/public/placeholder-movie.jpg /usr/share/nginx/html/
 
 # Copy nginx configuration
-COPY infrastructure/docker/nginx-frontend.conf /etc/nginx/conf.d/default.conf
+COPY docker/nginx/nginx-frontend.conf /etc/nginx/conf.d/default.conf
 
 # Add cache-busting timestamp to index.html
 RUN TIMESTAMP=$(date +%s) && \
