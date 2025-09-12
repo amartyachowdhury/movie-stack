@@ -27,18 +27,24 @@ const MovieDetailsPage: React.FC = () => {
   const fetchMovieDetails = async () => {
     if (!movieId) return;
     
+    console.log('🔍 [MovieDetailsPage] Fetching movie details for ID:', movieId);
     setLoading(true);
     setError(null);
     
     try {
+      console.log('🔍 [MovieDetailsPage] Calling API service...');
       const movieData = await apiService.getMovieDetails(parseInt(movieId));
+      console.log('🔍 [MovieDetailsPage] Received movie data:', movieData);
       setMovie(movieData);
+      console.log('🔍 [MovieDetailsPage] Movie state set successfully');
       
       // Fetch user rating if available
       // TODO: Implement user rating fetch
     } catch (err) {
+      console.error('❌ [MovieDetailsPage] Error fetching movie details:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch movie details');
     } finally {
+      console.log('🔍 [MovieDetailsPage] Setting loading to false');
       setLoading(false);
     }
   };

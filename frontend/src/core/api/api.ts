@@ -56,7 +56,9 @@ class ApiService {
   }
 
   async getMovieDetails(movieId: number): Promise<MovieDetails> {
+    console.log('🔍 [API Service] Getting movie details for ID:', movieId);
     const response = await this.request<ApiResponse<MovieDetails>>(`/movies/${movieId}`);
+    console.log('🔍 [API Service] Received response:', response);
     return response.data;
   }
 

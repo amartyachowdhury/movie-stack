@@ -111,7 +111,8 @@ def create_app(config_name=None):
             total = count_result.scalar()
             
             return {
-                'status': 'success',
+                'success': True,
+                'message': 'Popular movies retrieved successfully',
                 'data': {
                     'items': movies,
                     'pagination': {
@@ -126,7 +127,7 @@ def create_app(config_name=None):
             }
         except Exception as e:
             return {
-                'status': 'error',
+                'success': False,
                 'message': f'Failed to fetch popular movies: {str(e)}'
             }, 500
     
@@ -175,7 +176,8 @@ def create_app(config_name=None):
             total = count_result.scalar()
             
             return {
-                'status': 'success',
+                'success': True,
+                'message': 'Popular movies retrieved successfully',
                 'data': {
                     'items': movies,
                     'pagination': {
@@ -190,7 +192,7 @@ def create_app(config_name=None):
             }
         except Exception as e:
             return {
-                'status': 'error',
+                'success': False,
                 'message': f'Failed to fetch movies: {str(e)}'
             }, 500
     
@@ -205,7 +207,8 @@ def create_app(config_name=None):
             
             if not query:
                 return {
-                    'status': 'success',
+                    'success': True,
+                'message': 'Popular movies retrieved successfully',
                     'data': {
                         'items': [],
                         'pagination': {
@@ -276,7 +279,8 @@ def create_app(config_name=None):
             total = count_result.scalar()
             
             return {
-                'status': 'success',
+                'success': True,
+                'message': 'Popular movies retrieved successfully',
                 'data': {
                     'items': movies,
                     'pagination': {
@@ -291,7 +295,7 @@ def create_app(config_name=None):
             }
         except Exception as e:
             return {
-                'status': 'error',
+                'success': False,
                 'message': f'Failed to search movies: {str(e)}'
             }, 500
     
@@ -310,16 +314,23 @@ def create_app(config_name=None):
             row = result.fetchone()
             if not row:
                 return {
-                    'status': 'error',
-                    'message': 'Movie not found'
+                    'success': False,
+                    'message': 'Movie not found',
+                    'data': None
                 }, 404
+            
+            # Parse genres string into Genre objects
+            genres_list = []
+            if row[4]:  # genres field
+                genre_names = [g.strip() for g in row[4].split(',')]
+                genres_list = [{'id': i+1, 'name': name} for i, name in enumerate(genre_names)]
             
             movie = {
                 'id': row[0],
                 'tmdb_id': row[1],
                 'title': row[2],
                 'overview': row[3],
-                'genres': row[4],
+                'genres': genres_list,
                 'release_date': row[5].isoformat() if row[5] else None,
                 'poster_path': row[6],
                 'backdrop_path': row[7],
@@ -331,17 +342,36 @@ def create_app(config_name=None):
                 'original_title': row[13],
                 'video': bool(row[14]),
                 'created_at': row[15].isoformat() if row[15] else None,
-                'updated_at': row[16].isoformat() if row[16] else None
+                'updated_at': row[16].isoformat() if row[16] else None,
+                # Additional fields required by MovieDetails interface
+                'genre_ids': [g['id'] for g in genres_list],
+                'runtime': 120,  # Default runtime
+                'budget': 0,
+                'revenue': 0,
+                'status': 'Released',
+                'tagline': '',
+                'homepage': '',
+                'imdb_id': '',
+                'production_companies': [],
+                'production_countries': [],
+                'spoken_languages': [],
+                'cast': [],
+                'crew': [],
+                'similar_movies': [],
+                'rating_count': row[9],  # Use vote_count as rating_count
+                'average_rating': float(row[8]) if row[8] else 0.0
             }
             
             return {
-                'status': 'success',
+                'success': True,
+                'message': 'Movie details retrieved successfully',
                 'data': movie
             }
         except Exception as e:
             return {
-                'status': 'error',
-                'message': f'Failed to fetch movie details: {str(e)}'
+                'success': False,
+                'message': f'Failed to fetch movie details: {str(e)}',
+                'data': None
             }, 500
     
     # Analytics endpoints
@@ -405,7 +435,7 @@ def create_app(config_name=None):
             
             if not data or not data.get('username') or not data.get('password'):
                 return jsonify({
-                    'status': 'error',
+                    'success': False,
                     'message': 'Username and password are required'
                 }), 400
             
@@ -422,7 +452,7 @@ def create_app(config_name=None):
             
             if not user_data:
                 return jsonify({
-                    'status': 'error',
+                    'success': False,
                     'message': 'Invalid username or password'
                 }), 401
             
@@ -430,13 +460,13 @@ def create_app(config_name=None):
             from werkzeug.security import check_password_hash
             if not check_password_hash(user_data[3], password):  # password_hash is at index 3
                 return jsonify({
-                    'status': 'error',
+                    'success': False,
                     'message': 'Invalid username or password'
                 }), 401
             
             if not user_data[8]:  # is_active is at index 8
                 return jsonify({
-                    'status': 'error',
+                    'success': False,
                     'message': 'Account is deactivated'
                 }), 401
             
@@ -466,7 +496,8 @@ def create_app(config_name=None):
             }
             
             return jsonify({
-                'status': 'success',
+                'success': True,
+                'message': 'Popular movies retrieved successfully',
                 'data': {
                     'user': user_dict,
                     'access_token': access_token,
@@ -477,7 +508,7 @@ def create_app(config_name=None):
             
         except Exception as e:
             return jsonify({
-                'status': 'error',
+                'success': False,
                 'message': f'Login failed: {str(e)}'
             }), 500
     
@@ -494,7 +525,7 @@ def create_app(config_name=None):
             # Validate required fields
             if not data or not data.get('username') or not data.get('password'):
                 return jsonify({
-                    'status': 'error',
+                    'success': False,
                     'message': 'Username and password are required'
                 }), 400
             
@@ -505,13 +536,13 @@ def create_app(config_name=None):
             # Validate username
             if len(username) < 3:
                 return jsonify({
-                    'status': 'error',
+                    'success': False,
                     'message': 'Username must be at least 3 characters long'
                 }), 400
             
             if not username.replace('_', '').isalnum():
                 return jsonify({
-                    'status': 'error',
+                    'success': False,
                     'message': 'Username can only contain letters, numbers, and underscores'
                 }), 400
             
@@ -520,14 +551,14 @@ def create_app(config_name=None):
                 pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
                 if not re.match(pattern, email):
                     return jsonify({
-                        'status': 'error',
+                        'success': False,
                         'message': 'Invalid email format'
                     }), 400
             
             # Validate password
             if len(password) < 6:
                 return jsonify({
-                    'status': 'error',
+                    'success': False,
                     'message': 'Password must be at least 6 characters long'
                 }), 400
             
@@ -535,7 +566,7 @@ def create_app(config_name=None):
             result = db.session.execute(db.text("SELECT id FROM users WHERE username = :username"), {'username': username})
             if result.fetchone():
                 return jsonify({
-                    'status': 'error',
+                    'success': False,
                     'message': 'Username already exists'
                 }), 409
             
@@ -544,7 +575,7 @@ def create_app(config_name=None):
                 result = db.session.execute(db.text("SELECT id FROM users WHERE email = :email"), {'email': email})
                 if result.fetchone():
                     return jsonify({
-                        'status': 'error',
+                        'success': False,
                         'message': 'Email already exists'
                     }), 409
             
@@ -596,7 +627,8 @@ def create_app(config_name=None):
             }
             
             return jsonify({
-                'status': 'success',
+                'success': True,
+                'message': 'Popular movies retrieved successfully',
                 'data': {
                     'user': user_dict,
                     'access_token': access_token,
@@ -608,7 +640,7 @@ def create_app(config_name=None):
         except Exception as e:
             db.session.rollback()
             return jsonify({
-                'status': 'error',
+                'success': False,
                 'message': f'Registration failed: {str(e)}'
             }), 500
     
@@ -620,7 +652,8 @@ def create_app(config_name=None):
             # For now, return a mock user since JWT might not be working
             # TODO: Implement proper JWT validation
             return jsonify({
-                'status': 'success',
+                'success': True,
+                'message': 'Popular movies retrieved successfully',
                 'data': {
                     'id': 1,
                     'username': 'alice',
@@ -637,7 +670,7 @@ def create_app(config_name=None):
             
         except Exception as e:
             return jsonify({
-                'status': 'error',
+                'success': False,
                 'message': f'Failed to fetch profile: {str(e)}'
             }), 500
     
