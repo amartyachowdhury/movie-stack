@@ -28,12 +28,23 @@ A clean, minimal movie application focusing on core features only.
    cd movie-stack-minimal
    ```
 
-2. **Start the application:**
+2. **Set up TMDB API (Optional but Recommended):**
+   - Go to [https://developer.themoviedb.org/](https://developer.themoviedb.org/)
+   - Sign up for a free account
+   - Create a new API key
+   - Copy your API key
+   - Create a `.env` file in the root directory:
+     ```bash
+     cp env.example .env
+     # Edit .env and add your TMDB_API_KEY
+     ```
+
+3. **Start the application:**
    ```bash
    docker-compose up --build
    ```
 
-3. **Access the application:**
+4. **Access the application:**
    - Frontend: http://localhost:3002
    - Backend API: http://localhost:5002/api
 
@@ -77,9 +88,19 @@ movie-stack-minimal/
 
 ## 🔌 API Endpoints
 
+### Local Database
 - `GET /api/movies` - Get all movies (with pagination)
 - `GET /api/movies/:id` - Get movie details
 - `GET /api/movies/search?q=query` - Search movies
+
+### TMDB API Integration
+- `GET /api/movies/popular` - Get popular movies from TMDB
+- `GET /api/movies/top-rated` - Get top rated movies from TMDB
+- `GET /api/movies/search/tmdb?q=query` - Search movies using TMDB
+- `GET /api/movies/:id/tmdb` - Get movie details from TMDB
+- `GET /api/genres` - Get movie genres from TMDB
+
+### System
 - `GET /api/health` - Health check
 
 ## 🎨 Design
@@ -107,8 +128,15 @@ This minimal version eliminates the complex issues we encountered:
 - ❌ **No Authentication**: Focus on core movie features
 - ❌ **No Analytics**: Clean, distraction-free code
 
-## 📊 Sample Data
+## 📊 Movie Data
 
+### With TMDB API Key:
+- **Thousands of real movies** with posters, ratings, and details
+- **Real-time search** across TMDB's database
+- **Popular and top-rated** movie collections
+- **Movie genres** and detailed information
+
+### Without API Key (Fallback):
 The application comes with 3 sample movies:
 - Fight Club
 - Forrest Gump  

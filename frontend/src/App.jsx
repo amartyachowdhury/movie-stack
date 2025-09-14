@@ -25,12 +25,24 @@ const api = {
     return this.request(`/movies?page=${page}`)
   },
   
+  async getPopularMovies(page = 1) {
+    return this.request(`/movies/popular?page=${page}`)
+  },
+  
+  async getTopRatedMovies(page = 1) {
+    return this.request(`/movies/top-rated?page=${page}`)
+  },
+  
   async getMovie(id) {
     return this.request(`/movies/${id}`)
   },
   
   async searchMovies(query, page = 1) {
     return this.request(`/movies/search?q=${encodeURIComponent(query)}&page=${page}`)
+  },
+  
+  async searchMoviesTMDB(query, page = 1) {
+    return this.request(`/movies/search/tmdb?q=${encodeURIComponent(query)}&page=${page}`)
   }
 }
 
@@ -80,6 +92,18 @@ function HomePage() {
     try {
       setLoading(true)
       setError(null)
+      // Try to load popular movies from TMDB first, fallback to local movies
+      try {
+        const response = await api.getPopularMovies()
+        if (response.success) {
+          setMovies(response.data.items)
+          return
+        }
+      } catch (tmdbError) {
+        console.log('TMDB not available, using local movies:', tmdbError.message)
+      }
+      
+      // Fallback to local movies
       const response = await api.getMovies()
       if (response.success) {
         setMovies(response.data.items)
@@ -104,6 +128,19 @@ function HomePage() {
     try {
       setIsSearching(true)
       setError(null)
+      
+      // Try TMDB search first, fallback to local search
+      try {
+        const response = await api.searchMoviesTMDB(searchQuery)
+        if (response.success) {
+          setMovies(response.data.items)
+          return
+        }
+      } catch (tmdbError) {
+        console.log('TMDB search not available, using local search:', tmdbError.message)
+      }
+      
+      // Fallback to local search
       const response = await api.searchMovies(searchQuery)
       if (response.success) {
         setMovies(response.data.items)
@@ -181,6 +218,19 @@ function MovieDetailsPage() {
     try {
       setLoading(true)
       setError(null)
+      
+      // Try TMDB endpoint first for TMDB movies
+      try {
+        const response = await api.request(`/movies/${id}/tmdb`)
+        if (response.success) {
+          setMovie(response.data)
+          return
+        }
+      } catch (tmdbError) {
+        console.log('TMDB endpoint not available, trying local endpoint:', tmdbError.message)
+      }
+      
+      // Fallback to local endpoint
       const response = await api.getMovie(id)
       if (response.success) {
         setMovie(response.data)

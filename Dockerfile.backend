@@ -11,6 +11,9 @@ RUN npm install --only=production
 # Copy source code
 COPY backend/ ./
 
+# Create .env file for environment variables
+RUN touch .env
+
 # Create non-root user
 RUN addgroup -g 1001 -S nodejs && \
     adduser -S nodejs -u 1001

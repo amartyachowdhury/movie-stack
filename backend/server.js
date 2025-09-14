@@ -3,6 +3,10 @@ const cors = require('cors');
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
+require('dotenv').config();
+
+// Import TMDB service
+const tmdbService = require('./services/tmdbService');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -151,6 +155,138 @@ app.get('/api/movies', (req, res) => {
   );
 });
 
+// TMDB API Routes (must be before /api/movies/:id to avoid conflicts)
+
+// Get popular movies from TMDB
+app.get('/api/movies/popular', async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const movies = await tmdbService.getPopularMovies(page);
+    
+    // Store movies in database
+    await storeMoviesInDatabase(movies);
+    
+    res.json({
+      success: true,
+      message: 'Popular movies retrieved successfully',
+      data: {
+        items: movies,
+        pagination: {
+          page,
+          limit: 20,
+          total: movies.length,
+          totalPages: 1,
+          hasNext: false,
+          hasPrev: page > 1
+        }
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching popular movies:', error);
+    res.status(500).json({ success: false, message: 'Error fetching popular movies', data: null });
+  }
+});
+
+// Get top rated movies from TMDB
+app.get('/api/movies/top-rated', async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const movies = await tmdbService.getTopRatedMovies(page);
+    
+    // Store movies in database
+    await storeMoviesInDatabase(movies);
+    
+    res.json({
+      success: true,
+      message: 'Top rated movies retrieved successfully',
+      data: {
+        items: movies,
+        pagination: {
+          page,
+          limit: 20,
+          total: movies.length,
+          totalPages: 1,
+          hasNext: false,
+          hasPrev: page > 1
+        }
+      }
+    });
+  } catch (error) {
+    console.error('Error fetching top rated movies:', error);
+    res.status(500).json({ success: false, message: 'Error fetching top rated movies', data: null });
+  }
+});
+
+// Search movies using TMDB
+app.get('/api/movies/search/tmdb', async (req, res) => {
+  try {
+    const query = req.query.q;
+    const page = parseInt(req.query.page) || 1;
+    
+    if (!query) {
+      res.status(400).json({ success: false, message: 'Search query is required', data: null });
+      return;
+    }
+    
+    const movies = await tmdbService.searchMovies(query, page);
+    
+    // Store movies in database
+    await storeMoviesInDatabase(movies);
+    
+    res.json({
+      success: true,
+      message: 'Search results retrieved successfully',
+      data: {
+        items: movies,
+        pagination: {
+          page,
+          limit: 20,
+          total: movies.length,
+          totalPages: 1,
+          hasNext: false,
+          hasPrev: page > 1
+        }
+      }
+    });
+  } catch (error) {
+    console.error('Error searching movies:', error);
+    res.status(500).json({ success: false, message: 'Error searching movies', data: null });
+  }
+});
+
+// Get movie details from TMDB
+app.get('/api/movies/:id/tmdb', async (req, res) => {
+  try {
+    const movieId = parseInt(req.params.id);
+    const movieDetails = await tmdbService.getMovieDetails(movieId);
+    
+    res.json({
+      success: true,
+      message: 'Movie details retrieved successfully',
+      data: movieDetails
+    });
+  } catch (error) {
+    console.error('Error fetching movie details:', error);
+    res.status(500).json({ success: false, message: 'Error fetching movie details', data: null });
+  }
+});
+
+// Get genres from TMDB
+app.get('/api/genres', async (req, res) => {
+  try {
+    const genres = await tmdbService.getGenres();
+    
+    res.json({
+      success: true,
+      message: 'Genres retrieved successfully',
+      data: genres
+    });
+  } catch (error) {
+    console.error('Error fetching genres:', error);
+    res.status(500).json({ success: false, message: 'Error fetching genres', data: null });
+  }
+});
+
 // Get single movie
 app.get('/api/movies/:id', (req, res) => {
   const movieId = parseInt(req.params.id);
@@ -249,6 +385,34 @@ app.get('/api/movies/search', (req, res) => {
     }
   );
 });
+
+// Helper function to store movies in database
+async function storeMoviesInDatabase(movies) {
+  return new Promise((resolve, reject) => {
+    const stmt = db.prepare(`INSERT OR REPLACE INTO movies (
+      tmdb_id, title, overview, genres, release_date, poster_path, backdrop_path,
+      vote_average, vote_count, popularity, adult, original_language, original_title, video
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
+
+    let completed = 0;
+    movies.forEach(movie => {
+      stmt.run([
+        movie.tmdb_id, movie.title, movie.overview, movie.genres, movie.release_date,
+        movie.poster_path, movie.backdrop_path, movie.vote_average, movie.vote_count,
+        movie.popularity, movie.adult, movie.original_language, movie.original_title, movie.video
+      ], (err) => {
+        if (err) {
+          console.error('Error storing movie:', err);
+        }
+        completed++;
+        if (completed === movies.length) {
+          stmt.finalize();
+          resolve();
+        }
+      });
+    });
+  });
+}
 
 // Health check
 app.get('/api/health', (req, res) => {
