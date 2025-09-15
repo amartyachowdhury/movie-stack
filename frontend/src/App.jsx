@@ -375,6 +375,55 @@ function MovieDetailsPage() {
     return new Date(dateString).getFullYear()
   }
 
+  const formatCurrency = (amount) => {
+    if (!amount || amount === 0) return 'N/A'
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(amount)
+  }
+
+  const formatRuntime = (minutes) => {
+    if (!minutes) return 'N/A'
+    const hours = Math.floor(minutes / 60)
+    const mins = minutes % 60
+    return hours > 0 ? `${hours}h ${mins}m` : `${mins}m`
+  }
+
+  const getLanguageFlag = (languageCode) => {
+    const flags = {
+      'en': '🇺🇸', 'es': '🇪🇸', 'fr': '🇫🇷', 'de': '🇩🇪', 'it': '🇮🇹',
+      'pt': '🇵🇹', 'ru': '🇷🇺', 'ja': '🇯🇵', 'ko': '🇰🇷', 'zh': '🇨🇳',
+      'hi': '🇮🇳', 'ar': '🇸🇦', 'th': '🇹🇭', 'nl': '🇳🇱', 'sv': '🇸🇪',
+      'da': '🇩🇰', 'no': '🇳🇴', 'fi': '🇫🇮', 'pl': '🇵🇱', 'tr': '🇹🇷'
+    }
+    return flags[languageCode] || '🌍'
+  }
+
+  const parseGenres = (genres) => {
+    if (!genres) return []
+    
+    if (typeof genres === 'string') {
+      const genreMap = {
+        '28': 'Action', '12': 'Adventure', '16': 'Animation', '35': 'Comedy',
+        '80': 'Crime', '99': 'Documentary', '18': 'Drama', '10751': 'Family',
+        '14': 'Fantasy', '36': 'History', '27': 'Horror', '10402': 'Music',
+        '9648': 'Mystery', '10749': 'Romance', '878': 'Science Fiction',
+        '10770': 'TV Movie', '53': 'Thriller', '10752': 'War', '37': 'Western'
+      }
+      return genres.split(',').map(id => ({
+        id: id.trim(),
+        name: genreMap[id.trim()] || `Genre ${id.trim()}`
+      }))
+    } else if (Array.isArray(genres)) {
+      return genres
+    }
+    
+    return []
+  }
+
   if (loading) {
     return <div className="loading">Loading movie details...</div>
   }
@@ -401,44 +450,264 @@ function MovieDetailsPage() {
     )
   }
 
-  return (
-    <div className="container">
-      <button className="back-btn" onClick={() => navigate('/')}>
-        ← Back to Movies
-      </button>
+  const genresArray = parseGenres(movie.genres)
 
-      <div className="movie-details">
-        <div className="movie-details-header">
-          <div className="movie-details-poster">
-            {movie.poster_path ? (
-              <img 
-                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} 
-                alt={movie.title}
-                style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }}
-              />
-            ) : (
-              'No Image'
-            )}
+  return (
+    <div className="movie-details-page">
+      {/* Hero Section with Backdrop */}
+      <div className="movie-hero">
+        {movie.backdrop_path && (
+          <div className="movie-backdrop-hero">
+            <img 
+              src={`https://image.tmdb.org/t/p/w1920${movie.backdrop_path}`} 
+              alt={movie.title}
+              className="backdrop-hero-image"
+            />
+            <div className="backdrop-overlay"></div>
           </div>
-          
-          <div className="movie-details-info">
-            <h1>{movie.title}</h1>
-            <div className="year">{getYear(movie.release_date)}</div>
-            <div className="rating">⭐ {movie.vote_average?.toFixed(1) || 'N/A'}/10</div>
-            
-            <div className="genres">
-              {movie.genres && movie.genres.map((genre, index) => (
-                <span key={index} className="genre-tag">
-                  {genre.name}
-                </span>
-              ))}
+        )}
+        
+        <div className="container">
+          <button className="back-btn-hero" onClick={() => navigate('/')}>
+            ← Back to Movies
+          </button>
+        </div>
+      </div>
+
+      <div className="container">
+        <div className="movie-details-enhanced">
+          {/* Main Movie Info Section */}
+          <div className="movie-main-info">
+            <div className="movie-poster-large">
+              {movie.poster_path ? (
+                <img 
+                  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} 
+                  alt={movie.title}
+                  className="poster-large"
+                />
+              ) : (
+                <div className="poster-placeholder-large">No Image</div>
+              )}
             </div>
             
-            <div className="overview">
-              <h3>Overview</h3>
-              <p>{movie.overview || 'No overview available.'}</p>
+            <div className="movie-info-main">
+              <div className="movie-title-section">
+                <h1 className="movie-title-main">{movie.title}</h1>
+                {movie.original_title && movie.original_title !== movie.title && (
+                  <h2 className="movie-original-title">({movie.original_title})</h2>
+                )}
+                {movie.tagline && (
+                  <p className="movie-tagline">"{movie.tagline}"</p>
+                )}
+              </div>
+
+              <div className="movie-meta-grid">
+                <div className="meta-item">
+                  <span className="meta-label">Release Date</span>
+                  <span className="meta-value">{getYear(movie.release_date)}</span>
+                </div>
+                <div className="meta-item">
+                  <span className="meta-label">Runtime</span>
+                  <span className="meta-value">{formatRuntime(movie.runtime)}</span>
+                </div>
+                <div className="meta-item">
+                  <span className="meta-label">Language</span>
+                  <span className="meta-value">{getLanguageFlag(movie.original_language)} {movie.original_language?.toUpperCase()}</span>
+                </div>
+                <div className="meta-item">
+                  <span className="meta-label">Status</span>
+                  <span className="meta-value">{movie.status || 'Released'}</span>
+                </div>
+                {movie.adult && (
+                  <div className="meta-item">
+                    <span className="meta-label">Rating</span>
+                    <span className="meta-value adult-rating">18+</span>
+                  </div>
+                )}
+              </div>
+
+              <div className="movie-rating-section">
+                <div className="rating-main">
+                  <span className="rating-star">⭐</span>
+                  <span className="rating-score">{movie.vote_average?.toFixed(1) || 'N/A'}</span>
+                  <span className="rating-max">/10</span>
+                </div>
+                <div className="rating-details">
+                  <span className="vote-count">Based on {movie.vote_count?.toLocaleString() || 0} votes</span>
+                  <span className="popularity-score">Popularity: {movie.popularity?.toFixed(0) || 'N/A'}</span>
+                </div>
+              </div>
+
+              {genresArray.length > 0 && (
+                <div className="movie-genres-section">
+                  <h3>Genres</h3>
+                  <div className="genres-list">
+                    {genresArray.map((genre, index) => (
+                      <span key={index} className="genre-tag-large">
+                        {genre.name}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {movie.overview && (
+                <div className="movie-overview-section">
+                  <h3>Overview</h3>
+                  <p className="overview-text">{movie.overview}</p>
+                </div>
+              )}
             </div>
           </div>
+
+          {/* Financial Information */}
+          {(movie.budget > 0 || movie.revenue > 0) && (
+            <div className="movie-financial-section">
+              <h3>Financial Information</h3>
+              <div className="financial-grid">
+                {movie.budget > 0 && (
+                  <div className="financial-item">
+                    <span className="financial-label">Budget</span>
+                    <span className="financial-value">{formatCurrency(movie.budget)}</span>
+                  </div>
+                )}
+                {movie.revenue > 0 && (
+                  <div className="financial-item">
+                    <span className="financial-label">Revenue</span>
+                    <span className="financial-value revenue">{formatCurrency(movie.revenue)}</span>
+                  </div>
+                )}
+                {movie.budget > 0 && movie.revenue > 0 && (
+                  <div className="financial-item">
+                    <span className="financial-label">Profit/Loss</span>
+                    <span className={`financial-value ${movie.revenue > movie.budget ? 'profit' : 'loss'}`}>
+                      {formatCurrency(movie.revenue - movie.budget)}
+                    </span>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Cast Section */}
+          {movie.cast && movie.cast.length > 0 && (
+            <div className="movie-cast-section">
+              <h3>Cast</h3>
+              <div className="cast-grid">
+                {movie.cast.slice(0, 10).map((actor, index) => (
+                  <div key={index} className="cast-member">
+                    <div className="cast-photo">
+                      {actor.profile_path ? (
+                        <img 
+                          src={`https://image.tmdb.org/t/p/w200${actor.profile_path}`} 
+                          alt={actor.name}
+                          className="cast-image"
+                        />
+                      ) : (
+                        <div className="cast-placeholder">No Photo</div>
+                      )}
+                    </div>
+                    <div className="cast-info">
+                      <span className="cast-name">{actor.name}</span>
+                      <span className="cast-character">{actor.character}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Crew Section */}
+          {movie.crew && movie.crew.length > 0 && (
+            <div className="movie-crew-section">
+              <h3>Crew</h3>
+              <div className="crew-grid">
+                {movie.crew.slice(0, 8).map((member, index) => (
+                  <div key={index} className="crew-member">
+                    <span className="crew-name">{member.name}</span>
+                    <span className="crew-job">{member.job}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Production Information */}
+          {(movie.production_companies?.length > 0 || movie.production_countries?.length > 0) && (
+            <div className="movie-production-section">
+              <h3>Production</h3>
+              {movie.production_companies?.length > 0 && (
+                <div className="production-companies">
+                  <h4>Production Companies</h4>
+                  <div className="companies-list">
+                    {movie.production_companies.map((company, index) => (
+                      <span key={index} className="company-tag">
+                        {company.name}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {movie.production_countries?.length > 0 && (
+                <div className="production-countries">
+                  <h4>Countries</h4>
+                  <div className="countries-list">
+                    {movie.production_countries.map((country, index) => (
+                      <span key={index} className="country-tag">
+                        {country.name}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* External Links */}
+          <div className="movie-links-section">
+            <h3>External Links</h3>
+            <div className="links-grid">
+              {movie.homepage && (
+                <a href={movie.homepage} target="_blank" rel="noopener noreferrer" className="external-link">
+                  🌐 Official Website
+                </a>
+              )}
+              {movie.imdb_id && (
+                <a href={`https://www.imdb.com/title/${movie.imdb_id}`} target="_blank" rel="noopener noreferrer" className="external-link">
+                  🎬 IMDB
+                </a>
+              )}
+            </div>
+          </div>
+
+          {/* Similar Movies */}
+          {movie.similar_movies && movie.similar_movies.length > 0 && (
+            <div className="similar-movies-section">
+              <h3>Similar Movies</h3>
+              <div className="similar-movies-grid">
+                {movie.similar_movies.map((similarMovie, index) => (
+                  <div key={index} className="similar-movie-card" onClick={() => navigate(`/movie/${similarMovie.id}`)}>
+                    <div className="similar-movie-poster">
+                      {similarMovie.poster_path ? (
+                        <img 
+                          src={`https://image.tmdb.org/t/p/w300${similarMovie.poster_path}`} 
+                          alt={similarMovie.title}
+                          className="similar-poster"
+                        />
+                      ) : (
+                        <div className="similar-poster-placeholder">No Image</div>
+                      )}
+                    </div>
+                    <div className="similar-movie-info">
+                      <h4 className="similar-movie-title">{similarMovie.title}</h4>
+                      <span className="similar-movie-year">{getYear(similarMovie.release_date)}</span>
+                      <span className="similar-movie-rating">⭐ {similarMovie.vote_average?.toFixed(1) || 'N/A'}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
