@@ -1,11 +1,9 @@
-version: '3.8'
-
 services:
   backend:
     build:
       context: .
       dockerfile: Dockerfile.backend
-    container_name: movie-stack-minimal-backend
+    container_name: movie-stack-backend
     ports:
       - "5002:5000"
     environment:
@@ -14,8 +12,6 @@ services:
       - TMDB_API_KEY=${TMDB_API_KEY:-}
       - TMDB_BASE_URL=https://api.themoviedb.org/3
       - TMDB_IMAGE_BASE_URL=https://image.tmdb.org/t/p
-    volumes:
-      - ./data:/app/data
     healthcheck:
       test: ["CMD", "node", "-e", "require('http').get('http://127.0.0.1:5000/api/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"]
       interval: 30s
@@ -27,7 +23,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.frontend
-    container_name: movie-stack-minimal-frontend
+    container_name: movie-stack-frontend
     ports:
       - "3002:80"
     depends_on:
@@ -41,4 +37,4 @@ services:
 
 networks:
   default:
-    name: movie-stack-minimal-network
+    name: movie-stack-network
