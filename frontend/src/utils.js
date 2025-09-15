@@ -1,9 +1,14 @@
-// Utility functions for the Movie Stack application
+// Utility Functions
+import { TMDB_IMAGE_BASE_URL, POSTER_SIZE, BACKDROP_SIZE, PROFILE_SIZE, GENRE_MAP, LANGUAGE_FLAGS } from './constants';
 
-// Date formatting utilities
+// Date utilities
 export const getYear = (dateString) => {
   if (!dateString) return 'N/A';
-  return new Date(dateString).getFullYear();
+  try {
+    return new Date(dateString).getFullYear().toString();
+  } catch (error) {
+    return 'N/A';
+  }
 };
 
 // Currency formatting
@@ -28,39 +33,31 @@ export const formatRuntime = (minutes) => {
 // Vote count formatting
 export const formatVoteCount = (count) => {
   if (!count) return '0';
-  if (count >= 1000000) return `${(count / 1000000).toFixed(1)}M`;
-  if (count >= 1000) return `${(count / 1000).toFixed(1)}K`;
+  if (count >= 1000000) {
+    return `${(count / 1000000).toFixed(1)}M`;
+  } else if (count >= 1000) {
+    return `${(count / 1000).toFixed(1)}K`;
+  }
   return count.toString();
 };
 
-// Language flag mapping
+// Language flag utility
 export const getLanguageFlag = (languageCode) => {
-  const flags = {
-    'en': '🇺🇸', 'es': '🇪🇸', 'fr': '🇫🇷', 'de': '🇩🇪', 'it': '🇮🇹',
-    'pt': '🇵🇹', 'ru': '🇷🇺', 'ja': '🇯🇵', 'ko': '🇰🇷', 'zh': '🇨🇳',
-    'hi': '🇮🇳', 'ar': '🇸🇦', 'tr': '🇹🇷', 'pl': '🇵🇱', 'nl': '🇳🇱',
-    'sv': '🇸🇪', 'da': '🇩🇰', 'no': '🇳🇴', 'fi': '🇫🇮', 'cs': '🇨🇿',
-    'hu': '🇭🇺', 'ro': '🇷🇴', 'bg': '🇧🇬', 'hr': '🇭🇷', 'sk': '🇸🇰',
-    'sl': '🇸🇮', 'et': '🇪🇪', 'lv': '🇱🇻', 'lt': '🇱🇹', 'el': '🇬🇷',
-    'he': '🇮🇱', 'th': '🇹🇭', 'vi': '🇻🇳', 'id': '🇮🇩', 'ms': '🇲🇾',
-    'tl': '🇵🇭', 'uk': '🇺🇦', 'be': '🇧🇾', 'ka': '🇬🇪', 'hy': '🇦🇲',
-    'az': '🇦🇿', 'kk': '🇰🇿', 'ky': '🇰🇬', 'uz': '🇺🇿', 'tg': '🇹🇯',
-    'mn': '🇲🇳', 'my': '🇲🇲', 'km': '🇰🇭', 'lo': '🇱🇦', 'si': '🇱🇰',
-    'ne': '🇳🇵', 'bn': '🇧🇩', 'ur': '🇵🇰', 'fa': '🇮🇷', 'ps': '🇦🇫',
-    'ku': '🇮🇶', 'am': '🇪🇹', 'sw': '🇰🇪', 'zu': '🇿🇦', 'af': '🇿🇦',
-    'sq': '🇦🇱', 'mk': '🇲🇰', 'sr': '🇷🇸', 'bs': '🇧🇦', 'me': '🇲🇪',
-    'mt': '🇲🇹', 'cy': '🇬🇧', 'ga': '🇮🇪', 'is': '🇮🇸', 'fo': '🇫🇴',
-    'kl': '🇬🇱', 'sm': '🇼🇸', 'to': '🇹🇴', 'fj': '🇫🇯', 'ty': '🇵🇫',
-    'haw': '🇺🇸', 'mi': '🇳🇿', 'ar': '🇸🇦', 'he': '🇮🇱', 'fa': '🇮🇷'
-  };
-  return flags[languageCode] || '🌍';
+  if (!languageCode) return '🌍';
+  return LANGUAGE_FLAGS[languageCode.toLowerCase()] || '🌍';
 };
 
-// Popularity badge classification
+// Popularity badge utility
 export const getPopularityBadge = (popularity) => {
-  if (popularity >= 1000) return { text: 'Trending', class: 'trending' };
-  if (popularity >= 100) return { text: 'Popular', class: 'popular' };
-  if (popularity >= 10) return { text: 'Rising', class: 'rising' };
+  if (!popularity) return null;
+  
+  if (popularity >= 1000) {
+    return { text: '🔥 Hot', class: 'hot' };
+  } else if (popularity >= 500) {
+    return { text: '⭐ Popular', class: 'popular' };
+  } else if (popularity >= 100) {
+    return { text: '📈 Rising', class: 'rising' };
+  }
   return null;
 };
 
@@ -68,59 +65,123 @@ export const getPopularityBadge = (popularity) => {
 export const parseGenres = (genres) => {
   if (!genres) return [];
   
-  if (typeof genres === 'string') {
-    // Convert comma-separated string to array of genre names
-    const genreMap = {
-      '28': 'Action', '12': 'Adventure', '16': 'Animation', '35': 'Comedy',
-      '80': 'Crime', '99': 'Documentary', '18': 'Drama', '10751': 'Family',
-      '14': 'Fantasy', '36': 'History', '27': 'Horror', '10402': 'Music',
-      '9648': 'Mystery', '10749': 'Romance', '878': 'Science Fiction',
-      '10770': 'TV Movie', '53': 'Thriller', '10752': 'War', '37': 'Western'
-    };
-    return genres.split(',').map(id => ({
-      id: id.trim(),
-      name: genreMap[id.trim()] || `Genre ${id.trim()}`
-    }));
-  } else if (Array.isArray(genres)) {
+  // If it's already an array of objects, return as is
+  if (Array.isArray(genres) && genres.length > 0 && typeof genres[0] === 'object') {
     return genres;
+  }
+  
+  // If it's a string of comma-separated IDs, parse it
+  if (typeof genres === 'string') {
+    const genreIds = genres.split(',').map(id => parseInt(id.trim())).filter(id => !isNaN(id));
+    return genreIds.map(id => ({
+      id,
+      name: GENRE_MAP[id] || `Genre ${id}`
+    }));
+  }
+  
+  // If it's an array of IDs, convert to objects
+  if (Array.isArray(genres)) {
+    return genres.map(id => ({
+      id: typeof id === 'number' ? id : parseInt(id),
+      name: GENRE_MAP[id] || `Genre ${id}`
+    }));
   }
   
   return [];
 };
 
-// Image URL helpers
-export const getImageUrl = (path, size = 'w500') => {
+// Image URL utilities
+export const getImageUrl = (path, size = POSTER_SIZE) => {
   if (!path) return null;
-  return `https://image.tmdb.org/t/p/${size}${path}`;
+  return `${TMDB_IMAGE_BASE_URL}/${size}${path}`;
 };
 
-export const getBackdropUrl = (path, size = 'w1280') => {
-  if (!path) return null;
-  return `https://image.tmdb.org/t/p/${size}${path}`;
+export const getBackdropUrl = (path) => {
+  return getImageUrl(path, BACKDROP_SIZE);
 };
 
-export const getPosterUrl = (path, size = 'w500') => {
-  if (!path) return null;
-  return `https://image.tmdb.org/t/p/${size}${path}`;
+export const getPosterUrl = (path, size = POSTER_SIZE) => {
+  return getImageUrl(path, size);
 };
 
-// Text truncation utility
+export const getProfileUrl = (path) => {
+  return getImageUrl(path, PROFILE_SIZE);
+};
+
+// Text utilities
 export const truncateText = (text, maxLength = 150) => {
   if (!text) return '';
   if (text.length <= maxLength) return text;
   return text.substring(0, maxLength).trim() + '...';
 };
 
-// API response helper
-export const handleApiResponse = async (apiCall) => {
-  try {
-    const response = await apiCall();
-    if (response.success) {
-      return { data: response.data, error: null };
-    } else {
-      return { data: null, error: response.message };
-    }
-  } catch (error) {
-    return { data: null, error: error.message || 'An error occurred' };
+// API response handler
+export const handleApiResponse = (response) => {
+  if (response.success) {
+    return response.data;
+  } else {
+    throw new Error(response.message || 'API request failed');
   }
+};
+
+// Debounce utility
+export const debounce = (func, wait) => {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+};
+
+// Local storage utilities
+export const storage = {
+  get: (key, defaultValue = null) => {
+    try {
+      const item = localStorage.getItem(key);
+      return item ? JSON.parse(item) : defaultValue;
+    } catch (error) {
+      console.error('Error reading from localStorage:', error);
+      return defaultValue;
+    }
+  },
+  
+  set: (key, value) => {
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+    } catch (error) {
+      console.error('Error writing to localStorage:', error);
+    }
+  },
+  
+  remove: (key) => {
+    try {
+      localStorage.removeItem(key);
+    } catch (error) {
+      console.error('Error removing from localStorage:', error);
+    }
+  }
+};
+
+// URL utilities
+export const buildQueryString = (params) => {
+  const searchParams = new URLSearchParams();
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== null && value !== undefined && value !== '') {
+      searchParams.append(key, value);
+    }
+  });
+  return searchParams.toString();
+};
+
+// Validation utilities
+export const isValidMovieId = (id) => {
+  return id && !isNaN(id) && parseInt(id) > 0;
+};
+
+export const isValidSearchQuery = (query) => {
+  return query && typeof query === 'string' && query.trim().length > 0;
 };
