@@ -53,23 +53,148 @@ function MovieCard({ movie, onClick }) {
     return new Date(dateString).getFullYear()
   }
 
+  const getLanguageFlag = (languageCode) => {
+    const flags = {
+      'en': '🇺🇸', 'es': '🇪🇸', 'fr': '🇫🇷', 'de': '🇩🇪', 'it': '🇮🇹',
+      'pt': '🇵🇹', 'ru': '🇷🇺', 'ja': '🇯🇵', 'ko': '🇰🇷', 'zh': '🇨🇳',
+      'hi': '🇮🇳', 'ar': '🇸🇦', 'th': '🇹🇭', 'nl': '🇳🇱', 'sv': '🇸🇪',
+      'da': '🇩🇰', 'no': '🇳🇴', 'fi': '🇫🇮', 'pl': '🇵🇱', 'tr': '🇹🇷'
+    }
+    return flags[languageCode] || '🌍'
+  }
+
+  const formatVoteCount = (count) => {
+    if (!count) return 'No votes'
+    if (count >= 1000000) return `${(count / 1000000).toFixed(1)}M votes`
+    if (count >= 1000) return `${(count / 1000).toFixed(1)}K votes`
+    return `${count} votes`
+  }
+
+  const getPopularityBadge = (popularity) => {
+    if (popularity >= 100) return { text: '🔥 Trending', class: 'trending' }
+    if (popularity >= 50) return { text: '⭐ Popular', class: 'popular' }
+    if (popularity >= 20) return { text: '📈 Rising', class: 'rising' }
+    return null
+  }
+
+  const parseGenres = (genres) => {
+    if (!genres) return []
+    
+    if (typeof genres === 'string') {
+      // Convert comma-separated string to array of genre names
+      const genreMap = {
+        '28': 'Action', '12': 'Adventure', '16': 'Animation', '35': 'Comedy',
+        '80': 'Crime', '99': 'Documentary', '18': 'Drama', '10751': 'Family',
+        '14': 'Fantasy', '36': 'History', '27': 'Horror', '10402': 'Music',
+        '9648': 'Mystery', '10749': 'Romance', '878': 'Science Fiction',
+        '10770': 'TV Movie', '53': 'Thriller', '10752': 'War', '37': 'Western'
+      }
+      return genres.split(',').map(id => ({
+        id: id.trim(),
+        name: genreMap[id.trim()] || `Genre ${id.trim()}`
+      }))
+    } else if (Array.isArray(genres)) {
+      return genres
+    }
+    
+    return []
+  }
+
+  const popularityBadge = getPopularityBadge(movie.popularity)
+
   return (
-    <div className="movie-card" onClick={() => onClick(movie)}>
-      <div className="movie-poster">
-        {movie.poster_path ? (
+    <div className="movie-card-enhanced" onClick={() => onClick(movie)}>
+      {/* Backdrop Image */}
+      <div className="movie-backdrop">
+        {movie.backdrop_path ? (
           <img 
-            src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} 
+            src={`https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`} 
             alt={movie.title}
-            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            className="backdrop-image"
           />
         ) : (
-          'No Image'
+          <div className="backdrop-placeholder"></div>
         )}
+        
+        {/* Overlay with poster */}
+        <div className="movie-overlay">
+          <div className="movie-poster-small">
+            {movie.poster_path ? (
+              <img 
+                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} 
+                alt={movie.title}
+                className="poster-image"
+              />
+            ) : (
+              <div className="poster-placeholder">No Image</div>
+            )}
+          </div>
+          
+          {/* Top badges */}
+          <div className="movie-badges">
+            {movie.adult && <span className="badge adult-badge">18+</span>}
+            {popularityBadge && (
+              <span className={`badge popularity-badge ${popularityBadge.class}`}>
+                {popularityBadge.text}
+              </span>
+            )}
+          </div>
+        </div>
       </div>
-      <div className="movie-info">
-        <h3 className="movie-title">{movie.title}</h3>
-        <div className="movie-year">{getYear(movie.release_date)}</div>
-        <div className="movie-rating">⭐ {movie.vote_average?.toFixed(1) || 'N/A'}</div>
+
+      <div className="movie-info-enhanced">
+        <div className="movie-header">
+          <h3 className="movie-title">{movie.title}</h3>
+          <div className="movie-meta">
+            <span className="movie-year">{getYear(movie.release_date)}</span>
+            <span className="movie-language">{getLanguageFlag(movie.original_language)}</span>
+            {movie.runtime && <span className="movie-runtime">{movie.runtime}min</span>}
+          </div>
+        </div>
+
+        <div className="movie-rating-section">
+          <div className="rating-main">
+            <span className="rating-star">⭐</span>
+            <span className="rating-score">{movie.vote_average?.toFixed(1) || 'N/A'}</span>
+            <span className="rating-max">/10</span>
+          </div>
+          <div className="rating-details">
+            <span className="vote-count">{formatVoteCount(movie.vote_count)}</span>
+            <span className="popularity-score">Popularity: {movie.popularity?.toFixed(0) || 'N/A'}</span>
+          </div>
+        </div>
+
+        {(() => {
+          const genresArray = parseGenres(movie.genres)
+          return genresArray.length > 0 && (
+            <div className="movie-genres">
+              {genresArray.slice(0, 3).map((genre, index) => (
+                <span key={index} className="genre-chip">
+                  {genre.name}
+                </span>
+              ))}
+              {genresArray.length > 3 && (
+                <span className="genre-more">+{genresArray.length - 3} more</span>
+              )}
+            </div>
+          )
+        })()}
+
+        {movie.overview && (
+          <div className="movie-overview">
+            <p>{movie.overview.length > 120 ? `${movie.overview.substring(0, 120)}...` : movie.overview}</p>
+          </div>
+        )}
+
+        {/* Financial info for high-budget movies */}
+        {movie.budget > 0 && (
+          <div className="movie-financial">
+            <span className="budget">Budget: ${movie.budget.toLocaleString()}</span>
+            {movie.revenue > 0 && (
+              <span className="revenue">Revenue: ${movie.revenue.toLocaleString()}</span>
+            )}
+          </div>
+        )}
       </div>
     </div>
   )
