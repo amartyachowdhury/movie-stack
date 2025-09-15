@@ -39,10 +39,6 @@ const api = {
   
   async searchMovies(query, page = 1) {
     return this.request(`/movies/search?q=${encodeURIComponent(query)}&page=${page}`)
-  },
-  
-  async searchMoviesTMDB(query, page = 1) {
-    return this.request(`/movies/search/tmdb?q=${encodeURIComponent(query)}&page=${page}`)
   }
 }
 
@@ -144,7 +140,7 @@ function MovieCard({ movie, onClick }) {
 
       <div className="movie-info-enhanced">
         <div className="movie-header">
-          <h3 className="movie-title">{movie.title}</h3>
+        <h3 className="movie-title">{movie.title}</h3>
           <div className="movie-meta">
             <span className="movie-year">{getYear(movie.release_date)}</span>
             <span className="movie-language">{getLanguageFlag(movie.original_language)}</span>
@@ -217,19 +213,8 @@ function HomePage() {
     try {
       setLoading(true)
       setError(null)
-      // Try to load popular movies from TMDB first, fallback to local movies
-      try {
-        const response = await api.getPopularMovies()
-        if (response.success) {
-          setMovies(response.data.items)
-          return
-        }
-      } catch (tmdbError) {
-        console.log('TMDB not available, using local movies:', tmdbError.message)
-      }
       
-      // Fallback to local movies
-      const response = await api.getMovies()
+      const response = await api.getPopularMovies()
       if (response.success) {
         setMovies(response.data.items)
       } else {
@@ -254,18 +239,6 @@ function HomePage() {
       setIsSearching(true)
       setError(null)
       
-      // Try TMDB search first, fallback to local search
-      try {
-        const response = await api.searchMoviesTMDB(searchQuery)
-        if (response.success) {
-          setMovies(response.data.items)
-          return
-        }
-      } catch (tmdbError) {
-        console.log('TMDB search not available, using local search:', tmdbError.message)
-      }
-      
-      // Fallback to local search
       const response = await api.searchMovies(searchQuery)
       if (response.success) {
         setMovies(response.data.items)
@@ -344,18 +317,6 @@ function MovieDetailsPage() {
       setLoading(true)
       setError(null)
       
-      // Try TMDB endpoint first for TMDB movies
-      try {
-        const response = await api.request(`/movies/${id}/tmdb`)
-        if (response.success) {
-          setMovie(response.data)
-          return
-        }
-      } catch (tmdbError) {
-        console.log('TMDB endpoint not available, trying local endpoint:', tmdbError.message)
-      }
-      
-      // Fallback to local endpoint
       const response = await api.getMovie(id)
       if (response.success) {
         setMovie(response.data)
@@ -467,10 +428,10 @@ function MovieDetailsPage() {
           </div>
         )}
         
-        <div className="container">
+    <div className="container">
           <button className="back-btn-hero" onClick={() => navigate('/')}>
-            ← Back to Movies
-          </button>
+        ← Back to Movies
+      </button>
         </div>
       </div>
 
@@ -479,13 +440,13 @@ function MovieDetailsPage() {
           {/* Main Movie Info Section */}
           <div className="movie-main-info">
             <div className="movie-poster-large">
-              {movie.poster_path ? (
-                <img 
-                  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} 
-                  alt={movie.title}
+            {movie.poster_path ? (
+              <img 
+                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} 
+                alt={movie.title}
                   className="poster-large"
-                />
-              ) : (
+              />
+            ) : (
                 <div className="poster-placeholder-large">No Image</div>
               )}
             </div>
@@ -523,9 +484,9 @@ function MovieDetailsPage() {
                     <span className="meta-label">Rating</span>
                     <span className="meta-value adult-rating">18+</span>
                   </div>
-                )}
-              </div>
-
+            )}
+          </div>
+          
               <div className="movie-rating-section">
                 <div className="rating-main">
                   <span className="rating-star">⭐</span>
@@ -544,16 +505,16 @@ function MovieDetailsPage() {
                   <div className="genres-list">
                     {genresArray.map((genre, index) => (
                       <span key={index} className="genre-tag-large">
-                        {genre.name}
-                      </span>
-                    ))}
-                  </div>
+                  {genre.name}
+                </span>
+              ))}
+            </div>
                 </div>
               )}
-
+            
               {movie.overview && (
                 <div className="movie-overview-section">
-                  <h3>Overview</h3>
+              <h3>Overview</h3>
                   <p className="overview-text">{movie.overview}</p>
                 </div>
               )}
