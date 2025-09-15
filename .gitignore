@@ -5,6 +5,10 @@
 .env.test.local
 .env.production.local
 
+# Environment templates (keep these in git)
+# env.example
+# env.template
+
 # Dependencies
 node_modules/
 npm-debug.log*
