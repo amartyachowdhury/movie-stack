@@ -162,7 +162,7 @@ class TMDBService {
     try {
       const response = await this.client.get(`/movie/${movieId}`, {
         params: {
-          append_to_response: 'credits,videos,similar'
+          append_to_response: 'credits,videos,similar,watch/providers'
         }
       });
 
@@ -290,6 +290,7 @@ class TMDBService {
         clips: clips,
         primary_trailer: trailers[0] || teasers[0] || clips[0] || null
       },
+      watch_providers: movie['watch/providers'] || null,
       omdb: omdbData
     };
   }

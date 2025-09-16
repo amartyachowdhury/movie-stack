@@ -12,6 +12,7 @@ import {
   getPosterUrl,
   truncateText
 } from '../../utils';
+import WatchProviders from './WatchProviders';
 
 const EnhancedMovieInfo = ({ movie }) => {
   if (!movie) return null;
@@ -377,6 +378,11 @@ const EnhancedMovieInfo = ({ movie }) => {
             )}
           </div>
         </div>
+      )}
+
+      {/* Watch Providers */}
+      {movie.watch_providers && (
+        <WatchProviders watchProviders={movie.watch_providers} />
       )}
 
       {/* Enhanced External Links */}
