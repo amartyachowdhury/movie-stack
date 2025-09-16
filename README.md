@@ -41,6 +41,34 @@ A modern, feature-rich movie application powered by The Movie Database (TMDB) AP
 - **Nginx** for frontend serving
 - **Environment-based configuration**
 
+## 🚀 Quick Start
+
+### Prerequisites
+- Docker and Docker Compose
+- TMDB API key (free at [themoviedb.org](https://developer.themoviedb.org/))
+
+### Setup
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd movie-stack
+   ```
+
+2. **Configure environment**
+   ```bash
+   cp env.template .env
+   # Edit .env and add your TMDB_API_KEY
+   ```
+
+3. **Start the application**
+   ```bash
+   docker-compose up --build
+   ```
+
+4. **Access the application**
+   - Frontend: http://localhost:3002
+   - API: http://localhost:5002/api
+
 ## 📝 License
 
 MIT License - feel free to use this as a starting point for your own projects!
