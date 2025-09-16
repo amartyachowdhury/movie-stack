@@ -39,6 +39,7 @@ const HomePage = ({ onMovieClick }) => {
   const isLoading = searchQuery ? searchLoading : moviesLoading;
   const error = searchQuery ? searchError : moviesError;
 
+
   return (
     <div className="home-page">
       <Header 
@@ -99,7 +100,7 @@ const HomePage = ({ onMovieClick }) => {
           </div>
         )}
 
-        {!isLoading && !error && displayMovies.length > 0 && (
+        {displayMovies.length > 0 && (
           <>
             <div className="results-header">
               <h2>
