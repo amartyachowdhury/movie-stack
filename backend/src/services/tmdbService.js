@@ -214,6 +214,24 @@ class TMDBService {
       name: g.name
     })) : [];
 
+    // Format videos data
+    const videos = movie.videos?.results || [];
+    const trailers = videos.filter(video => 
+      video.type === 'Trailer' && 
+      video.site === 'YouTube' && 
+      video.official === true
+    );
+    const teasers = videos.filter(video => 
+      video.type === 'Teaser' && 
+      video.site === 'YouTube' && 
+      video.official === true
+    );
+    const clips = videos.filter(video => 
+      video.type === 'Clip' && 
+      video.site === 'YouTube' && 
+      video.official === true
+    );
+
     return {
       tmdb_id: movie.id,
       title: movie.title,
@@ -244,7 +262,14 @@ class TMDBService {
       crew: movie.credits?.crew?.slice(0, 10) || [],
       similar_movies: movie.similar?.results?.slice(0, 5) || [],
       rating_count: movie.vote_count,
-      average_rating: movie.vote_average
+      average_rating: movie.vote_average,
+      videos: {
+        all: videos,
+        trailers: trailers,
+        teasers: teasers,
+        clips: clips,
+        primary_trailer: trailers[0] || teasers[0] || clips[0] || null
+      }
     };
   }
 

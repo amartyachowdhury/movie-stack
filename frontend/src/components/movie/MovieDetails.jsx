@@ -12,6 +12,7 @@ import {
   getPosterUrl,
   truncateText
 } from '../../utils';
+import TrailerSection from './TrailerSection';
 
 const MovieDetails = ({ movie, onBack }) => {
   const genres = parseGenres(movie.genres);
@@ -264,6 +265,11 @@ const MovieDetails = ({ movie, onBack }) => {
               )}
             </div>
           </div>
+        )}
+
+        {/* Trailers & Videos */}
+        {movie.videos && (
+          <TrailerSection videos={movie.videos} />
         )}
 
         {/* Similar Movies */}
