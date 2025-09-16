@@ -17,6 +17,13 @@ const config = {
     timeout: parseInt(process.env.TMDB_TIMEOUT) || 10000,
   },
 
+  // OMDb API Configuration
+  omdb: {
+    apiKey: process.env.OMDB_API_KEY,
+    baseUrl: process.env.OMDB_BASE_URL || 'http://www.omdbapi.com',
+    timeout: parseInt(process.env.OMDB_TIMEOUT) || 10000,
+  },
+
   // CORS Configuration
   cors: {
     origin: process.env.CORS_ORIGIN || '*',

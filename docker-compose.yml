@@ -12,6 +12,8 @@ services:
       - TMDB_API_KEY=${TMDB_API_KEY:-}
       - TMDB_BASE_URL=https://api.themoviedb.org/3
       - TMDB_IMAGE_BASE_URL=https://image.tmdb.org/t/p
+      - OMDB_API_KEY=${OMDB_API_KEY:-}
+      - OMDB_BASE_URL=${OMDB_BASE_URL:-http://www.omdbapi.com}
     healthcheck:
       test: ["CMD", "node", "-e", "require('http').get('http://127.0.0.1:5000/api/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"]
       interval: 30s

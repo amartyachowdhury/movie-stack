@@ -1,6 +1,7 @@
 const axios = require('axios');
 const config = require('../config');
 const logger = require('../utils/logger');
+const OMDbService = require('./omdbService');
 
 class TMDBService {
   constructor() {
@@ -8,6 +9,7 @@ class TMDBService {
     this.baseURL = config.tmdb.baseUrl;
     this.imageBaseURL = config.tmdb.imageBaseUrl;
     this.timeout = config.tmdb.timeout;
+    this.omdbService = new OMDbService();
     
     // Create axios instance with default config
     this.client = axios.create({
@@ -165,7 +167,7 @@ class TMDBService {
       });
 
       logger.info('Successfully fetched movie details', { movieId, title: response.data.title });
-      return this.formatMovieDetails(response.data);
+      return await this.formatMovieDetails(response.data);
     } catch (error) {
       logger.error('Error fetching movie details', { error: error.message, movieId });
       return this.getSampleMovieDetails(movieId);
@@ -208,7 +210,7 @@ class TMDBService {
     }));
   }
 
-  formatMovieDetails(movie) {
+  async formatMovieDetails(movie) {
     const genres = movie.genres ? movie.genres.map(g => ({
       id: g.id,
       name: g.name
@@ -231,6 +233,24 @@ class TMDBService {
       video.site === 'YouTube' && 
       video.official === true
     );
+
+    // Get OMDb data
+    let omdbData = null;
+    try {
+      if (movie.imdb_id) {
+        omdbData = await this.omdbService.getMovieByIMDbId(movie.imdb_id);
+      } else {
+        // Try to get by title and year if no IMDB ID
+        const year = movie.release_date ? new Date(movie.release_date).getFullYear() : null;
+        omdbData = await this.omdbService.getMovieByTitle(movie.title, year);
+      }
+    } catch (error) {
+      logger.warn('Failed to fetch OMDb data', { 
+        movieId: movie.id, 
+        title: movie.title, 
+        error: error.message 
+      });
+    }
 
     return {
       tmdb_id: movie.id,
@@ -269,7 +289,8 @@ class TMDBService {
         teasers: teasers,
         clips: clips,
         primary_trailer: trailers[0] || teasers[0] || clips[0] || null
-      }
+      },
+      omdb: omdbData
     };
   }
 
