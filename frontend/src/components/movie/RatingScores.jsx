@@ -1,6 +1,5 @@
 // Rating Scores Component - Displays IMDB, Rotten Tomatoes, and Metacritic scores
 import React from 'react';
-import DataSourceIndicator from '../common/DataSourceIndicator';
 
 const RatingScores = ({ omdbData }) => {
   if (!omdbData || !omdbData.ratings) {
@@ -31,7 +30,6 @@ const RatingScores = ({ omdbData }) => {
   return (
     <div className="rating-scores">
       <h3>🎯 Professional Ratings</h3>
-      <DataSourceIndicator source="omdb" size="small" />
       <div className="scores-grid">
         {/* IMDB Rating */}
         {ratings.imdb && (

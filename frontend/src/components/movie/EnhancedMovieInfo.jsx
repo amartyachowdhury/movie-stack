@@ -12,7 +12,6 @@ import {
   getPosterUrl,
   truncateText
 } from '../../utils';
-import DataSourceIndicator from '../common/DataSourceIndicator';
 
 const EnhancedMovieInfo = ({ movie }) => {
   if (!movie) return null;
@@ -180,47 +179,40 @@ const EnhancedMovieInfo = ({ movie }) => {
                   {releaseInfo.formatted && releaseInfo.formatted !== releaseInfo.year && (
                     <span className="meta-detail"> ({releaseInfo.formatted})</span>
                   )}
-                  <DataSourceIndicator source={omdbData?.year ? 'omdb' : 'tmdb'} />
                 </div>
               )}
               
               <div className="meta-item">
                 <strong>Runtime:</strong> {getRuntime()}
-                <DataSourceIndicator source={omdbData?.runtime ? 'omdb' : 'tmdb'} />
               </div>
               
               {omdbData?.rated && (
                 <div className="meta-item">
                   <strong>MPAA Rating:</strong> {omdbData.rated}
-                  <DataSourceIndicator source="omdb" />
                 </div>
               )}
               
               {movie.vote_average > 0 && (
                 <div className="meta-item">
-                  <strong>TMDB Rating:</strong> ⭐ {movie.vote_average?.toFixed(1)} / 10 ({formatVoteCount(movie.vote_count)} votes)
-                  <DataSourceIndicator source="tmdb" />
+                  <strong>Community Rating:</strong> ⭐ {movie.vote_average?.toFixed(1)} / 10 ({formatVoteCount(movie.vote_count)} votes)
                 </div>
               )}
               
               {movie.original_language && (
                 <div className="meta-item">
                   <strong>Original Language:</strong> {getLanguageFlag(movie.original_language)} {movie.original_language.toUpperCase()}
-                  <DataSourceIndicator source="tmdb" />
                 </div>
               )}
               
               {movie.status && (
                 <div className="meta-item">
                   <strong>Status:</strong> {movie.status}
-                  <DataSourceIndicator source="tmdb" />
                 </div>
               )}
               
               {movie.popularity > 0 && (
                 <div className="meta-item">
                   <strong>Popularity:</strong> {popularityBadge?.text || 'N/A'}
-                  <DataSourceIndicator source="tmdb" />
                 </div>
               )}
             </div>
@@ -229,7 +221,6 @@ const EnhancedMovieInfo = ({ movie }) => {
             {combinedGenres.length > 0 && (
               <div className="movie-genres-section">
                 <strong>Genres:</strong>
-                <DataSourceIndicator source="combined" />
                 <div className="movie-genres">
                   {combinedGenres.map((genre, index) => (
                     <span key={index} className="genre-chip">
@@ -258,19 +249,16 @@ const EnhancedMovieInfo = ({ movie }) => {
           {movie.budget > 0 && (
             <div className="financial-item">
               <strong>Budget:</strong> {formatCurrency(movie.budget)}
-              <DataSourceIndicator source="tmdb" />
             </div>
           )}
           {movie.revenue > 0 && (
             <div className="financial-item">
               <strong>Box Office:</strong> {formatCurrency(movie.revenue)}
-              <DataSourceIndicator source="tmdb" />
             </div>
           )}
           {omdbData?.boxOffice && (
             <div className="financial-item">
-              <strong>OMDb Box Office:</strong> {omdbData.boxOffice}
-              <DataSourceIndicator source="omdb" />
+              <strong>Additional Box Office:</strong> {omdbData.boxOffice}
             </div>
           )}
           {profit !== null && (
@@ -279,7 +267,6 @@ const EnhancedMovieInfo = ({ movie }) => {
               <span style={{ color: profit >= 0 ? '#4CAF50' : '#F44336' }}>
                 {formatCurrency(profit)}
               </span>
-              <DataSourceIndicator source="combined" />
             </div>
           )}
         </div>
@@ -289,7 +276,6 @@ const EnhancedMovieInfo = ({ movie }) => {
       <div className="movie-cast-crew-enhanced">
         <div className="cast-section">
           <h3>🎭 Cast</h3>
-          <DataSourceIndicator source="combined" size="small" />
           <div className="cast-grid">
             {combinedCast.slice(0, 12).map((person) => (
               <div key={person.id} className="cast-item">
@@ -313,7 +299,6 @@ const EnhancedMovieInfo = ({ movie }) => {
 
         <div className="crew-section">
           <h3>🎬 Key Crew</h3>
-          <DataSourceIndicator source="combined" size="small" />
           <div className="crew-grid">
             {combinedCrew.filter(c => ['Director', 'Writer', 'Producer', 'Original Music Composer'].includes(c.job)).map((person) => (
               <div key={person.credit_id || person.id} className="crew-item">
@@ -343,7 +328,6 @@ const EnhancedMovieInfo = ({ movie }) => {
           {movie.production_companies.length > 0 && (
             <div className="production-item">
               <strong>Production Companies:</strong> 
-              <DataSourceIndicator source="tmdb" />
               <div className="production-companies">
                 {movie.production_companies.map(pc => (
                   <span key={pc.id} className="company-chip">{pc.name}</span>
@@ -355,7 +339,6 @@ const EnhancedMovieInfo = ({ movie }) => {
           {combinedCountries.codes.length > 0 && (
             <div className="production-item">
               <strong>Production Countries:</strong> 
-              <DataSourceIndicator source="combined" />
               <div className="country-flags">
                 {combinedCountries.codes.map(code => (
                   <span key={code} className="country-flag">{code}</span>
@@ -372,7 +355,6 @@ const EnhancedMovieInfo = ({ movie }) => {
           {combinedLanguages.length > 0 && (
             <div className="production-item">
               <strong>Languages:</strong> {combinedLanguages.join(', ')}
-              <DataSourceIndicator source="combined" />
             </div>
           )}
         </div>
@@ -384,16 +366,12 @@ const EnhancedMovieInfo = ({ movie }) => {
           <h3>🏆 Awards & Recognition</h3>
           <div className="awards-content">
             {omdbData?.awards && (
-              <div className="omdb-awards">
-                <h4>OMDb Awards:</h4>
-                <DataSourceIndicator source="omdb" size="small" />
+              <div className="awards-item">
                 <p>{omdbData.awards}</p>
               </div>
             )}
-            {movie.awards && (
-              <div className="tmdb-awards">
-                <h4>TMDB Awards:</h4>
-                <DataSourceIndicator source="tmdb" size="small" />
+            {movie.awards && omdbData?.awards !== movie.awards && (
+              <div className="awards-item">
                 <p>{movie.awards}</p>
               </div>
             )}
