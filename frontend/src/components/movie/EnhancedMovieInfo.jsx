@@ -212,7 +212,7 @@ const EnhancedMovieInfo = ({ movie }) => {
               
               {movie.popularity > 0 && (
                 <div className="meta-item">
-                  <strong>Popularity:</strong> {popularityBadge}
+                  <strong>Popularity:</strong> {popularityBadge?.text || 'N/A'}
                 </div>
               )}
             </div>
