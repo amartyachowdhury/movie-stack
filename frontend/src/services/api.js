@@ -48,6 +48,19 @@ class ApiService {
     return this.request(`/movies/search?q=${encodeURIComponent(query)}&page=${page}`);
   }
 
+  async discoverMovies(filters = {}, page = 1) {
+    const params = new URLSearchParams();
+    params.append('page', page);
+    
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value !== undefined && value !== '') {
+        params.append(key, value);
+      }
+    });
+    
+    return this.request(`/movies/discover?${params.toString()}`);
+  }
+
   // Genre endpoints
   async getGenres() {
     return this.request('/genres');

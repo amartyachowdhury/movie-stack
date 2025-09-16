@@ -10,6 +10,7 @@ router.get('/', ErrorHandler.handleAsync(movieController.getMovies));
 router.get('/popular', ErrorHandler.handleAsync(movieController.getPopularMovies));
 router.get('/top-rated', ErrorHandler.handleAsync(movieController.getTopRatedMovies));
 router.get('/search', ErrorHandler.handleAsync(movieController.searchMovies));
+router.get('/discover', ErrorHandler.handleAsync(movieController.discoverMovies));
 router.get('/:id', ErrorHandler.handleAsync(movieController.getMovieDetails));
 
 module.exports = router;

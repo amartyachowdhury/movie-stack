@@ -112,6 +112,45 @@ class TMDBService {
     }
   }
 
+  async discoverMovies(filters = {}, page = 1) {
+    if (!this.apiKey) {
+      logger.warn('No API key available, returning sample movies');
+      return this.getSampleMovies();
+    }
+
+    try {
+      const params = {
+        page,
+        sort_by: filters.sortBy || 'popularity.desc',
+        include_adult: false
+      };
+
+      // Add filters if provided
+      if (filters.genre) params.with_genres = filters.genre;
+      if (filters.year) params.year = filters.year;
+      if (filters.minRating) params['vote_average.gte'] = filters.minRating;
+      if (filters.maxRating) params['vote_average.lte'] = filters.maxRating;
+      if (filters.language) params.with_original_language = filters.language;
+      if (filters.query) params.query = filters.query;
+
+      const response = await this.client.get('/discover/movie', { params });
+
+      logger.info('Successfully discovered movies', { 
+        filters, 
+        page, 
+        count: response.data.results.length 
+      });
+      return this.formatMovies(response.data.results);
+    } catch (error) {
+      logger.error('Error discovering movies', { 
+        error: error.message, 
+        filters, 
+        page 
+      });
+      return this.getSampleMovies();
+    }
+  }
+
   async getMovieDetails(movieId) {
     if (!this.apiKey) {
       logger.warn('No API key available, returning sample movie details');

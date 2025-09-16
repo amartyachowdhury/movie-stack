@@ -107,6 +107,45 @@ class MovieController {
     }
   };
 
+  // Advanced search with filters
+  discoverMovies = async (req, res) => {
+    try {
+      const page = parseInt(req.query.page) || 1;
+      const filters = {
+        query: req.query.query,
+        genre: req.query.genre,
+        year: req.query.year,
+        minRating: req.query.minRating,
+        maxRating: req.query.maxRating,
+        language: req.query.language,
+        sortBy: req.query.sortBy || 'popularity.desc'
+      };
+
+      // Remove empty filters
+      Object.keys(filters).forEach(key => {
+        if (filters[key] === undefined || filters[key] === '') {
+          delete filters[key];
+        }
+      });
+
+      const movies = await this.tmdbService.discoverMovies(filters, page);
+      
+      const pagination = {
+        page,
+        limit: 20,
+        total: movies.length,
+        totalPages: 1,
+        hasNext: false,
+        hasPrev: page > 1
+      };
+      
+      return ResponseHelper.success(res, 'Movies discovered successfully', movies, pagination);
+    } catch (error) {
+      logger.error('Error in discoverMovies controller', { error: error.message, filters: req.query });
+      return ResponseHelper.error(res, 'Error discovering movies', error);
+    }
+  };
+
   // Get movies (defaults to popular)
   getMovies = async (req, res) => {
     try {

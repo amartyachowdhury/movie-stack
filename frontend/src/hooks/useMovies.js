@@ -95,6 +95,52 @@ export const useMovieSearch = () => {
   };
 };
 
+// Hook for advanced movie discovery with filters
+export const useMovieDiscovery = () => {
+  const [discoveryResults, setDiscoveryResults] = useState([]);
+  const [loading, setLoading] = useState(LOADING_STATES.IDLE);
+  const [error, setError] = useState(null);
+  const [currentFilters, setCurrentFilters] = useState({});
+
+  const discoverMovies = useCallback(async (filters = {}, page = 1) => {
+    setLoading(LOADING_STATES.LOADING);
+    setError(null);
+    setCurrentFilters(filters);
+    
+    try {
+      const response = await api.discoverMovies(filters, page);
+      
+      if (response.success) {
+        setDiscoveryResults(response.data.items || response.data);
+        setLoading(LOADING_STATES.SUCCESS);
+      } else {
+        setError(response.message || 'Discovery failed');
+        setLoading(LOADING_STATES.ERROR);
+      }
+    } catch (err) {
+      setError('Discovery failed');
+      setLoading(LOADING_STATES.ERROR);
+      console.error('Error discovering movies:', err);
+    }
+  }, []);
+
+  const clearDiscovery = useCallback(() => {
+    setDiscoveryResults([]);
+    setError(null);
+    setLoading(LOADING_STATES.IDLE);
+    setCurrentFilters({});
+  }, []);
+
+  return { 
+    discoveryResults, 
+    loading, 
+    error, 
+    currentFilters,
+    discoverMovies, 
+    clearDiscovery 
+  };
+};
+
 // Hook for fetching individual movie details
 export const useMovieDetails = (movieId) => {
   const [movie, setMovie] = useState(null);

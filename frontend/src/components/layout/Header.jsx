@@ -1,7 +1,7 @@
 // Header Component
 import React, { useState } from 'react';
 
-const Header = ({ onSearch, searchQuery, setSearchQuery, isSearching }) => {
+const Header = ({ onSearch, searchQuery, setSearchQuery, isSearching, onAdvancedSearch }) => {
   const [localQuery, setLocalQuery] = useState(searchQuery);
 
   const handleSubmit = (e) => {
@@ -49,6 +49,14 @@ const Header = ({ onSearch, searchQuery, setSearchQuery, isSearching }) => {
               disabled={isSearching}
             >
               {isSearching ? 'Searching...' : 'Search'}
+            </button>
+            <button
+              type="button"
+              onClick={onAdvancedSearch}
+              className="advanced-search-button"
+              title="Advanced Search"
+            >
+              ⚙️
             </button>
           </div>
         </form>
