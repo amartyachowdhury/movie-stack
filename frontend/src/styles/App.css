@@ -29,12 +29,25 @@
 }
 
 .header-title h1 {
-  font-size: 3rem;
+  font-size: 3.5rem;
   margin: 0;
-  background: linear-gradient(45deg, #e50914, #ff6b6b);
+  font-weight: 900;
+  background: linear-gradient(45deg, #e50914, #ff6b6b, #ffd700);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  text-shadow: 0 0 30px rgba(229, 9, 20, 0.5);
+  letter-spacing: -0.02em;
+  animation: titleGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes titleGlow {
+  0% { 
+    filter: drop-shadow(0 0 5px rgba(229, 9, 20, 0.3));
+  }
+  100% { 
+    filter: drop-shadow(0 0 20px rgba(229, 9, 20, 0.6));
+  }
 }
 
 .header-title p {
@@ -56,6 +69,15 @@
   border-radius: 50px;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.search-input-group:focus-within {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(229, 9, 20, 0.5);
+  box-shadow: 0 0 20px rgba(229, 9, 20, 0.2);
+  transform: translateY(-2px);
 }
 
 .search-input {
@@ -66,10 +88,20 @@
   color: white;
   font-size: 1rem;
   outline: none;
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  color: #fff;
 }
 
 .search-input::placeholder {
   color: rgba(255, 255, 255, 0.6);
+  transition: color 0.3s ease;
+}
+
+.search-input:focus::placeholder {
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .clear-button {
@@ -125,18 +157,40 @@
   border-radius: 25px;
   color: white;
   cursor: pointer;
-  transition: all 0.3s ease;
-  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  font-weight: 600;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+}
+
+.nav-tab::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.nav-tab:hover::before {
+  left: 100%;
 }
 
 .nav-tab:hover {
   background: rgba(255, 255, 255, 0.2);
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 255, 255, 0.4);
 }
 
 .nav-tab.active {
   background: linear-gradient(45deg, #e50914, #ff6b6b);
   border-color: #e50914;
+  box-shadow: 0 5px 15px rgba(229, 9, 20, 0.4);
+  transform: translateY(-2px);
 }
 
 /* Main Content */
