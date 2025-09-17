@@ -49,10 +49,14 @@ const WatchProviders = ({ watchProviders }) => {
           {providers.map((provider) => {
             const config = getProviderConfig(provider.provider_id);
             return (
-              <div 
+              <a 
                 key={provider.provider_id} 
+                href={usProviders.link}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="provider-item"
                 style={{ borderColor: config.color }}
+                title={`View on ${config.name} via TMDB`}
               >
                 <div className="provider-icon" style={{ color: config.color }}>
                   {config.icon}
@@ -72,7 +76,7 @@ const WatchProviders = ({ watchProviders }) => {
                     />
                   </div>
                 )}
-              </div>
+              </a>
             );
           })}
         </div>

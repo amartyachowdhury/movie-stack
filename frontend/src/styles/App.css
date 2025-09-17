@@ -1489,6 +1489,9 @@
   border-radius: 12px;
   transition: all 0.3s ease;
   backdrop-filter: blur(8px);
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
 }
 
 .provider-item:hover {

@@ -30,7 +30,7 @@ const AppRouter = () => {
           />
           <Route 
             path="/movie/:id" 
-            element={<MovieDetailsWrapper onBack={handleBack} />} 
+            element={<MovieDetailsWrapper onBack={handleBack} onMovieClick={handleMovieClick} />} 
           />
         </Routes>
       </div>
@@ -39,9 +39,9 @@ const AppRouter = () => {
 };
 
 // Movie Details Wrapper Component
-const MovieDetailsWrapper = ({ onBack }) => {
+const MovieDetailsWrapper = ({ onBack, onMovieClick }) => {
   const { id } = useParams();
-  return <MovieDetailsPage movieId={id} onBack={onBack} />;
+  return <MovieDetailsPage movieId={id} onBack={onBack} onMovieClick={onMovieClick} />;
 };
 
 // Main App Component

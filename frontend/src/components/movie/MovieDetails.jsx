@@ -8,7 +8,13 @@ import TrailerSection from './TrailerSection';
 import RatingScores from './RatingScores';
 import EnhancedMovieInfo from './EnhancedMovieInfo';
 
-const MovieDetails = ({ movie, onBack }) => {
+const MovieDetails = ({ movie, onBack, onMovieClick }) => {
+  const handleSimilarMovieClick = (similarMovie) => {
+    if (onMovieClick) {
+      onMovieClick(similarMovie);
+    }
+  };
+
   return (
     <div className="movie-details-page">
       {/* Back Button */}
@@ -35,7 +41,12 @@ const MovieDetails = ({ movie, onBack }) => {
           <h3>Similar Movies</h3>
           <div className="similar-movies-grid">
             {movie.similar_movies.slice(0, 6).map((similarMovie) => (
-              <div key={similarMovie.id} className="similar-movie-card">
+              <div 
+                key={similarMovie.id} 
+                className="similar-movie-card"
+                onClick={() => handleSimilarMovieClick(similarMovie)}
+                title={`View details for ${similarMovie.title}`}
+              >
                 <div className="similar-movie-poster">
                   {similarMovie.poster_path ? (
                     <img 
