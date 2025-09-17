@@ -39,12 +39,29 @@ const WatchProviders = ({ watchProviders }) => {
     };
   };
 
+  const getTypeColor = (type) => {
+    switch (type) {
+      case 'Stream': return '#4ade80'; // Green for streaming
+      case 'Free': return '#fbbf24'; // Yellow for free
+      case 'Rent': return '#3b82f6'; // Blue for rent
+      case 'Buy': return '#ef4444'; // Red for buy
+      default: return '#e50914';
+    }
+  };
+
   const renderProviderList = (providers, type, title) => {
     if (!providers || providers.length === 0) return null;
 
+    const typeColor = getTypeColor(type);
+
     return (
       <div className="provider-category">
-        <h4 className="provider-category-title">{title}</h4>
+        <h4 
+          className="provider-category-title"
+          style={{ borderLeftColor: typeColor }}
+        >
+          {title}
+        </h4>
         <div className="provider-list">
           {providers.map((provider) => {
             const config = getProviderConfig(provider.provider_id);
@@ -65,7 +82,9 @@ const WatchProviders = ({ watchProviders }) => {
                   <div className="provider-name" style={{ color: config.color }}>
                     {config.name}
                   </div>
-                  <div className="provider-type">{type}</div>
+                  <div className="provider-type" style={{ color: typeColor }}>
+                    {type}
+                  </div>
                 </div>
                 {provider.logo_path && (
                   <div className="provider-logo">
@@ -88,10 +107,10 @@ const WatchProviders = ({ watchProviders }) => {
     <div className="watch-providers">
       <h3>📺 Where to Watch</h3>
       <div className="watch-providers-content">
-        {renderProviderList(usProviders.flatrate, 'Subscription', 'Stream with Subscription')}
+        {renderProviderList(usProviders.flatrate, 'Stream', 'Stream with Subscription')}
         {renderProviderList(usProviders.free, 'Free', 'Free to Watch')}
-        {renderProviderList(usProviders.rent, 'Rental', 'Rent')}
-        {renderProviderList(usProviders.buy, 'Purchase', 'Buy')}
+        {renderProviderList(usProviders.rent, 'Rent', 'Rent')}
+        {renderProviderList(usProviders.buy, 'Buy', 'Buy')}
       </div>
     </div>
   );
