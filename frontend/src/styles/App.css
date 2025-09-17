@@ -1567,3 +1567,29 @@
     height: 28px;
   }
 }
+
+/* Cast & Crew Profile Pictures */
+.cast-profile-pic,
+.crew-profile-pic {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.cast-profile-pic-placeholder,
+.crew-profile-pic-placeholder {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(45deg, #e50914, #ff6b6b);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}

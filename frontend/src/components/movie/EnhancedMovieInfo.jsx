@@ -10,6 +10,7 @@ import {
   parseGenres,
   getBackdropUrl,
   getPosterUrl,
+  getProfileUrl,
   truncateText
 } from '../../utils';
 import WatchProviders from './WatchProviders';
@@ -282,13 +283,21 @@ const EnhancedMovieInfo = ({ movie }) => {
               <div key={person.id} className="cast-item">
                 {person.profile_path ? (
                   <img 
-                    src={getPosterUrl(person.profile_path, 'profile')} 
+                    src={getProfileUrl(person.profile_path)} 
                     alt={person.name}
                     className="cast-profile-pic"
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                      e.target.nextSibling.style.display = 'flex';
+                    }}
                   />
-                ) : (
-                  <div className="cast-profile-pic-placeholder"></div>
-                )}
+                ) : null}
+                <div 
+                  className="cast-profile-pic-placeholder"
+                  style={{ display: person.profile_path ? 'none' : 'flex' }}
+                >
+                  <span>{person.name.charAt(0)}</span>
+                </div>
                 <div className="cast-info">
                   <div className="cast-name">{person.name}</div>
                   <div className="cast-character">{person.character || 'Actor'}</div>
@@ -305,13 +314,21 @@ const EnhancedMovieInfo = ({ movie }) => {
               <div key={person.credit_id || person.id} className="crew-item">
                 {person.profile_path ? (
                   <img 
-                    src={getPosterUrl(person.profile_path, 'profile')} 
+                    src={getProfileUrl(person.profile_path)} 
                     alt={person.name}
                     className="crew-profile-pic"
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                      e.target.nextSibling.style.display = 'flex';
+                    }}
                   />
-                ) : (
-                  <div className="crew-profile-pic-placeholder"></div>
-                )}
+                ) : null}
+                <div 
+                  className="crew-profile-pic-placeholder"
+                  style={{ display: person.profile_path ? 'none' : 'flex' }}
+                >
+                  <span>{person.name.charAt(0)}</span>
+                </div>
                 <div className="crew-info">
                   <div className="crew-name">{person.name}</div>
                   <div className="crew-job">{person.job}</div>
