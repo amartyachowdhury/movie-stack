@@ -237,6 +237,30 @@ movie-stack/
 
 ---
 
+## 📞 **Contact & Connect**
+
+### **Let's Discuss Opportunities**
+
+**Amartya Chowdhury**  
+*Full-Stack JavaScript Developer*
+
+📧 **Email:** [amartya.chowdhury47@gmail.com](mailto:amartya.chowdhury47@gmail.com)  
+💼 **LinkedIn:** [Connect with me on LinkedIn](https://linkedin.com/in/amartyachowdhury)  
+🐙 **GitHub:** [amartyachowdhury](https://github.com/amartyachowdhury)  
+🌐 **Portfolio:** [View my other projects](https://github.com/amartyachowdhury)
+
+### **Ready to Discuss:**
+- **Technical Interviews** - Deep dive into implementation details
+- **Code Reviews** - Architecture and performance discussions  
+- **Team Collaboration** - How I approach development workflows
+- **Project Planning** - From concept to production deployment
+- **Career Opportunities** - Full-stack, React, or DevOps roles
+
+**Response Time:** Typically within 24 hours  
+**Availability:** Open to new opportunities and technical discussions
+
+---
+
 ## 📄 **License**
 
 MIT License - Open source and available for educational and portfolio purposes.
