@@ -1,7 +1,32 @@
 // Custom React Hooks for Movie Data
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import api from '../services/api';
 import { LOADING_STATES } from '../constants';
+import { debounce } from '../utils';
+
+// Simple in-memory cache for API responses
+const apiCache = new Map();
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+
+const getCacheKey = (endpoint, params = {}) => {
+  return `${endpoint}_${JSON.stringify(params)}`;
+};
+
+const getCachedData = (key) => {
+  const cached = apiCache.get(key);
+  if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
+    return cached.data;
+  }
+  apiCache.delete(key);
+  return null;
+};
+
+const setCachedData = (key, data) => {
+  apiCache.set(key, {
+    data,
+    timestamp: Date.now()
+  });
+};
 
 // Hook for fetching movies by type (popular, top-rated)
 export const useMovies = (type = 'popular', page = 1) => {
@@ -10,6 +35,15 @@ export const useMovies = (type = 'popular', page = 1) => {
   const [error, setError] = useState(null);
 
   const fetchMovies = useCallback(async () => {
+    const cacheKey = getCacheKey(`movies_${type}`, { page });
+    const cachedData = getCachedData(cacheKey);
+    
+    if (cachedData) {
+      setMovies(cachedData);
+      setLoading(LOADING_STATES.SUCCESS);
+      return;
+    }
+
     setLoading(LOADING_STATES.LOADING);
     setError(null);
     
@@ -27,7 +61,9 @@ export const useMovies = (type = 'popular', page = 1) => {
       }
 
       if (response.success) {
-        setMovies(response.data.items || response.data);
+        const movieData = response.data.items || response.data;
+        setMovies(movieData);
+        setCachedData(cacheKey, movieData);
         setLoading(LOADING_STATES.SUCCESS);
       } else {
         setError(response.message || 'Failed to fetch movies');
@@ -52,11 +88,26 @@ export const useMovieSearch = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(LOADING_STATES.IDLE);
   const [error, setError] = useState(null);
+  const abortControllerRef = useRef(null);
 
   const searchMovies = useCallback(async (query, page = 1) => {
     if (!query.trim()) {
       setSearchResults([]);
       setLoading(LOADING_STATES.IDLE);
+      return;
+    }
+
+    // Cancel previous request
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+
+    const cacheKey = getCacheKey('search', { query, page });
+    const cachedData = getCachedData(cacheKey);
+    
+    if (cachedData) {
+      setSearchResults(cachedData);
+      setLoading(LOADING_STATES.SUCCESS);
       return;
     }
 
@@ -67,18 +118,32 @@ export const useMovieSearch = () => {
       const response = await api.searchMovies(query, page);
       
       if (response.success) {
-        setSearchResults(response.data.items || response.data);
+        const searchData = response.data.items || response.data;
+        setSearchResults(searchData);
+        setCachedData(cacheKey, searchData);
         setLoading(LOADING_STATES.SUCCESS);
       } else {
         setError(response.message || 'Search failed');
         setLoading(LOADING_STATES.ERROR);
       }
     } catch (err) {
-      setError('Search failed');
-      setLoading(LOADING_STATES.ERROR);
-      console.error('Error searching movies:', err);
+      if (err.name !== 'AbortError') {
+        setError('Search failed');
+        setLoading(LOADING_STATES.ERROR);
+        console.error('Error searching movies:', err);
+      }
     }
   }, []);
+
+  // Debounced search function
+  const debouncedSearch = useMemo(
+    () => debounce((query, page = 1) => {
+      const controller = new AbortController();
+      abortControllerRef.current = controller;
+      searchMovies(query, page);
+    }, 300),
+    [searchMovies]
+  );
 
   const clearSearch = useCallback(() => {
     setSearchResults([]);
@@ -91,6 +156,7 @@ export const useMovieSearch = () => {
     loading, 
     error, 
     searchMovies, 
+    debouncedSearch,
     clearSearch 
   };
 };
@@ -103,6 +169,16 @@ export const useMovieDiscovery = () => {
   const [currentFilters, setCurrentFilters] = useState({});
 
   const discoverMovies = useCallback(async (filters = {}, page = 1) => {
+    const cacheKey = getCacheKey('discover', { ...filters, page });
+    const cachedData = getCachedData(cacheKey);
+    
+    if (cachedData) {
+      setDiscoveryResults(cachedData);
+      setCurrentFilters(filters);
+      setLoading(LOADING_STATES.SUCCESS);
+      return;
+    }
+
     setLoading(LOADING_STATES.LOADING);
     setError(null);
     setCurrentFilters(filters);
@@ -111,7 +187,9 @@ export const useMovieDiscovery = () => {
       const response = await api.discoverMovies(filters, page);
       
       if (response.success) {
-        setDiscoveryResults(response.data.items || response.data);
+        const discoveryData = response.data.items || response.data;
+        setDiscoveryResults(discoveryData);
+        setCachedData(cacheKey, discoveryData);
         setLoading(LOADING_STATES.SUCCESS);
       } else {
         setError(response.message || 'Discovery failed');
@@ -150,6 +228,15 @@ export const useMovieDetails = (movieId) => {
   const fetchMovieDetails = useCallback(async () => {
     if (!movieId) return;
 
+    const cacheKey = getCacheKey('movie_details', { movieId });
+    const cachedData = getCachedData(cacheKey);
+    
+    if (cachedData) {
+      setMovie(cachedData);
+      setLoading(LOADING_STATES.SUCCESS);
+      return;
+    }
+
     setLoading(LOADING_STATES.LOADING);
     setError(null);
     
@@ -158,6 +245,7 @@ export const useMovieDetails = (movieId) => {
       
       if (response.success) {
         setMovie(response.data);
+        setCachedData(cacheKey, response.data);
         setLoading(LOADING_STATES.SUCCESS);
       } else {
         setError(response.message || 'Movie not found');

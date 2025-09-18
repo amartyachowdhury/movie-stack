@@ -4,9 +4,30 @@ import { handleApiResponse } from '../utils';
 class ApiService {
   constructor() {
     this.baseURL = '/api';
+    this.pendingRequests = new Map(); // For request deduplication
   }
 
   async request(endpoint, options = {}) {
+    const requestKey = `${endpoint}_${JSON.stringify(options)}`;
+    
+    // Check if request is already pending
+    if (this.pendingRequests.has(requestKey)) {
+      return this.pendingRequests.get(requestKey);
+    }
+
+    const requestPromise = this._makeRequest(endpoint, options);
+    this.pendingRequests.set(requestKey, requestPromise);
+
+    try {
+      const result = await requestPromise;
+      return result;
+    } finally {
+      // Clean up pending request
+      this.pendingRequests.delete(requestKey);
+    }
+  }
+
+  async _makeRequest(endpoint, options = {}) {
     try {
       const response = await fetch(`${this.baseURL}${endpoint}`, {
         headers: {

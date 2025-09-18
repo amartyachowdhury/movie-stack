@@ -1,5 +1,5 @@
 // Movie Card Component
-import React from 'react';
+import React, { memo, useMemo, useCallback } from 'react';
 import { 
   getYear, 
   formatCurrency, 
@@ -13,42 +13,43 @@ import {
   truncateText
 } from '../../utils';
 import { MOVIE_CONFIG } from '../../constants';
+import LazyImage from '../common/LazyImage';
 
-const MovieCard = ({ movie, onClick }) => {
-  const genres = parseGenres(movie.genres);
-  const popularityBadge = getPopularityBadge(movie.popularity);
+const MovieCard = memo(({ movie, onClick }) => {
+  // Memoize expensive computations
+  const genres = useMemo(() => parseGenres(movie.genres), [movie.genres]);
+  const popularityBadge = useMemo(() => getPopularityBadge(movie.popularity), [movie.popularity]);
+  const backdropUrl = useMemo(() => getBackdropUrl(movie.backdrop_path), [movie.backdrop_path]);
+  const posterUrl = useMemo(() => getPosterUrl(movie.poster_path), [movie.poster_path]);
+  const truncatedOverview = useMemo(() => 
+    truncateText(movie.overview, MOVIE_CONFIG.MAX_OVERVIEW_LENGTH), 
+    [movie.overview]
+  );
+
+  // Memoize click handler
+  const handleClick = useCallback(() => {
+    onClick(movie);
+  }, [onClick, movie]);
 
   return (
-    <div className="movie-card-enhanced" onClick={() => onClick(movie)}>
+    <div className="movie-card-enhanced" onClick={handleClick}>
       {/* Backdrop Image */}
       <div className="movie-backdrop">
-        {movie.backdrop_path ? (
-          <img 
-            src={getBackdropUrl(movie.backdrop_path)} 
-            alt={movie.title}
-            className="backdrop-image"
-            loading="lazy"
-          />
-        ) : (
-          <div className="backdrop-placeholder">
-            <span>No Image</span>
-          </div>
-        )}
+        <LazyImage
+          src={backdropUrl}
+          alt={movie.title}
+          className="backdrop-image"
+          placeholder={<span>No Image</span>}
+        />
         
         {/* Overlay with Poster */}
         <div className="movie-overlay">
-          {movie.poster_path ? (
-            <img 
-              src={getPosterUrl(movie.poster_path)} 
-              alt={movie.title}
-              className="movie-poster-small"
-              loading="lazy"
-            />
-          ) : (
-            <div className="poster-placeholder">
-              <span>No Poster</span>
-            </div>
-          )}
+          <LazyImage
+            src={posterUrl}
+            alt={movie.title}
+            className="movie-poster-small"
+            placeholder={<span>No Poster</span>}
+          />
         </div>
 
         {/* Badges */}
@@ -107,7 +108,7 @@ const MovieCard = ({ movie, onClick }) => {
         {/* Overview */}
         {movie.overview && (
           <div className="movie-overview">
-            <p>{truncateText(movie.overview, MOVIE_CONFIG.MAX_OVERVIEW_LENGTH)}</p>
+            <p>{truncatedOverview}</p>
           </div>
         )}
 
@@ -129,6 +130,8 @@ const MovieCard = ({ movie, onClick }) => {
       </div>
     </div>
   );
-};
+});
+
+MovieCard.displayName = 'MovieCard';
 
 export default MovieCard;

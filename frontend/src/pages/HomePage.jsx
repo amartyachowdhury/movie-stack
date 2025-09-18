@@ -1,5 +1,5 @@
 // Home Page Component
-import React, { useState } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { useMovies, useMovieSearch, useMovieDiscovery } from '../hooks/useMovies';
 import MovieCard from '../components/movie/MovieCard';
 import Header from '../components/layout/Header';
@@ -19,6 +19,7 @@ const HomePage = ({ onMovieClick }) => {
     loading: searchLoading, 
     error: searchError, 
     searchMovies, 
+    debouncedSearch,
     clearSearch 
   } = useMovieSearch();
   
@@ -31,39 +32,39 @@ const HomePage = ({ onMovieClick }) => {
     clearDiscovery
   } = useMovieDiscovery();
 
-  const handleSearch = (query) => {
+  const handleSearch = useCallback((query) => {
     if (query.trim()) {
       setSearchQuery(query);
       setSearchMode('basic');
-      searchMovies(query);
+      debouncedSearch(query);
     } else {
       setSearchQuery('');
       setSearchMode('basic');
       clearSearch();
     }
-  };
+  }, [debouncedSearch, clearSearch]);
 
-  const handleAdvancedSearch = (filters) => {
+  const handleAdvancedSearch = useCallback((filters) => {
     setSearchMode('discovery');
     setSearchQuery('');
     clearSearch();
     discoverMovies(filters);
-  };
+  }, [clearSearch, discoverMovies]);
 
-  const handleAdvancedSearchToggle = () => {
+  const handleAdvancedSearchToggle = useCallback(() => {
     setShowAdvancedSearch(!showAdvancedSearch);
-  };
+  }, [showAdvancedSearch]);
 
-  const handleEndpointChange = (endpoint) => {
+  const handleEndpointChange = useCallback((endpoint) => {
     setCurrentEndpoint(endpoint);
     setSearchQuery('');
     setSearchMode('basic');
     clearSearch();
     clearDiscovery();
-  };
+  }, [clearSearch, clearDiscovery]);
 
-  // Determine which movies to display based on current mode
-  const getDisplayMovies = () => {
+  // Memoize expensive computations
+  const displayMovies = useMemo(() => {
     switch (searchMode) {
       case 'discovery':
         return discoveryResults;
@@ -72,9 +73,9 @@ const HomePage = ({ onMovieClick }) => {
       default:
         return movies;
     }
-  };
+  }, [searchMode, discoveryResults, searchResults, movies, searchQuery]);
 
-  const getLoadingState = () => {
+  const isLoading = useMemo(() => {
     switch (searchMode) {
       case 'discovery':
         return discoveryLoading;
@@ -83,9 +84,9 @@ const HomePage = ({ onMovieClick }) => {
       default:
         return moviesLoading;
     }
-  };
+  }, [searchMode, discoveryLoading, searchLoading, moviesLoading, searchQuery]);
 
-  const getError = () => {
+  const error = useMemo(() => {
     switch (searchMode) {
       case 'discovery':
         return discoveryError;
@@ -94,11 +95,7 @@ const HomePage = ({ onMovieClick }) => {
       default:
         return moviesError;
     }
-  };
-
-  const displayMovies = getDisplayMovies();
-  const isLoading = getLoadingState();
-  const error = getError();
+  }, [searchMode, discoveryError, searchError, moviesError, searchQuery]);
 
 
   return (
