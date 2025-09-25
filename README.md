@@ -14,6 +14,7 @@
 **Full-Stack JavaScript Developer** | **React Specialist** | **API Integration Expert** | **DevOps Practitioner**
 
 ### **🎯 What This Project Demonstrates:**
+
 - ✅ **Advanced React Development** - Hooks, Context, Performance Optimization, Code Splitting
 - ✅ **Node.js Backend Architecture** - Express.js, Middleware, Error Handling, API Design
 - ✅ **Production DevOps** - Docker, Multi-container Orchestration, Nginx, Environment Management
@@ -25,6 +26,7 @@
 ## 🛠️ **Technical Expertise**
 
 ### **Frontend Mastery**
+
 | **Technology** | **Skills Demonstrated** | **Impact** |
 |----------------|-------------------------|------------|
 | **React 18** | Hooks, Context, Performance Optimization, Memoization | Modern component architecture |
@@ -33,6 +35,7 @@
 | **JavaScript ES6+** | Async/await, Destructuring, Modules, Promises | Clean, maintainable code |
 
 ### **Backend Architecture**
+
 | **Technology** | **Skills Demonstrated** | **Impact** |
 |----------------|-------------------------|------------|
 | **Node.js + Express** | RESTful APIs, Middleware, Error handling | Scalable server architecture |
@@ -40,6 +43,7 @@
 | **Security** | CORS, Environment variables, Input validation | Production-ready security |
 
 ### **DevOps & Production**
+
 | **Technology** | **Skills Demonstrated** | **Impact** |
 |----------------|-------------------------|------------|
 | **Docker** | Multi-container orchestration, Environment consistency | Production deployment |
@@ -51,24 +55,28 @@
 ## 🚀 **Key Features & Technical Achievements**
 
 ### **🎬 Advanced Movie Discovery Engine**
+
 - **Multi-API Integration**: Seamlessly combines TMDB + OMDb data with intelligent merging
 - **Advanced Search System**: Real-time filtering by genre, rating, year, popularity
 - **Performance Optimization**: 70% reduction in API calls through smart caching
 - **Error Resilience**: Comprehensive error handling and fallback mechanisms
 
 ### **⚡ Performance & Optimization**
+
 - **React Performance**: Memoization, lazy loading, code splitting for optimal UX
 - **Image Optimization**: Intersection Observer-based lazy loading
 - **Bundle Optimization**: Dynamic imports reducing initial load time
 - **API Efficiency**: Request deduplication and 5-minute intelligent caching
 
 ### **🎨 Professional UI/UX**
+
 - **Responsive Design**: Mobile-first approach supporting 320px to 4K displays
 - **Modern Animations**: CSS transitions, keyframes, and smooth interactions
 - **Accessibility**: ARIA labels, keyboard navigation, screen reader support
 - **Dark Theme**: Netflix-inspired professional interface
 
 ### **🔗 Real-World Integrations**
+
 - **Streaming Providers**: Live data from 140+ countries via TMDB Watch Providers API
 - **Trailer System**: YouTube integration with modal player
 - **Rich Media**: High-resolution images, trailers, and metadata
@@ -79,6 +87,7 @@
 ## 📊 **API Integration Mastery**
 
 ### **External APIs Successfully Integrated:**
+
 1. **The Movie Database (TMDB)** - Primary data source
    - Movie discovery, search, and filtering
    - Cast, crew, and production details
@@ -91,7 +100,8 @@
    - Additional plot details and metadata
 
 ### **Advanced Data Architecture:**
-```
+
+```text
 Frontend (React) → Backend (Express) → External APIs (TMDB/OMDb)
      ↓                    ↓                    ↓
 Smart Caching → Data Processing → Response Optimization
@@ -100,6 +110,7 @@ UI Components ← Merged Data ← Error Handling
 ```
 
 **Key Technical Achievements:**
+
 - **Intelligent Data Merging**: Combines data from multiple APIs seamlessly
 - **Smart Caching**: 5-minute TTL with automatic cleanup
 - **Request Deduplication**: Prevents duplicate API calls
@@ -110,18 +121,21 @@ UI Components ← Merged Data ← Error Handling
 ## 🏆 **Production-Ready Achievements**
 
 ### **Performance Excellence**
+
 - ⚡ **70% API Call Reduction** through intelligent caching and deduplication
 - 🖼️ **Intersection Observer** lazy loading for optimal image performance
 - 📦 **Code Splitting** with dynamic imports reducing bundle size
 - 🚀 **Vite Build System** delivering 3x faster development experience
 
 ### **Enterprise-Grade Code Quality**
+
 - 🧪 **Comprehensive Error Handling** with React Error Boundaries
 - 📝 **TypeScript-Ready Architecture** for easy migration and type safety
 - 🔧 **ESLint Integration** ensuring code consistency and quality
 - 📚 **Modular Component Architecture** for maintainability and scalability
 
 ### **DevOps & Production Excellence**
+
 - 🐳 **Docker Multi-Container Setup** with orchestrated services
 - 🔒 **Security Best Practices** with CORS, CSP, and environment variables
 - 📊 **Production Monitoring** with structured logging and error tracking
@@ -131,7 +145,7 @@ UI Components ← Merged Data ← Error Handling
 
 ## 📁 **Clean Architecture & Code Organization**
 
-```
+```text
 movie-stack/
 ├── frontend/                 # React 18 Application
 │   ├── src/
@@ -156,6 +170,7 @@ movie-stack/
 ```
 
 **Architecture Highlights:**
+
 - **Separation of Concerns**: Clear frontend/backend boundaries
 - **Modular Design**: Reusable components and services
 - **Performance-First**: Optimized for speed and efficiency
@@ -166,12 +181,14 @@ movie-stack/
 ## 🎨 **Professional UI/UX Design**
 
 ### **Modern Design System**
+
 - **Dark Theme**: Netflix-inspired professional interface
 - **Responsive Design**: Mobile-first approach (320px to 4K displays)
 - **Accessibility**: ARIA labels, keyboard navigation, screen reader support
 - **Smooth Animations**: CSS transitions and keyframe animations
 
 ### **Interactive Excellence**
+
 - **Advanced Search Modal**: Multi-filter search with real-time results
 - **Trailer Player**: YouTube integration with modal interface
 - **Loading States**: Skeleton screens and progress indicators
@@ -182,18 +199,21 @@ movie-stack/
 ## 🚀 **Ready for Production**
 
 ### **Deployment Ready Features:**
+
 - **Docker Containerization**: Multi-service orchestration
 - **Environment Management**: Secure configuration handling
 - **Performance Monitoring**: Structured logging and error tracking
 - **Security Headers**: CORS, CSP, and security best practices
 
 ### **Scalability Architecture:**
+
 - **Horizontal Scaling**: Stateless backend design
 - **API Optimization**: Built-in caching and request deduplication
 - **Database Ready**: Prepared for PostgreSQL/MySQL integration
 - **Microservices**: Modular architecture for easy scaling
 
 ### **Future Enhancement Ready:**
+
 - **User Authentication**: JWT-based system architecture
 - **Real-time Features**: WebSocket integration prepared
 - **ML Integration**: Recommendation engine ready
@@ -204,6 +224,7 @@ movie-stack/
 ## 💼 **Developer Profile & Skills**
 
 ### **Core Competencies Demonstrated:**
+
 - **Full-Stack JavaScript Development** - React 18 + Node.js + Express.js
 - **Advanced React Patterns** - Hooks, Context, Performance Optimization, Memoization
 - **API Integration Mastery** - Multiple external APIs, data merging, caching strategies
@@ -212,6 +233,7 @@ movie-stack/
 - **Modern Development Practices** - ES6+, async/await, modular architecture
 
 ### **Technical Leadership Qualities:**
+
 - **Production-Ready Code** - Comprehensive error handling and monitoring
 - **Scalable Architecture** - Microservices design with horizontal scaling
 - **Security Best Practices** - CORS, environment variables, input validation
@@ -222,6 +244,7 @@ movie-stack/
 ## 🎯 **Ready for Your Team**
 
 **This project showcases the skills needed for:**
+
 - **Senior Frontend Developer** positions
 - **Full-Stack Developer** roles
 - **React Specialist** opportunities
@@ -229,6 +252,7 @@ movie-stack/
 - **Technical Lead** responsibilities
 
 **Available for immediate discussion about:**
+
 - Technical implementation details
 - Architecture decisions and trade-offs
 - Performance optimization strategies
@@ -250,6 +274,7 @@ movie-stack/
 🌐 **Portfolio:** [View my other projects](https://github.com/amartyachowdhury)
 
 ### **Ready to Discuss:**
+
 - **Technical Interviews** - Deep dive into implementation details
 - **Code Reviews** - Architecture and performance discussions  
 - **Team Collaboration** - How I approach development workflows
@@ -267,4 +292,6 @@ MIT License - Open source and available for educational and portfolio purposes.
 
 ---
 
-*Built with ❤️ by a passionate full-stack developer using React, Node.js, and modern web technologies*
+## 🎯 **About the Developer**
+
+Built with ❤️ by a passionate full-stack developer using React, Node.js, and modern web technologies

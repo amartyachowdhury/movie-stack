@@ -9,6 +9,7 @@
 .app-header {
   background: rgba(0, 0, 0, 0.8);
   -webkit-backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   padding: 2rem 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
@@ -70,6 +71,7 @@
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.2);
   transition: all 0.3s ease;
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
 }
 
@@ -183,6 +185,7 @@
   font-weight: 600;
   position: relative;
   overflow: hidden;
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
 }
 
@@ -458,6 +461,7 @@
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.8);
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   display: flex;
   align-items: center;
@@ -569,6 +573,7 @@
   color: white;
   font-size: 1rem;
   transition: all 0.3s ease;
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
 }
 
@@ -858,6 +863,7 @@
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.9);
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   display: flex;
   align-items: center;
@@ -1220,6 +1226,7 @@
   background: rgba(0, 0, 0, 0.8);
   padding: 2rem;
   border-radius: 16px;
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -1492,6 +1499,7 @@
   border: 2px solid;
   border-radius: 12px;
   transition: all 0.3s ease;
+  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   text-decoration: none;
   color: inherit;
