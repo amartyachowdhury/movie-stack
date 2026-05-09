@@ -195,6 +195,38 @@ class TMDBService {
     }
   }
 
+  async searchPersonByName(query) {
+    if (!this.apiKey) {
+      logger.warn('No API key available, person search not available');
+      return null;
+    }
+
+    try {
+      const response = await this.client.get('/search/person', {
+        params: {
+          query,
+          page: 1,
+          include_adult: false
+        }
+      });
+
+      const [person] = response.data?.results || [];
+      if (!person) {
+        return null;
+      }
+
+      return {
+        id: person.id,
+        name: person.name,
+        profile_path: person.profile_path || '',
+        known_for_department: person.known_for_department || ''
+      };
+    } catch (error) {
+      logger.error('Error searching person by name', { error: error.message, query });
+      return null;
+    }
+  }
+
   async getGenres() {
     if (!this.apiKey) {
       logger.warn('No API key available, returning sample genres');

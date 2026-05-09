@@ -1,5 +1,6 @@
 // Enhanced Movie Info Component - Combines TMDB and OMDb data for maximum information
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   getYear, 
   formatCurrency, 
@@ -14,9 +15,11 @@ import {
   truncateText
 } from '../../utils';
 import WatchProviders from './WatchProviders';
+import api from '../../services/api';
 
 const EnhancedMovieInfo = ({ movie, onPersonClick }) => {
   if (!movie) return null;
+  const navigate = useNavigate();
 
   const genres = parseGenres(movie.genres);
   const popularityBadge = getPopularityBadge(movie.popularity);
@@ -140,6 +143,33 @@ const EnhancedMovieInfo = ({ movie, onPersonClick }) => {
   const combinedPlot = getCombinedPlot();
   const combinedLanguages = getCombinedLanguages();
   const combinedCountries = getCombinedCountries();
+
+  const handlePersonNavigation = async (person) => {
+    if (!person?.name) return;
+
+    const navigateToPerson = (personId) => {
+      if (!personId) return;
+      if (onPersonClick) {
+        onPersonClick({ id: personId });
+      } else {
+        navigate(`/person/${personId}`);
+      }
+    };
+
+    if (person.id && !String(person.id).startsWith('omdb-')) {
+      navigateToPerson(person.id);
+      return;
+    }
+
+    try {
+      const response = await api.searchPerson(person.name);
+      if (response?.success && response.data?.id) {
+        navigateToPerson(response.data.id);
+      }
+    } catch (error) {
+      console.error('Unable to resolve person profile:', error);
+    }
+  };
 
   return (
     <div className="enhanced-movie-info">
@@ -280,7 +310,19 @@ const EnhancedMovieInfo = ({ movie, onPersonClick }) => {
           <h3>🎭 Cast</h3>
           <div className="cast-grid">
             {combinedCast.slice(0, 12).map((person) => (
-              <div key={person.id} className="cast-item">
+              <div
+                key={person.id}
+                className="cast-item clickable-person-card"
+                onClick={() => handlePersonNavigation(person)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    handlePersonNavigation(person);
+                  }
+                }}
+                title={`View ${person.name}`}
+              >
                 {person.profile_path ? (
                   <img 
                     src={getProfileUrl(person.profile_path)} 
@@ -302,9 +344,11 @@ const EnhancedMovieInfo = ({ movie, onPersonClick }) => {
                   <button
                     className="person-link-button"
                     type="button"
-                    onClick={() => onPersonClick && onPersonClick(person)}
-                    disabled={!person.id || String(person.id).startsWith('omdb-')}
-                    title={person.id && !String(person.id).startsWith('omdb-') ? `View ${person.name}` : 'Person details unavailable'}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      handlePersonNavigation(person);
+                    }}
+                    title={`View ${person.name}`}
                   >
                     {person.name}
                   </button>
@@ -319,7 +363,19 @@ const EnhancedMovieInfo = ({ movie, onPersonClick }) => {
           <h3>🎬 Key Crew</h3>
           <div className="crew-grid">
             {combinedCrew.filter(c => ['Director', 'Writer', 'Producer', 'Original Music Composer'].includes(c.job)).map((person) => (
-              <div key={person.credit_id || person.id} className="crew-item">
+              <div
+                key={person.credit_id || person.id}
+                className="crew-item clickable-person-card"
+                onClick={() => handlePersonNavigation(person)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    handlePersonNavigation(person);
+                  }
+                }}
+                title={`View ${person.name}`}
+              >
                 {person.profile_path ? (
                   <img 
                     src={getProfileUrl(person.profile_path)} 
@@ -341,9 +397,11 @@ const EnhancedMovieInfo = ({ movie, onPersonClick }) => {
                   <button
                     className="person-link-button"
                     type="button"
-                    onClick={() => onPersonClick && onPersonClick(person)}
-                    disabled={!person.id || String(person.id).startsWith('omdb-')}
-                    title={person.id && !String(person.id).startsWith('omdb-') ? `View ${person.name}` : 'Person details unavailable'}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      handlePersonNavigation(person);
+                    }}
+                    title={`View ${person.name}`}
                   >
                     {person.name}
                   </button>

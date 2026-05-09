@@ -169,6 +169,28 @@ class MovieController {
     }
   };
 
+  // Search person by name
+  searchPerson = async (req, res) => {
+    try {
+      const { q: query } = req.query;
+
+      if (!query || query.trim().length < 2) {
+        return ResponseHelper.validationError(res, 'Person search query must be at least 2 characters long');
+      }
+
+      const person = await this.tmdbService.searchPersonByName(query.trim());
+
+      if (!person) {
+        return ResponseHelper.notFound(res, 'Person not found');
+      }
+
+      return ResponseHelper.success(res, 'Person found successfully', person);
+    } catch (error) {
+      logger.error('Error in searchPerson controller', { error: error.message, query: req.query.q });
+      return ResponseHelper.error(res, 'Error searching person', error);
+    }
+  };
+
   // Get movies (defaults to popular)
   getMovies = async (req, res) => {
     try {

@@ -1679,6 +1679,10 @@
   cursor: not-allowed;
 }
 
+.clickable-person-card {
+  cursor: pointer;
+}
+
 .person-details-page {
   max-width: 1200px;
   margin: 0 auto;

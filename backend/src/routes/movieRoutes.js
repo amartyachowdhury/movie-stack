@@ -11,6 +11,7 @@ router.get('/popular', ErrorHandler.handleAsync(movieController.getPopularMovies
 router.get('/top-rated', ErrorHandler.handleAsync(movieController.getTopRatedMovies));
 router.get('/search', ErrorHandler.handleAsync(movieController.searchMovies));
 router.get('/discover', ErrorHandler.handleAsync(movieController.discoverMovies));
+router.get('/person/search', ErrorHandler.handleAsync(movieController.searchPerson));
 router.get('/person/:id', ErrorHandler.handleAsync(movieController.getPersonDetails));
 router.get('/:id', ErrorHandler.handleAsync(movieController.getMovieDetails));
 
