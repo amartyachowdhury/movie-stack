@@ -265,5 +265,51 @@ export const useMovieDetails = (movieId) => {
   return { movie, loading, error, refetch: fetchMovieDetails };
 };
 
+// Hook for fetching individual person details
+export const usePersonDetails = (personId) => {
+  const [person, setPerson] = useState(null);
+  const [loading, setLoading] = useState(LOADING_STATES.IDLE);
+  const [error, setError] = useState(null);
+
+  const fetchPersonDetails = useCallback(async () => {
+    if (!personId) return;
+
+    const cacheKey = getCacheKey('person_details', { personId });
+    const cachedData = getCachedData(cacheKey);
+
+    if (cachedData) {
+      setPerson(cachedData);
+      setLoading(LOADING_STATES.SUCCESS);
+      return;
+    }
+
+    setLoading(LOADING_STATES.LOADING);
+    setError(null);
+
+    try {
+      const response = await api.getPerson(personId);
+
+      if (response.success) {
+        setPerson(response.data);
+        setCachedData(cacheKey, response.data);
+        setLoading(LOADING_STATES.SUCCESS);
+      } else {
+        setError(response.message || 'Person not found');
+        setLoading(LOADING_STATES.ERROR);
+      }
+    } catch (err) {
+      setError('Failed to load person details');
+      setLoading(LOADING_STATES.ERROR);
+      console.error('Error fetching person details:', err);
+    }
+  }, [personId]);
+
+  useEffect(() => {
+    fetchPersonDetails();
+  }, [fetchPersonDetails]);
+
+  return { person, loading, error, refetch: fetchPersonDetails };
+};
+
 // Default export for backward compatibility
 export default useMovies;

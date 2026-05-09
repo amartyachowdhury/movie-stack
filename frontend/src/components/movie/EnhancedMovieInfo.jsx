@@ -15,7 +15,7 @@ import {
 } from '../../utils';
 import WatchProviders from './WatchProviders';
 
-const EnhancedMovieInfo = ({ movie }) => {
+const EnhancedMovieInfo = ({ movie, onPersonClick }) => {
   if (!movie) return null;
 
   const genres = parseGenres(movie.genres);
@@ -299,7 +299,15 @@ const EnhancedMovieInfo = ({ movie }) => {
                   <span>{person.name.charAt(0)}</span>
                 </div>
                 <div className="cast-info">
-                  <div className="cast-name">{person.name}</div>
+                  <button
+                    className="person-link-button"
+                    type="button"
+                    onClick={() => onPersonClick && onPersonClick(person)}
+                    disabled={!person.id || String(person.id).startsWith('omdb-')}
+                    title={person.id && !String(person.id).startsWith('omdb-') ? `View ${person.name}` : 'Person details unavailable'}
+                  >
+                    {person.name}
+                  </button>
                   <div className="cast-character">{person.character || 'Actor'}</div>
                 </div>
               </div>
@@ -330,7 +338,15 @@ const EnhancedMovieInfo = ({ movie }) => {
                   <span>{person.name.charAt(0)}</span>
                 </div>
                 <div className="crew-info">
-                  <div className="crew-name">{person.name}</div>
+                  <button
+                    className="person-link-button"
+                    type="button"
+                    onClick={() => onPersonClick && onPersonClick(person)}
+                    disabled={!person.id || String(person.id).startsWith('omdb-')}
+                    title={person.id && !String(person.id).startsWith('omdb-') ? `View ${person.name}` : 'Person details unavailable'}
+                  >
+                    {person.name}
+                  </button>
                   <div className="crew-job">{person.job}</div>
                 </div>
               </div>

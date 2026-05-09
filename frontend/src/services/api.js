@@ -65,6 +65,10 @@ class ApiService {
     return this.request(`/movies/${id}`);
   }
 
+  async getPerson(id) {
+    return this.request(`/movies/person/${id}`);
+  }
+
   async searchMovies(query, page = 1) {
     return this.request(`/movies/search?q=${encodeURIComponent(query)}&page=${page}`);
   }

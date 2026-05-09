@@ -8,7 +8,7 @@ import TrailerSection from './TrailerSection';
 import RatingScores from './RatingScores';
 import EnhancedMovieInfo from './EnhancedMovieInfo';
 
-const MovieDetails = ({ movie, onBack, onMovieClick }) => {
+const MovieDetails = ({ movie, onBack, onMovieClick, onPersonClick }) => {
   const handleSimilarMovieClick = (similarMovie) => {
     if (onMovieClick) {
       onMovieClick(similarMovie);
@@ -23,7 +23,7 @@ const MovieDetails = ({ movie, onBack, onMovieClick }) => {
       </button>
 
       {/* Enhanced Movie Information - Combines TMDB and OMDb data */}
-      <EnhancedMovieInfo movie={movie} />
+      <EnhancedMovieInfo movie={movie} onPersonClick={onPersonClick} />
 
       {/* Professional Ratings */}
       {movie.omdb && (

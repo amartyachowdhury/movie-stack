@@ -5,7 +5,7 @@ import MovieDetails from '../components/movie/MovieDetails';
 import LoadingSpinner from '../components/layout/LoadingSpinner';
 import { LOADING_STATES } from '../constants';
 
-const MovieDetailsPage = ({ movieId, onBack, onMovieClick }) => {
+const MovieDetailsPage = ({ movieId, onBack, onMovieClick, onPersonClick }) => {
   const { movie, loading, error } = useMovieDetails(movieId);
 
   if (loading === LOADING_STATES.LOADING) {
@@ -40,7 +40,7 @@ const MovieDetailsPage = ({ movieId, onBack, onMovieClick }) => {
     );
   }
 
-  return <MovieDetails movie={movie} onBack={onBack} onMovieClick={onMovieClick} />;
+  return <MovieDetails movie={movie} onBack={onBack} onMovieClick={onMovieClick} onPersonClick={onPersonClick} />;
 };
 
 export default MovieDetailsPage;

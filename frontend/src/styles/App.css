@@ -1657,3 +1657,148 @@
     opacity: 1;
   }
 }
+
+.person-link-button {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.person-link-button:hover:not(:disabled) {
+  color: #ff6b6b;
+  text-decoration: underline;
+}
+
+.person-link-button:disabled {
+  color: rgba(255, 255, 255, 0.7);
+  cursor: not-allowed;
+}
+
+.person-details-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem 1.5rem 3rem;
+}
+
+.person-hero {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 2rem;
+  align-items: start;
+  margin-top: 1rem;
+}
+
+.person-profile-image,
+.person-profile-placeholder {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  border-radius: 16px;
+}
+
+.person-profile-image {
+  object-fit: cover;
+}
+
+.person-profile-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(45deg, #e50914, #ff6b6b);
+  font-size: 5rem;
+  font-weight: 800;
+}
+
+.person-info-column {
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 1.5rem;
+}
+
+.person-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+  margin-bottom: 1rem;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.person-biography {
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.known-for-section {
+  margin-top: 2rem;
+}
+
+.known-for-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.known-for-card {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.known-for-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.35);
+}
+
+.known-for-poster img,
+.known-for-poster-placeholder {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+}
+
+.known-for-poster img {
+  object-fit: cover;
+}
+
+.known-for-poster-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.known-for-info {
+  padding: 0.75rem;
+}
+
+.known-for-info h4 {
+  margin: 0 0 0.4rem;
+}
+
+.known-for-info p {
+  margin: 0.2rem 0;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .person-details-page {
+    padding: 0.75rem 1rem 2rem;
+  }
+
+  .person-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .person-profile-column {
+    max-width: 260px;
+  }
+}

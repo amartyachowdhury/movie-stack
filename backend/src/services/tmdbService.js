@@ -174,6 +174,27 @@ class TMDBService {
     }
   }
 
+  async getPersonDetails(personId) {
+    if (!this.apiKey) {
+      logger.warn('No API key available, returning sample person details');
+      return this.getSamplePersonDetails(personId);
+    }
+
+    try {
+      const response = await this.client.get(`/person/${personId}`, {
+        params: {
+          append_to_response: 'movie_credits,external_ids'
+        }
+      });
+
+      logger.info('Successfully fetched person details', { personId, name: response.data.name });
+      return this.formatPersonDetails(response.data);
+    } catch (error) {
+      logger.error('Error fetching person details', { error: error.message, personId });
+      return this.getSamplePersonDetails(personId);
+    }
+  }
+
   async getGenres() {
     if (!this.apiKey) {
       logger.warn('No API key available, returning sample genres');
@@ -295,6 +316,38 @@ class TMDBService {
     };
   }
 
+  formatPersonDetails(person) {
+    const knownForMovies = [...(person.movie_credits?.cast || [])]
+      .sort((a, b) => (b.popularity || 0) - (a.popularity || 0))
+      .slice(0, 12)
+      .map(movie => ({
+        id: movie.id,
+        title: movie.title,
+        character: movie.character,
+        release_date: movie.release_date,
+        poster_path: movie.poster_path,
+        vote_average: movie.vote_average,
+        popularity: movie.popularity
+      }));
+
+    return {
+      id: person.id,
+      name: person.name,
+      biography: person.biography || '',
+      birthday: person.birthday || '',
+      deathday: person.deathday || '',
+      place_of_birth: person.place_of_birth || '',
+      known_for_department: person.known_for_department || '',
+      also_known_as: person.also_known_as || [],
+      gender: person.gender || 0,
+      profile_path: person.profile_path || '',
+      popularity: person.popularity || 0,
+      imdb_id: person.external_ids?.imdb_id || '',
+      homepage: person.homepage || '',
+      known_for_movies: knownForMovies
+    };
+  }
+
   // Fallback sample data when API is not available
   getSampleMovies() {
     return [
@@ -385,6 +438,33 @@ class TMDBService {
       { id: 10752, name: "War" },
       { id: 37, name: "Western" }
     ];
+  }
+
+  getSamplePersonDetails(personId) {
+    return {
+      id: parseInt(personId) || 31,
+      name: 'Tom Hanks',
+      biography: 'American actor and filmmaker known for dramatic and comedic roles in films.',
+      birthday: '1956-07-09',
+      deathday: '',
+      place_of_birth: 'Concord, California, USA',
+      known_for_department: 'Acting',
+      also_known_as: [],
+      gender: 2,
+      profile_path: '',
+      popularity: 55.2,
+      imdb_id: 'nm0000158',
+      homepage: '',
+      known_for_movies: this.getSampleMovies().map(movie => ({
+        id: movie.id,
+        title: movie.title,
+        character: 'N/A',
+        release_date: movie.release_date,
+        poster_path: movie.poster_path,
+        vote_average: movie.vote_average,
+        popularity: movie.popularity
+      }))
+    };
   }
 }
 

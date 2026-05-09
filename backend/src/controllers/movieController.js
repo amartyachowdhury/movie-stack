@@ -146,6 +146,29 @@ class MovieController {
     }
   };
 
+  // Get person details
+  getPersonDetails = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const personId = parseInt(id);
+
+      if (!personId || isNaN(personId)) {
+        return ResponseHelper.validationError(res, 'Invalid person ID');
+      }
+
+      const personDetails = await this.tmdbService.getPersonDetails(personId);
+
+      if (!personDetails) {
+        return ResponseHelper.notFound(res, 'Person not found');
+      }
+
+      return ResponseHelper.success(res, 'Person details retrieved successfully', personDetails);
+    } catch (error) {
+      logger.error('Error in getPersonDetails controller', { error: error.message, personId: req.params.id });
+      return ResponseHelper.error(res, 'Error fetching person details', error);
+    }
+  };
+
   // Get movies (defaults to popular)
   getMovies = async (req, res) => {
     try {

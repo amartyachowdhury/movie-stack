@@ -3,6 +3,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, useNavigate, useParams } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import MovieDetailsPage from './pages/MovieDetailsPage';
+import PersonDetailsPage from './pages/PersonDetailsPage';
 import ErrorBoundary from './components/layout/ErrorBoundary';
 import './styles/App.css';
 
@@ -18,6 +19,12 @@ const AppRouter = () => {
     navigate('/');
   };
 
+  const handlePersonClick = (person) => {
+    if (person?.id) {
+      navigate(`/person/${person.id}`);
+    }
+  };
+
   return (
     <ErrorBoundary>
       <div className="app">
@@ -30,7 +37,22 @@ const AppRouter = () => {
           />
           <Route 
             path="/movie/:id" 
-            element={<MovieDetailsWrapper onBack={handleBack} onMovieClick={handleMovieClick} />} 
+            element={
+              <MovieDetailsWrapper
+                onBack={handleBack}
+                onMovieClick={handleMovieClick}
+                onPersonClick={handlePersonClick}
+              />
+            }
+          />
+          <Route
+            path="/person/:id"
+            element={
+              <PersonDetailsWrapper
+                onBack={handleBack}
+                onMovieClick={handleMovieClick}
+              />
+            }
           />
         </Routes>
       </div>
@@ -39,9 +61,14 @@ const AppRouter = () => {
 };
 
 // Movie Details Wrapper Component
-const MovieDetailsWrapper = ({ onBack, onMovieClick }) => {
+const MovieDetailsWrapper = ({ onBack, onMovieClick, onPersonClick }) => {
   const { id } = useParams();
-  return <MovieDetailsPage movieId={id} onBack={onBack} onMovieClick={onMovieClick} />;
+  return <MovieDetailsPage movieId={id} onBack={onBack} onMovieClick={onMovieClick} onPersonClick={onPersonClick} />;
+};
+
+const PersonDetailsWrapper = ({ onBack, onMovieClick }) => {
+  const { id } = useParams();
+  return <PersonDetailsPage personId={id} onBack={onBack} onMovieClick={onMovieClick} />;
 };
 
 // Main App Component
