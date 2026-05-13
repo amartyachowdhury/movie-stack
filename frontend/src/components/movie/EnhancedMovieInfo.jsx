@@ -18,8 +18,8 @@ import WatchProviders from './WatchProviders';
 import api from '../../services/api';
 
 const EnhancedMovieInfo = ({ movie, onPersonClick }) => {
-  if (!movie) return null;
   const navigate = useNavigate();
+  if (!movie) return null;
 
   const genres = parseGenres(movie.genres);
   const popularityBadge = getPopularityBadge(movie.popularity);

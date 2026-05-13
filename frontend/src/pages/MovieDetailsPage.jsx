@@ -1,12 +1,23 @@
 // Movie Details Page Component
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useMovieDetails } from '../hooks/useMovies';
 import MovieDetails from '../components/movie/MovieDetails';
 import LoadingSpinner from '../components/layout/LoadingSpinner';
 import { LOADING_STATES } from '../constants';
 
+const DEFAULT_TITLE = 'Movie Stack';
+
 const MovieDetailsPage = ({ movieId, onBack, onMovieClick, onPersonClick }) => {
   const { movie, loading, error } = useMovieDetails(movieId);
+
+  useEffect(() => {
+    if (!movie?.title) return;
+    const previousTitle = document.title;
+    document.title = `${movie.title} | ${DEFAULT_TITLE}`;
+    return () => {
+      document.title = previousTitle;
+    };
+  }, [movie]);
 
   if (loading === LOADING_STATES.LOADING) {
     return <LoadingSpinner message="Loading movie details..." size="large" />;

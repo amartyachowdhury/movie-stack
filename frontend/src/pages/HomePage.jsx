@@ -1,5 +1,5 @@
 // Home Page Component
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { useMovies, useMovieSearch, useMovieDiscovery } from '../hooks/useMovies';
 import MovieCard from '../components/movie/MovieCard';
 import Header from '../components/layout/Header';
@@ -12,6 +12,10 @@ const HomePage = ({ onMovieClick }) => {
   const [currentEndpoint, setCurrentEndpoint] = useState('popular');
   const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
   const [searchMode, setSearchMode] = useState('basic'); // 'basic', 'advanced', 'discovery'
+
+  useEffect(() => {
+    document.title = 'Movie Stack';
+  }, []);
   
   const { movies, loading: moviesLoading, error: moviesError } = useMovies(currentEndpoint);
   const { 

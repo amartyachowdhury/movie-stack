@@ -243,6 +243,29 @@ class TMDBService {
     }
   }
 
+  normalizeMovieGenres(genres) {
+    if (!genres) return [];
+    if (Array.isArray(genres) && genres.length > 0) {
+      if (typeof genres[0] === 'object' && genres[0] !== null) {
+        return genres
+          .filter((g) => g && g.name)
+          .map((g) => ({ id: g.id ?? 0, name: g.name }));
+      }
+      return genres
+        .map((id) => parseInt(id, 10))
+        .filter((id) => !Number.isNaN(id))
+        .map((id) => ({ id, name: `Genre ${id}` }));
+    }
+    if (typeof genres === 'string' && genres.trim()) {
+      return genres
+        .split(',')
+        .map((name) => name.trim())
+        .filter(Boolean)
+        .map((name, index) => ({ id: index, name }));
+    }
+    return [];
+  }
+
   formatMovies(movies) {
     return movies.map(movie => ({
       id: movie.id, // Use TMDB ID as the primary ID
@@ -264,10 +287,7 @@ class TMDBService {
   }
 
   async formatMovieDetails(movie) {
-    const genres = movie.genres ? movie.genres.map(g => ({
-      id: g.id,
-      name: g.name
-    })) : [];
+    const genres = this.normalizeMovieGenres(movie.genres);
 
     // Format videos data
     const videos = movie.videos?.results || [];
@@ -299,14 +319,14 @@ class TMDBService {
       }
     } catch (error) {
       logger.warn('Failed to fetch OMDb data', { 
-        movieId: movie.id, 
+        movieId: movie.id ?? movie.tmdb_id, 
         title: movie.title, 
         error: error.message 
       });
     }
 
     return {
-      tmdb_id: movie.id,
+      tmdb_id: movie.id ?? movie.tmdb_id,
       title: movie.title,
       overview: movie.overview,
       genres: genres,

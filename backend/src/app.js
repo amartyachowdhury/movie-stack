@@ -50,7 +50,9 @@ class App {
         endpoints: {
           health: '/api/health',
           movies: '/api/movies',
-          genres: '/api/genres'
+          genres: '/api/genres',
+          personDetails: '/api/movies/person/:id',
+          personSearch: '/api/movies/person/search?q='
         }
       });
     });

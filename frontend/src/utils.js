@@ -179,9 +179,11 @@ export const buildQueryString = (params) => {
 
 // Validation utilities
 export const isValidMovieId = (id) => {
-  return id && !isNaN(id) && parseInt(id) > 0;
+  if (id === null || id === undefined || id === '') return false;
+  const n = parseInt(id, 10);
+  return !Number.isNaN(n) && n > 0;
 };
 
 export const isValidSearchQuery = (query) => {
-  return query && typeof query === 'string' && query.trim().length > 0;
+  return typeof query === 'string' && query.trim().length > 0;
 };

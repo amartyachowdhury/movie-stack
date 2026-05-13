@@ -1,11 +1,22 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { usePersonDetails } from '../hooks/useMovies';
 import LoadingSpinner from '../components/layout/LoadingSpinner';
 import { getProfileUrl, getPosterUrl, getYear } from '../utils';
 import { LOADING_STATES } from '../constants';
 
+const DEFAULT_TITLE = 'Movie Stack';
+
 const PersonDetailsPage = ({ personId, onBack, onMovieClick }) => {
   const { person, loading, error } = usePersonDetails(personId);
+
+  useEffect(() => {
+    if (!person?.name) return;
+    const previousTitle = document.title;
+    document.title = `${person.name} | ${DEFAULT_TITLE}`;
+    return () => {
+      document.title = previousTitle;
+    };
+  }, [person]);
 
   if (loading === LOADING_STATES.LOADING) {
     return <LoadingSpinner message="Loading person details..." size="large" />;
