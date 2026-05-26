@@ -4,8 +4,11 @@ const path = require('path');
 
 class Logger {
   constructor() {
+    this.isTest = process.env.NODE_ENV === 'test';
     this.logDir = path.join(__dirname, '../../logs');
-    this.ensureLogDirectory();
+    if (!this.isTest) {
+      this.ensureLogDirectory();
+    }
   }
 
   ensureLogDirectory() {
@@ -21,6 +24,7 @@ class Logger {
   }
 
   writeToFile(level, message, meta = {}) {
+    if (this.isTest) return;
     const logFile = path.join(this.logDir, `${level}.log`);
     const formattedMessage = this.formatMessage(level, message, meta);
     
@@ -28,18 +32,21 @@ class Logger {
   }
 
   info(message, meta = {}) {
+    if (this.isTest) return;
     const formattedMessage = this.formatMessage('info', message, meta);
     console.log(`ℹ️  ${formattedMessage}`);
     this.writeToFile('info', message, meta);
   }
 
   warn(message, meta = {}) {
+    if (this.isTest) return;
     const formattedMessage = this.formatMessage('warn', message, meta);
     console.warn(`⚠️  ${formattedMessage}`);
     this.writeToFile('warn', message, meta);
   }
 
   error(message, meta = {}) {
+    if (this.isTest) return;
     const formattedMessage = this.formatMessage('error', message, meta);
     console.error(`❌ ${formattedMessage}`);
     this.writeToFile('error', message, meta);
@@ -54,6 +61,7 @@ class Logger {
   }
 
   success(message, meta = {}) {
+    if (this.isTest) return;
     const formattedMessage = this.formatMessage('success', message, meta);
     console.log(`✅ ${formattedMessage}`);
     this.writeToFile('info', message, meta);

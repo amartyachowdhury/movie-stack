@@ -2,6 +2,7 @@
   "name": "movie-stack",
   "private": true,
   "scripts": {
-    "test": "npm --prefix backend test && npm --prefix frontend test"
+    "test": "npm --prefix backend test && npm --prefix frontend test",
+    "test:ci": "npm test && npm --prefix frontend run build"
   }
 }

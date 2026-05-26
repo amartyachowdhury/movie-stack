@@ -1,6 +1,8 @@
 // Configuration management for Movie Stack Backend
 require('dotenv').config();
 
+const isTestEnv = process.env.NODE_ENV === 'test';
+
 const config = {
   // Server Configuration
   server: {
@@ -67,10 +69,13 @@ const validateConfig = () => {
 try {
   validateConfig();
 } catch (error) {
-  console.error('❌ Configuration Error:', error.message);
-  if (config.server.nodeEnv === 'production') {
+  if (isTestEnv) {
+    // Tests use sample/fallback data when keys are absent; avoid noisy stderr.
+  } else if (config.server.nodeEnv === 'production') {
+    console.error('❌ Configuration Error:', error.message);
     process.exit(1);
   } else {
+    console.error('❌ Configuration Error:', error.message);
     console.warn('⚠️  Running in development mode with invalid configuration');
   }
 }
