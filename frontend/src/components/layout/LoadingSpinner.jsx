@@ -1,5 +1,4 @@
 // Loading Spinner Component
-import React from 'react';
 
 const LoadingSpinner = ({ message = 'Loading...', size = 'medium' }) => {
   const sizeClasses = {

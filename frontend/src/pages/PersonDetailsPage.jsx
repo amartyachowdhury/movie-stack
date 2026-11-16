@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { usePersonDetails } from '../hooks/useMovies';
 import LoadingSpinner from '../components/layout/LoadingSpinner';
 import { getProfileUrl, getPosterUrl, getYear } from '../utils';

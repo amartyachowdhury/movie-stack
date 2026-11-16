@@ -6,7 +6,7 @@ export const getYear = (dateString) => {
   if (!dateString) return 'N/A';
   try {
     return new Date(dateString).getFullYear().toString();
-  } catch (error) {
+  } catch {
     return 'N/A';
   }
 };

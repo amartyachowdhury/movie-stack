@@ -1,18 +1,15 @@
 // Enhanced Movie Info Component - Combines TMDB and OMDb data for maximum information
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   getYear, 
   formatCurrency, 
-  formatRuntime, 
   formatVoteCount, 
   getLanguageFlag, 
   getPopularityBadge, 
   parseGenres,
   getBackdropUrl,
   getPosterUrl,
-  getProfileUrl,
-  truncateText
+  getProfileUrl
 } from '../../utils';
 import WatchProviders from './WatchProviders';
 import api from '../../services/api';

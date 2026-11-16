@@ -1,5 +1,5 @@
 // Advanced Search Component
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import api from '../../services/api';
 
 const AdvancedSearch = ({ onSearch, onClose, isOpen }) => {
@@ -14,7 +14,7 @@ const AdvancedSearch = ({ onSearch, onClose, isOpen }) => {
   });
   
   const [genres, setGenres] = useState([]);
-  const [languages, setLanguages] = useState([
+  const [languages] = useState([
     { code: 'en', name: 'English' },
     { code: 'es', name: 'Spanish' },
     { code: 'fr', name: 'French' },

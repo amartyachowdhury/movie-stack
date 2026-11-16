@@ -1,5 +1,4 @@
 // API service for Movie Stack Frontend
-import { handleApiResponse } from '../utils';
 
 class ApiService {
   constructor() {

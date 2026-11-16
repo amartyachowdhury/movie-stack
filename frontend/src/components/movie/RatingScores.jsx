@@ -1,5 +1,4 @@
 // Rating Scores Component - Displays IMDB, Rotten Tomatoes, and Metacritic scores
-import React from 'react';
 
 const RatingScores = ({ omdbData }) => {
   if (!omdbData || !omdbData.ratings) {

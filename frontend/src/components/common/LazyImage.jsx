@@ -1,5 +1,5 @@
 // Lazy Loading Image Component
-import React, { useState, useRef, useEffect, memo } from 'react';
+import { useState, useRef, useEffect, memo } from 'react';
 
 const LazyImage = memo(({ 
   src, 

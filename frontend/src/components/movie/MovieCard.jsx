@@ -1,5 +1,5 @@
 // Movie Card Component
-import React, { memo, useMemo, useCallback } from 'react';
+import { memo, useMemo, useCallback } from 'react';
 import { 
   getYear, 
   formatCurrency, 

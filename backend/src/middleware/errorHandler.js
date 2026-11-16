@@ -3,7 +3,7 @@ const logger = require('../utils/logger');
 const ResponseHelper = require('../utils/response');
 
 class ErrorHandler {
-  static handleError(err, req, res, next) {
+  static handleError(err, req, res, _next) {
     // Log the error
     logger.error('Unhandled Error', {
       message: err.message,
@@ -43,7 +43,7 @@ class ErrorHandler {
     return ResponseHelper.error(res, message, err);
   }
 
-  static handleNotFound(req, res, next) {
+  static handleNotFound(req, res, _next) {
     return ResponseHelper.notFound(res, `Route ${req.originalUrl} not found`);
   }
 

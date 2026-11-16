@@ -1,5 +1,5 @@
 // Header Component
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 const Header = ({ onSearch, searchQuery, setSearchQuery, isSearching, onAdvancedSearch }) => {
   const [localQuery, setLocalQuery] = useState(searchQuery);

@@ -1,5 +1,4 @@
 // Movie Details Component - Enhanced with combined TMDB and OMDb data
-import React from 'react';
 import { 
   getYear, 
   getPosterUrl

@@ -1,5 +1,4 @@
 // Watch Providers Component - Displays streaming availability
-import React from 'react';
 
 const WatchProviders = ({ watchProviders }) => {
   if (!watchProviders || !watchProviders.results) {

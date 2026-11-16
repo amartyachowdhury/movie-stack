@@ -1,5 +1,5 @@
 // Movie Details Page Component
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useMovieDetails } from '../hooks/useMovies';
 import MovieDetails from '../components/movie/MovieDetails';
 import LoadingSpinner from '../components/layout/LoadingSpinner';

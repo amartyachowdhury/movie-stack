@@ -1,5 +1,5 @@
 // Trailer Section Component
-import React, { useState } from 'react';
+import { useState } from 'react';
 import TrailerPlayer from './TrailerPlayer';
 
 const TrailerSection = ({ videos }) => {

@@ -1,5 +1,5 @@
 // Trailer Player Component
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 const TrailerPlayer = ({ video, onClose, isOpen }) => {
   const [isLoading, setIsLoading] = useState(true);

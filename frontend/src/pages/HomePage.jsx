@@ -1,5 +1,5 @@
 // Home Page Component
-import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import { useMovies, useMovieSearch, useMovieDiscovery } from '../hooks/useMovies';
 import MovieCard from '../components/movie/MovieCard';
 import Header from '../components/layout/Header';
