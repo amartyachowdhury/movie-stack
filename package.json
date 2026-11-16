@@ -2,7 +2,8 @@
   "name": "movie-stack",
   "private": true,
   "scripts": {
+    "lint": "npm --prefix backend run lint && npm --prefix frontend run lint",
     "test": "npm --prefix backend test && npm --prefix frontend test",
-    "test:ci": "npm test && npm --prefix frontend run build"
+    "test:ci": "npm run lint && npm test && npm --prefix frontend run build"
   }
 }
