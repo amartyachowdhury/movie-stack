@@ -1,7 +1,7 @@
 {
   "name": "movie-stack-backend",
   "version": "1.0.0",
-  "description": "Movie Stack Backend - TMDB API Only",
+  "description": "Movie Stack Backend - TMDB & OMDb API",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

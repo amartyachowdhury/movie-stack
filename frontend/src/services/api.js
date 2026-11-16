@@ -1,4 +1,5 @@
 // API service for Movie Stack Frontend
+import { logError } from './logger';
 
 class ApiService {
   constructor() {
@@ -42,7 +43,7 @@ class ApiService {
 
       return response.json();
     } catch (error) {
-      console.error('API Request Error:', error);
+      logError('API Request Error:', error);
       throw error;
     }
   }

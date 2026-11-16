@@ -3,6 +3,7 @@ import api from '../services/api';
 import { LOADING_STATES } from '../constants';
 import { debounce } from '../utils';
 import { getCacheKey, getCachedData, setCachedData } from './apiCache';
+import { logError } from '../services/logger';
 
 // Hook for movie search functionality
 export const useMovieSearch = () => {
@@ -51,7 +52,7 @@ export const useMovieSearch = () => {
       if (err.name !== 'AbortError') {
         setError('Search failed');
         setLoading(LOADING_STATES.ERROR);
-        console.error('Error searching movies:', err);
+        logError('Error searching movies:', err);
       }
     }
   }, []);

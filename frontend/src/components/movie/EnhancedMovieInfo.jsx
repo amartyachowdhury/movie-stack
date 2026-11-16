@@ -21,6 +21,7 @@ import {
 import PersonCreditCard from './PersonCreditCard';
 import WatchProviders from './WatchProviders';
 import api from '../../services/api';
+import { logError } from '../../services/logger';
 
 const KEY_CREW_JOBS = ['Director', 'Writer', 'Producer', 'Original Music Composer'];
 
@@ -63,7 +64,7 @@ const EnhancedMovieInfo = ({ movie, onPersonClick }) => {
         navigateToPerson(response.data.id);
       }
     } catch (error) {
-      console.error('Unable to resolve person profile:', error);
+      logError('Unable to resolve person profile:', error);
     }
   };
 

@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import api from '../services/api';
 import { LOADING_STATES } from '../constants';
 import { getCacheKey, getCachedData, setCachedData } from './apiCache';
+import { logError } from '../services/logger';
 
 const useCachedEntity = (cacheNamespace, entityId, fetcher, notFoundMessage, errorMessage) => {
   const [data, setData] = useState(null);
@@ -37,7 +38,7 @@ const useCachedEntity = (cacheNamespace, entityId, fetcher, notFoundMessage, err
     } catch (err) {
       setError(errorMessage);
       setLoading(LOADING_STATES.ERROR);
-      console.error(`${errorMessage}:`, err);
+      logError(`${errorMessage}:`, err);
     }
   }, [cacheNamespace, entityId, fetcher, notFoundMessage, errorMessage]);
 

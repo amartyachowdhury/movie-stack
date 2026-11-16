@@ -1,6 +1,7 @@
 // Advanced Search Component
 import { useState, useEffect } from 'react';
 import api from '../../services/api';
+import { logError } from '../../services/logger';
 
 const AdvancedSearch = ({ onSearch, onClose, isOpen }) => {
   const [filters, setFilters] = useState({
@@ -42,7 +43,7 @@ const AdvancedSearch = ({ onSearch, onClose, isOpen }) => {
         setGenres(response.data);
       }
     } catch (error) {
-      console.error('Error loading genres:', error);
+      logError('Error loading genres:', error);
     }
   };
 
@@ -69,7 +70,7 @@ const AdvancedSearch = ({ onSearch, onClose, isOpen }) => {
       await onSearch(searchParams);
       onClose();
     } catch (error) {
-      console.error('Advanced search error:', error);
+      logError('Advanced search error:', error);
     } finally {
       setLoading(false);
     }

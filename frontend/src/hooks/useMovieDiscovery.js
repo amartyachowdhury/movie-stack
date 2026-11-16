@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react';
 import api from '../services/api';
 import { LOADING_STATES } from '../constants';
 import { getCacheKey, getCachedData, setCachedData } from './apiCache';
+import { logError } from '../services/logger';
 
 // Hook for advanced movie discovery with filters
 export const useMovieDiscovery = () => {
@@ -40,7 +41,7 @@ export const useMovieDiscovery = () => {
     } catch (err) {
       setError('Discovery failed');
       setLoading(LOADING_STATES.ERROR);
-      console.error('Error discovering movies:', err);
+      logError('Error discovering movies:', err);
     }
   }, []);
 

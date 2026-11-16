@@ -1,5 +1,6 @@
 // Error Boundary Component
 import React from 'react';
+import { logError } from '../../services/logger';
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -18,9 +19,7 @@ class ErrorBoundary extends React.Component {
     });
     
     // Log error to console in development
-    if (import.meta.env.DEV) {
-      console.error('Error Boundary caught an error:', error, errorInfo);
-    }
+    logError('Error Boundary caught an error:', error, errorInfo);
   }
 
   render() {

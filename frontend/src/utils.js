@@ -1,5 +1,6 @@
 // Utility Functions
 import { TMDB_IMAGE_BASE_URL, POSTER_SIZE, BACKDROP_SIZE, PROFILE_SIZE, GENRE_MAP, LANGUAGE_FLAGS } from './constants';
+import { logError } from './services/logger';
 
 // Date utilities
 export const getYear = (dateString) => {
@@ -144,7 +145,7 @@ export const storage = {
       const item = localStorage.getItem(key);
       return item ? JSON.parse(item) : defaultValue;
     } catch (error) {
-      console.error('Error reading from localStorage:', error);
+      logError('Error reading from localStorage:', error);
       return defaultValue;
     }
   },
@@ -153,7 +154,7 @@ export const storage = {
     try {
       localStorage.setItem(key, JSON.stringify(value));
     } catch (error) {
-      console.error('Error writing to localStorage:', error);
+      logError('Error writing to localStorage:', error);
     }
   },
   
@@ -161,7 +162,7 @@ export const storage = {
     try {
       localStorage.removeItem(key);
     } catch (error) {
-      console.error('Error removing from localStorage:', error);
+      logError('Error removing from localStorage:', error);
     }
   }
 };

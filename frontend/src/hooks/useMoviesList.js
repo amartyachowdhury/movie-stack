@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import api from '../services/api';
 import { LOADING_STATES } from '../constants';
 import { getCacheKey, getCachedData, setCachedData } from './apiCache';
+import { logError } from '../services/logger';
 
 // Hook for fetching movies by type (popular, top-rated)
 export const useMovies = (type = 'popular', page = 1) => {
@@ -47,7 +48,7 @@ export const useMovies = (type = 'popular', page = 1) => {
     } catch (err) {
       setError('Failed to load movies');
       setLoading(LOADING_STATES.ERROR);
-      console.error('Error fetching movies:', err);
+      logError('Error fetching movies:', err);
     }
   }, [type, page]);
 
