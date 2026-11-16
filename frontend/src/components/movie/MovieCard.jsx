@@ -1,16 +1,16 @@
 // Movie Card Component
 import { memo, useMemo, useCallback } from 'react';
-import { 
-  getYear, 
-  formatCurrency, 
-  formatRuntime, 
-  formatVoteCount, 
-  getLanguageFlag, 
-  getPopularityBadge, 
+import {
+  getYear,
+  formatCurrency,
+  formatRuntime,
+  formatVoteCount,
+  getLanguageFlag,
+  getPopularityBadge,
   parseGenres,
   getBackdropUrl,
   getPosterUrl,
-  truncateText
+  truncateText,
 } from '../../utils';
 import { MOVIE_CONFIG } from '../../constants';
 import LazyImage from '../common/LazyImage';
@@ -21,8 +21,8 @@ const MovieCard = memo(({ movie, onClick }) => {
   const popularityBadge = useMemo(() => getPopularityBadge(movie.popularity), [movie.popularity]);
   const backdropUrl = useMemo(() => getBackdropUrl(movie.backdrop_path), [movie.backdrop_path]);
   const posterUrl = useMemo(() => getPosterUrl(movie.poster_path), [movie.poster_path]);
-  const truncatedOverview = useMemo(() => 
-    truncateText(movie.overview, MOVIE_CONFIG.MAX_OVERVIEW_LENGTH), 
+  const truncatedOverview = useMemo(
+    () => truncateText(movie.overview, MOVIE_CONFIG.MAX_OVERVIEW_LENGTH),
     [movie.overview]
   );
 
@@ -41,7 +41,7 @@ const MovieCard = memo(({ movie, onClick }) => {
           className="backdrop-image"
           placeholder={<span>No Image</span>}
         />
-        
+
         {/* Overlay with Poster */}
         <div className="movie-overlay">
           <LazyImage
@@ -70,9 +70,7 @@ const MovieCard = memo(({ movie, onClick }) => {
           <div className="movie-meta">
             <span className="movie-year">{getYear(movie.release_date)}</span>
             <span className="movie-language">{getLanguageFlag(movie.original_language)}</span>
-            {movie.runtime && (
-              <span className="movie-runtime">{formatRuntime(movie.runtime)}</span>
-            )}
+            {movie.runtime && <span className="movie-runtime">{formatRuntime(movie.runtime)}</span>}
           </div>
         </div>
 
@@ -85,7 +83,9 @@ const MovieCard = memo(({ movie, onClick }) => {
           </div>
           <div className="rating-details">
             <span className="vote-count">{formatVoteCount(movie.vote_count)} votes</span>
-            <span className="popularity-score">Popularity: {movie.popularity?.toFixed(0) || 'N/A'}</span>
+            <span className="popularity-score">
+              Popularity: {movie.popularity?.toFixed(0) || 'N/A'}
+            </span>
           </div>
         </div>
 

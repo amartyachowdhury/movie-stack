@@ -9,7 +9,7 @@ class ApiService {
 
   async request(endpoint, options = {}) {
     const requestKey = `${endpoint}_${JSON.stringify(options)}`;
-    
+
     // Check if request is already pending
     if (this.pendingRequests.has(requestKey)) {
       return this.pendingRequests.get(requestKey);
@@ -80,13 +80,13 @@ class ApiService {
   async discoverMovies(filters = {}, page = 1) {
     const params = new URLSearchParams();
     params.append('page', page);
-    
+
     Object.entries(filters).forEach(([key, value]) => {
       if (value !== undefined && value !== '') {
         params.append(key, value);
       }
     });
-    
+
     return this.request(`/movies/discover?${params.toString()}`);
   }
 

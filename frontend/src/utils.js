@@ -1,5 +1,12 @@
 // Utility Functions
-import { TMDB_IMAGE_BASE_URL, POSTER_SIZE, BACKDROP_SIZE, PROFILE_SIZE, GENRE_MAP, LANGUAGE_FLAGS } from './constants';
+import {
+  TMDB_IMAGE_BASE_URL,
+  POSTER_SIZE,
+  BACKDROP_SIZE,
+  PROFILE_SIZE,
+  GENRE_MAP,
+  LANGUAGE_FLAGS,
+} from './constants';
 import { logError } from './services/logger';
 
 // Date utilities
@@ -51,7 +58,7 @@ export const getLanguageFlag = (languageCode) => {
 // Popularity badge utility
 export const getPopularityBadge = (popularity) => {
   if (!popularity) return null;
-  
+
   if (popularity >= 1000) {
     return { text: '🔥 Hot', class: 'hot' };
   } else if (popularity >= 500) {
@@ -65,29 +72,32 @@ export const getPopularityBadge = (popularity) => {
 // Genre parsing utility
 export const parseGenres = (genres) => {
   if (!genres) return [];
-  
+
   // If it's already an array of objects, return as is
   if (Array.isArray(genres) && genres.length > 0 && typeof genres[0] === 'object') {
     return genres;
   }
-  
+
   // If it's a string of comma-separated IDs, parse it
   if (typeof genres === 'string') {
-    const genreIds = genres.split(',').map(id => parseInt(id.trim())).filter(id => !isNaN(id));
-    return genreIds.map(id => ({
+    const genreIds = genres
+      .split(',')
+      .map((id) => parseInt(id.trim()))
+      .filter((id) => !isNaN(id));
+    return genreIds.map((id) => ({
       id,
-      name: GENRE_MAP[id] || `Genre ${id}`
+      name: GENRE_MAP[id] || `Genre ${id}`,
     }));
   }
-  
+
   // If it's an array of IDs, convert to objects
   if (Array.isArray(genres)) {
-    return genres.map(id => ({
+    return genres.map((id) => ({
       id: typeof id === 'number' ? id : parseInt(id),
-      name: GENRE_MAP[id] || `Genre ${id}`
+      name: GENRE_MAP[id] || `Genre ${id}`,
     }));
   }
-  
+
   return [];
 };
 
@@ -149,7 +159,7 @@ export const storage = {
       return defaultValue;
     }
   },
-  
+
   set: (key, value) => {
     try {
       localStorage.setItem(key, JSON.stringify(value));
@@ -157,14 +167,14 @@ export const storage = {
       logError('Error writing to localStorage:', error);
     }
   },
-  
+
   remove: (key) => {
     try {
       localStorage.removeItem(key);
     } catch (error) {
       logError('Error removing from localStorage:', error);
     }
-  }
+  },
 };
 
 // URL utilities

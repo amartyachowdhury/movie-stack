@@ -4,7 +4,7 @@ const LoadingSpinner = ({ message = 'Loading...', size = 'medium' }) => {
   const sizeClasses = {
     small: 'spinner-small',
     medium: 'spinner-medium',
-    large: 'spinner-large'
+    large: 'spinner-large',
   };
 
   return (

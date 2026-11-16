@@ -34,7 +34,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.7) 100%);
+  background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.7) 100%);
 }
 
 .back-btn-hero {
@@ -664,106 +664,106 @@
   .movie-details-header {
     flex-direction: column;
   }
-  
+
   .movie-details-poster {
     width: 100%;
     height: 400px;
   }
-  
+
   .movies-grid {
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 20px;
   }
-  
+
   .movie-card-enhanced {
     border-radius: 8px;
   }
-  
+
   .movie-backdrop {
     height: 150px;
   }
-  
+
   .movie-poster-small {
     width: 60px;
     height: 90px;
   }
-  
+
   .movie-info-enhanced {
     padding: 15px;
     gap: 10px;
   }
-  
+
   .movie-title {
     font-size: 16px;
   }
-  
+
   .movie-meta {
     font-size: 12px;
     gap: 8px;
   }
-  
+
   .rating-score {
     font-size: 16px;
   }
-  
+
   .movie-overview p {
     font-size: 12px;
     -webkit-line-clamp: 2;
   }
-  
+
   /* Enhanced Movie Details Mobile Styles */
   .movie-hero {
     height: 40vh;
     min-height: 300px;
   }
-  
+
   .movie-main-info {
     flex-direction: column;
     gap: 20px;
   }
-  
+
   .movie-poster-large {
     width: 100%;
     height: 400px;
     align-self: center;
   }
-  
+
   .movie-title-main {
     font-size: 2rem;
   }
-  
+
   .movie-meta-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 15px;
   }
-  
+
   .cast-grid {
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     gap: 15px;
   }
-  
+
   .cast-photo {
     width: 60px;
     height: 60px;
   }
-  
+
   .crew-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .similar-movies-grid {
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 15px;
   }
-  
+
   .similar-movie-poster {
     height: 225px;
   }
-  
+
   .financial-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .links-grid {
     flex-direction: column;
   }
@@ -774,79 +774,79 @@
     grid-template-columns: 1fr;
     gap: 15px;
   }
-  
+
   .movie-backdrop {
     height: 120px;
   }
-  
+
   .movie-poster-small {
     width: 50px;
     height: 75px;
   }
-  
+
   .movie-info-enhanced {
     padding: 12px;
   }
-  
+
   .movie-title {
     font-size: 15px;
   }
-  
+
   .badge {
     font-size: 9px;
     padding: 3px 6px;
   }
-  
+
   /* Enhanced Movie Details Small Mobile Styles */
   .movie-hero {
     height: 30vh;
     min-height: 250px;
   }
-  
+
   .movie-title-main {
     font-size: 1.5rem;
   }
-  
+
   .movie-poster-large {
     height: 350px;
   }
-  
+
   .movie-meta-grid {
     grid-template-columns: 1fr;
     gap: 10px;
   }
-  
+
   .cast-grid {
     grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
     gap: 10px;
   }
-  
+
   .cast-photo {
     width: 50px;
     height: 50px;
   }
-  
+
   .cast-name {
     font-size: 12px;
   }
-  
+
   .cast-character {
     font-size: 10px;
   }
-  
+
   .similar-movies-grid {
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     gap: 10px;
   }
-  
+
   .similar-movie-poster {
     height: 180px;
   }
-  
+
   .similar-movie-title {
     font-size: 12px;
   }
-  
+
   .movie-financial-section,
   .movie-production-section {
     padding: 20px;

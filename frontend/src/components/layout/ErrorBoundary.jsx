@@ -15,9 +15,9 @@ class ErrorBoundary extends React.Component {
   componentDidCatch(error, errorInfo) {
     this.setState({
       error: error,
-      errorInfo: errorInfo
+      errorInfo: errorInfo,
     });
-    
+
     // Log error to console in development
     logError('Error Boundary caught an error:', error, errorInfo);
   }
@@ -29,13 +29,10 @@ class ErrorBoundary extends React.Component {
           <div className="error-content">
             <h2>🚨 Something went wrong</h2>
             <p>We're sorry, but something unexpected happened.</p>
-            <button 
-              className="retry-button"
-              onClick={() => window.location.reload()}
-            >
+            <button className="retry-button" onClick={() => window.location.reload()}>
               Reload Page
             </button>
-            
+
             {import.meta.env.DEV && this.state.error && (
               <details className="error-details">
                 <summary>Error Details (Development Only)</summary>

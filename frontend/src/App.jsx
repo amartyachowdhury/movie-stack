@@ -28,14 +28,9 @@ const AppRouter = () => {
     <ErrorBoundary>
       <div className="app">
         <Routes>
-          <Route 
-            path="/" 
-            element={
-              <HomePage onMovieClick={handleMovieClick} />
-            } 
-          />
-          <Route 
-            path="/movie/:id" 
+          <Route path="/" element={<HomePage onMovieClick={handleMovieClick} />} />
+          <Route
+            path="/movie/:id"
             element={
               <MovieDetailsWrapper
                 onBack={handleBack}
@@ -46,12 +41,7 @@ const AppRouter = () => {
           />
           <Route
             path="/person/:id"
-            element={
-              <PersonDetailsWrapper
-                onBack={handleBack}
-                onMovieClick={handleMovieClick}
-              />
-            }
+            element={<PersonDetailsWrapper onBack={handleBack} onMovieClick={handleMovieClick} />}
           />
         </Routes>
       </div>
@@ -62,7 +52,14 @@ const AppRouter = () => {
 // Movie Details Wrapper Component
 const MovieDetailsWrapper = ({ onBack, onMovieClick, onPersonClick }) => {
   const { id } = useParams();
-  return <MovieDetailsPage movieId={id} onBack={onBack} onMovieClick={onMovieClick} onPersonClick={onPersonClick} />;
+  return (
+    <MovieDetailsPage
+      movieId={id}
+      onBack={onBack}
+      onMovieClick={onMovieClick}
+      onPersonClick={onPersonClick}
+    />
+  );
 };
 
 const PersonDetailsWrapper = ({ onBack, onMovieClick }) => {

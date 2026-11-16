@@ -8,10 +8,10 @@ const router = express.Router();
 
 // Health check route
 router.get('/health', (req, res) => {
-  return ResponseHelper.success(res, 'API is healthy', { 
+  return ResponseHelper.success(res, 'API is healthy', {
     status: 'running',
     timestamp: new Date().toISOString(),
-    version: '1.0.0'
+    version: '1.0.0',
   });
 });
 

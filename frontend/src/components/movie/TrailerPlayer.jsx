@@ -24,15 +24,11 @@ const TrailerPlayer = ({ video, onClose, isOpen }) => {
       <div className="trailer-modal">
         <div className="trailer-header">
           <h3>{video.name}</h3>
-          <button 
-            className="trailer-close-button"
-            onClick={handleClose}
-            aria-label="Close trailer"
-          >
+          <button className="trailer-close-button" onClick={handleClose} aria-label="Close trailer">
             ✕
           </button>
         </div>
-        
+
         <div className="trailer-content">
           {isLoading && (
             <div className="trailer-loading">
@@ -40,7 +36,7 @@ const TrailerPlayer = ({ video, onClose, isOpen }) => {
               <p>Loading trailer...</p>
             </div>
           )}
-          
+
           <iframe
             src={getYouTubeEmbedUrl(video.key)}
             title={video.name}
@@ -52,7 +48,7 @@ const TrailerPlayer = ({ video, onClose, isOpen }) => {
             style={{ opacity: isLoading ? 0 : 1 }}
           />
         </div>
-        
+
         <div className="trailer-info">
           <p className="trailer-type">{video.type}</p>
           <p className="trailer-duration">{video.size}p</p>

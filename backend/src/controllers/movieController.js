@@ -13,17 +13,22 @@ class MovieController {
     try {
       const page = parseInt(req.query.page) || 1;
       const movies = await this.tmdbService.getPopularMovies(page);
-      
+
       const pagination = {
         page,
         limit: 20,
         total: movies.length,
         totalPages: 1,
         hasNext: false,
-        hasPrev: page > 1
+        hasPrev: page > 1,
       };
-      
-      return ResponseHelper.success(res, 'Popular movies retrieved successfully', movies, pagination);
+
+      return ResponseHelper.success(
+        res,
+        'Popular movies retrieved successfully',
+        movies,
+        pagination
+      );
     } catch (error) {
       logger.error('Error in getPopularMovies controller', { error: error.message });
       return ResponseHelper.error(res, 'Error fetching popular movies', error);
@@ -35,17 +40,22 @@ class MovieController {
     try {
       const page = parseInt(req.query.page) || 1;
       const movies = await this.tmdbService.getTopRatedMovies(page);
-      
+
       const pagination = {
         page,
         limit: 20,
         total: movies.length,
         totalPages: 1,
         hasNext: false,
-        hasPrev: page > 1
+        hasPrev: page > 1,
       };
-      
-      return ResponseHelper.success(res, 'Top rated movies retrieved successfully', movies, pagination);
+
+      return ResponseHelper.success(
+        res,
+        'Top rated movies retrieved successfully',
+        movies,
+        pagination
+      );
     } catch (error) {
       logger.error('Error in getTopRatedMovies controller', { error: error.message });
       return ResponseHelper.error(res, 'Error fetching top rated movies', error);
@@ -57,29 +67,40 @@ class MovieController {
     try {
       const { q: query } = req.query;
       const page = parseInt(req.query.page) || 1;
-      
+
       if (!query || query.trim().length === 0) {
         return ResponseHelper.validationError(res, 'Search query is required');
       }
 
       if (query.trim().length < 2) {
-        return ResponseHelper.validationError(res, 'Search query must be at least 2 characters long');
+        return ResponseHelper.validationError(
+          res,
+          'Search query must be at least 2 characters long'
+        );
       }
-      
+
       const movies = await this.tmdbService.searchMovies(query.trim(), page);
-      
+
       const pagination = {
         page,
         limit: 20,
         total: movies.length,
         totalPages: 1,
         hasNext: false,
-        hasPrev: page > 1
+        hasPrev: page > 1,
       };
-      
-      return ResponseHelper.success(res, 'Search results retrieved successfully', movies, pagination);
+
+      return ResponseHelper.success(
+        res,
+        'Search results retrieved successfully',
+        movies,
+        pagination
+      );
     } catch (error) {
-      logger.error('Error in searchMovies controller', { error: error.message, query: req.query.q });
+      logger.error('Error in searchMovies controller', {
+        error: error.message,
+        query: req.query.q,
+      });
       return ResponseHelper.error(res, 'Error searching movies', error);
     }
   };
@@ -89,20 +110,23 @@ class MovieController {
     try {
       const { id } = req.params;
       const movieId = parseInt(id);
-      
+
       if (!movieId || isNaN(movieId)) {
         return ResponseHelper.validationError(res, 'Invalid movie ID');
       }
-      
+
       const movieDetails = await this.tmdbService.getMovieDetails(movieId);
-      
+
       if (!movieDetails) {
         return ResponseHelper.notFound(res, 'Movie not found');
       }
-      
+
       return ResponseHelper.success(res, 'Movie details retrieved successfully', movieDetails);
     } catch (error) {
-      logger.error('Error in getMovieDetails controller', { error: error.message, movieId: req.params.id });
+      logger.error('Error in getMovieDetails controller', {
+        error: error.message,
+        movieId: req.params.id,
+      });
       return ResponseHelper.error(res, 'Error fetching movie details', error);
     }
   };
@@ -118,30 +142,33 @@ class MovieController {
         minRating: req.query.minRating,
         maxRating: req.query.maxRating,
         language: req.query.language,
-        sortBy: req.query.sortBy || 'popularity.desc'
+        sortBy: req.query.sortBy || 'popularity.desc',
       };
 
       // Remove empty filters
-      Object.keys(filters).forEach(key => {
+      Object.keys(filters).forEach((key) => {
         if (filters[key] === undefined || filters[key] === '') {
           delete filters[key];
         }
       });
 
       const movies = await this.tmdbService.discoverMovies(filters, page);
-      
+
       const pagination = {
         page,
         limit: 20,
         total: movies.length,
         totalPages: 1,
         hasNext: false,
-        hasPrev: page > 1
+        hasPrev: page > 1,
       };
-      
+
       return ResponseHelper.success(res, 'Movies discovered successfully', movies, pagination);
     } catch (error) {
-      logger.error('Error in discoverMovies controller', { error: error.message, filters: req.query });
+      logger.error('Error in discoverMovies controller', {
+        error: error.message,
+        filters: req.query,
+      });
       return ResponseHelper.error(res, 'Error discovering movies', error);
     }
   };
@@ -164,7 +191,10 @@ class MovieController {
 
       return ResponseHelper.success(res, 'Person details retrieved successfully', personDetails);
     } catch (error) {
-      logger.error('Error in getPersonDetails controller', { error: error.message, personId: req.params.id });
+      logger.error('Error in getPersonDetails controller', {
+        error: error.message,
+        personId: req.params.id,
+      });
       return ResponseHelper.error(res, 'Error fetching person details', error);
     }
   };
@@ -175,7 +205,10 @@ class MovieController {
       const { q: query } = req.query;
 
       if (!query || query.trim().length < 2) {
-        return ResponseHelper.validationError(res, 'Person search query must be at least 2 characters long');
+        return ResponseHelper.validationError(
+          res,
+          'Person search query must be at least 2 characters long'
+        );
       }
 
       const person = await this.tmdbService.searchPersonByName(query.trim());
@@ -186,7 +219,10 @@ class MovieController {
 
       return ResponseHelper.success(res, 'Person found successfully', person);
     } catch (error) {
-      logger.error('Error in searchPerson controller', { error: error.message, query: req.query.q });
+      logger.error('Error in searchPerson controller', {
+        error: error.message,
+        query: req.query.q,
+      });
       return ResponseHelper.error(res, 'Error searching person', error);
     }
   };
@@ -196,16 +232,16 @@ class MovieController {
     try {
       const page = parseInt(req.query.page) || 1;
       const movies = await this.tmdbService.getPopularMovies(page);
-      
+
       const pagination = {
         page,
         limit: 20,
         total: movies.length,
         totalPages: 1,
         hasNext: false,
-        hasPrev: page > 1
+        hasPrev: page > 1,
       };
-      
+
       return ResponseHelper.success(res, 'Movies retrieved successfully', movies, pagination);
     } catch (error) {
       logger.error('Error in getMovies controller', { error: error.message });

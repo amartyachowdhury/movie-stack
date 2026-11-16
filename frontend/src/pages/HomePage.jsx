@@ -16,56 +16,65 @@ const HomePage = ({ onMovieClick }) => {
   useEffect(() => {
     document.title = 'Movie Stack';
   }, []);
-  
+
   const { movies, loading: moviesLoading, error: moviesError } = useMovies(currentEndpoint);
-  const { 
-    searchResults, 
-    loading: searchLoading, 
-    error: searchError, 
-    searchMovies, 
+  const {
+    searchResults,
+    loading: searchLoading,
+    error: searchError,
+    searchMovies,
     debouncedSearch,
-    clearSearch 
+    clearSearch,
   } = useMovieSearch();
-  
+
   const {
     discoveryResults,
     loading: discoveryLoading,
     error: discoveryError,
     currentFilters,
     discoverMovies,
-    clearDiscovery
+    clearDiscovery,
   } = useMovieDiscovery();
 
-  const handleSearch = useCallback((query) => {
-    if (query.trim()) {
-      setSearchQuery(query);
-      setSearchMode('basic');
-      debouncedSearch(query);
-    } else {
-      setSearchQuery('');
-      setSearchMode('basic');
-      clearSearch();
-    }
-  }, [debouncedSearch, clearSearch]);
+  const handleSearch = useCallback(
+    (query) => {
+      if (query.trim()) {
+        setSearchQuery(query);
+        setSearchMode('basic');
+        debouncedSearch(query);
+      } else {
+        setSearchQuery('');
+        setSearchMode('basic');
+        clearSearch();
+      }
+    },
+    [debouncedSearch, clearSearch]
+  );
 
-  const handleAdvancedSearch = useCallback((filters) => {
-    setSearchMode('discovery');
-    setSearchQuery('');
-    clearSearch();
-    discoverMovies(filters);
-  }, [clearSearch, discoverMovies]);
+  const handleAdvancedSearch = useCallback(
+    (filters) => {
+      setSearchMode('discovery');
+      setSearchQuery('');
+      clearSearch();
+      discoverMovies(filters);
+    },
+    [clearSearch, discoverMovies]
+  );
 
   const handleAdvancedSearchToggle = useCallback(() => {
     setShowAdvancedSearch(!showAdvancedSearch);
   }, [showAdvancedSearch]);
 
-  const handleEndpointChange = useCallback((endpoint) => {
-    setCurrentEndpoint(endpoint);
-    setSearchQuery('');
-    setSearchMode('basic');
-    clearSearch();
-    clearDiscovery();
-  }, [clearSearch, clearDiscovery]);
+  const handleEndpointChange = useCallback(
+    (endpoint) => {
+      setCurrentEndpoint(endpoint);
+      setSearchQuery('');
+      setSearchMode('basic');
+      clearSearch();
+      clearDiscovery();
+    },
+    [clearSearch, clearDiscovery]
+  );
 
   // Memoize expensive computations
   const displayMovies = useMemo(() => {
@@ -101,10 +110,9 @@ const HomePage = ({ onMovieClick }) => {
     }
   }, [searchMode, discoveryError, searchError, moviesError, searchQuery]);
 
-
   return (
     <div className="home-page">
-      <Header 
+      <Header
         onSearch={handleSearch}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
@@ -115,13 +123,13 @@ const HomePage = ({ onMovieClick }) => {
       {/* Navigation Tabs */}
       {searchMode === 'basic' && !searchQuery && (
         <div className="nav-tabs">
-          <button 
+          <button
             className={`nav-tab ${currentEndpoint === 'popular' ? 'active' : ''}`}
             onClick={() => handleEndpointChange('popular')}
           >
             Popular Movies
           </button>
-          <button 
+          <button
             className={`nav-tab ${currentEndpoint === 'top-rated' ? 'active' : ''}`}
             onClick={() => handleEndpointChange('top-rated')}
           >
@@ -140,18 +148,16 @@ const HomePage = ({ onMovieClick }) => {
       {/* Content */}
       <main className="main-content">
         {isLoading === LOADING_STATES.LOADING && (
-          <LoadingSpinner 
-            message={searchQuery ? "Searching movies..." : "Loading movies..."} 
-          />
+          <LoadingSpinner message={searchQuery ? 'Searching movies...' : 'Loading movies...'} />
         )}
 
         {error && (
           <div className="error-message">
             <h3>❌ Error Loading Movies</h3>
             <p>{error}</p>
-            <button 
+            <button
               className="retry-button"
-              onClick={() => searchQuery ? searchMovies(searchQuery) : window.location.reload()}
+              onClick={() => (searchQuery ? searchMovies(searchQuery) : window.location.reload())}
             >
               Try Again
             </button>
@@ -162,44 +168,38 @@ const HomePage = ({ onMovieClick }) => {
           <div className="no-results">
             <h3>🔍 No Movies Found</h3>
             <p>
-              {searchQuery 
+              {searchQuery
                 ? `No movies found for "${searchQuery}". Try a different search term.`
-                : 'No movies available at the moment.'
-              }
+                : 'No movies available at the moment.'}
             </p>
           </div>
         )}
 
-                 {displayMovies.length > 0 && (
-                   <>
-                     <div className="results-header">
-                       <h2>
-                         {searchMode === 'discovery' 
-                           ? `Discovery Results (${displayMovies.length} movies)`
-                           : searchQuery 
-                             ? `Search Results for "${searchQuery}" (${displayMovies.length} movies)`
-                             : `${currentEndpoint === 'popular' ? 'Popular' : 'Top Rated'} Movies (${displayMovies.length} movies)`
-                         }
-                       </h2>
-                       {searchMode === 'discovery' && Object.keys(currentFilters).length > 0 && (
-                         <div className="active-filters">
-                           <span>Active filters: </span>
-                           {Object.entries(currentFilters).map(([key, value]) => (
-                             <span key={key} className="filter-tag">
-                               {key}: {value}
-                             </span>
-                           ))}
-                         </div>
-                       )}
-                     </div>
-            
+        {displayMovies.length > 0 && (
+          <>
+            <div className="results-header">
+              <h2>
+                {searchMode === 'discovery'
+                  ? `Discovery Results (${displayMovies.length} movies)`
+                  : searchQuery
+                    ? `Search Results for "${searchQuery}" (${displayMovies.length} movies)`
+                    : `${currentEndpoint === 'popular' ? 'Popular' : 'Top Rated'} Movies (${displayMovies.length} movies)`}
+              </h2>
+              {searchMode === 'discovery' && Object.keys(currentFilters).length > 0 && (
+                <div className="active-filters">
+                  <span>Active filters: </span>
+                  {Object.entries(currentFilters).map(([key, value]) => (
+                    <span key={key} className="filter-tag">
+                      {key}: {value}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+
             <div className="movies-grid">
               {displayMovies.map((movie) => (
-                <MovieCard
-                  key={movie.id}
-                  movie={movie}
-                  onClick={onMovieClick}
-                />
+                <MovieCard key={movie.id} movie={movie} onClick={onMovieClick} />
               ))}
             </div>
           </>

@@ -23,7 +23,7 @@ const Header = ({ onSearch, searchQuery, setSearchQuery, isSearching, onAdvanced
           <h1>🎬 Movie Stack</h1>
           <p>Discover amazing movies powered by TMDB</p>
         </div>
-        
+
         <form className="search-form" onSubmit={handleSubmit}>
           <div className="search-input-group">
             <input
@@ -43,11 +43,7 @@ const Header = ({ onSearch, searchQuery, setSearchQuery, isSearching, onAdvanced
                 ✕
               </button>
             )}
-            <button 
-              type="submit" 
-              className="search-button"
-              disabled={isSearching}
-            >
+            <button type="submit" className="search-button" disabled={isSearching}>
               {isSearching ? 'Searching...' : 'Search'}
             </button>
             <button

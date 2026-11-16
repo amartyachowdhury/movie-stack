@@ -9,7 +9,7 @@ const server = app.listen(config.server.port, config.server.host, () => {
     port: config.server.port,
     host: config.server.host,
     environment: config.server.nodeEnv,
-    tmdbConfigured: !!config.tmdb.apiKey
+    tmdbConfigured: !!config.tmdb.apiKey,
   });
 });
 

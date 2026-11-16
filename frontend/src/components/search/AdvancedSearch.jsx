@@ -11,9 +11,9 @@ const AdvancedSearch = ({ onSearch, onClose, isOpen }) => {
     minRating: '',
     maxRating: '',
     language: '',
-    sortBy: 'popularity.desc'
+    sortBy: 'popularity.desc',
   });
-  
+
   const [genres, setGenres] = useState([]);
   const [languages] = useState([
     { code: 'en', name: 'English' },
@@ -25,9 +25,9 @@ const AdvancedSearch = ({ onSearch, onClose, isOpen }) => {
     { code: 'ru', name: 'Russian' },
     { code: 'ja', name: 'Japanese' },
     { code: 'ko', name: 'Korean' },
-    { code: 'zh', name: 'Chinese' }
+    { code: 'zh', name: 'Chinese' },
   ]);
-  
+
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -48,16 +48,16 @@ const AdvancedSearch = ({ onSearch, onClose, isOpen }) => {
   };
 
   const handleFilterChange = (field, value) => {
-    setFilters(prev => ({
+    setFilters((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    
+
     try {
       // Filter out empty values
       const searchParams = Object.entries(filters)
@@ -84,7 +84,7 @@ const AdvancedSearch = ({ onSearch, onClose, isOpen }) => {
       minRating: '',
       maxRating: '',
       language: '',
-      sortBy: 'popularity.desc'
+      sortBy: 'popularity.desc',
     });
   };
 
@@ -98,11 +98,7 @@ const AdvancedSearch = ({ onSearch, onClose, isOpen }) => {
       <div className="advanced-search-modal">
         <div className="advanced-search-header">
           <h2>🔍 Advanced Search</h2>
-          <button 
-            className="close-button"
-            onClick={onClose}
-            aria-label="Close advanced search"
-          >
+          <button className="close-button" onClick={onClose} aria-label="Close advanced search">
             ✕
           </button>
         </div>
@@ -132,7 +128,7 @@ const AdvancedSearch = ({ onSearch, onClose, isOpen }) => {
                 className="filter-select"
               >
                 <option value="">All Genres</option>
-                {genres.map(genre => (
+                {genres.map((genre) => (
                   <option key={genre.id} value={genre.id}>
                     {genre.name}
                   </option>
@@ -150,7 +146,7 @@ const AdvancedSearch = ({ onSearch, onClose, isOpen }) => {
                 className="filter-select"
               >
                 <option value="">Any Year</option>
-                {years.map(year => (
+                {years.map((year) => (
                   <option key={year} value={year}>
                     {year}
                   </option>
@@ -196,7 +192,7 @@ const AdvancedSearch = ({ onSearch, onClose, isOpen }) => {
                 className="filter-select"
               >
                 <option value="">Any Language</option>
-                {languages.map(lang => (
+                {languages.map((lang) => (
                   <option key={lang.code} value={lang.code}>
                     {lang.name}
                   </option>
@@ -224,18 +220,10 @@ const AdvancedSearch = ({ onSearch, onClose, isOpen }) => {
           </div>
 
           <div className="search-actions">
-            <button
-              type="button"
-              onClick={handleReset}
-              className="reset-button"
-            >
+            <button type="button" onClick={handleReset} className="reset-button">
               Reset Filters
             </button>
-            <button
-              type="submit"
-              className="search-button"
-              disabled={loading}
-            >
+            <button type="submit" className="search-button" disabled={loading}>
               {loading ? 'Searching...' : 'Search Movies'}
             </button>
           </div>

@@ -7,15 +7,15 @@ class OMDbService {
     this.apiKey = config.omdb.apiKey;
     this.baseURL = config.omdb.baseUrl;
     this.timeout = config.omdb.timeout;
-    
+
     // Create axios instance with default config
     this.client = axios.create({
       baseURL: this.baseURL,
       timeout: this.timeout,
       params: {
         apikey: this.apiKey,
-        plot: 'full' // Get full plot summary
-      }
+        plot: 'full', // Get full plot summary
+      },
     });
 
     // Add request/response interceptors for logging
@@ -32,23 +32,23 @@ class OMDbService {
 
     this.client.interceptors.response.use(
       (response) => {
-        logger.debug('OMDb API Response', { 
-          url: response.config.url, 
+        logger.debug('OMDb API Response', {
+          url: response.config.url,
           status: response.status,
-          title: response.data?.Title
+          title: response.data?.Title,
         });
         return response;
       },
       (error) => {
-        logger.error('OMDb API Response Error', { 
+        logger.error('OMDb API Response Error', {
           error: error.message,
           status: error.response?.status,
-          url: error.config?.url
+          url: error.config?.url,
         });
         return Promise.reject(error);
       }
     );
-    
+
     if (!this.apiKey) {
       logger.warn('OMDB_API_KEY not found. OMDb features will be disabled.');
     }
@@ -67,23 +67,23 @@ class OMDbService {
       }
 
       const response = await this.client.get('/', { params });
-      
+
       if (response.data.Response === 'False') {
         logger.warn('OMDb movie not found', { title, year, error: response.data.Error });
         return null;
       }
 
-      logger.info('Successfully fetched OMDb movie data', { 
-        title: response.data.Title, 
-        year: response.data.Year 
+      logger.info('Successfully fetched OMDb movie data', {
+        title: response.data.Title,
+        year: response.data.Year,
       });
-      
+
       return this.formatOMDbData(response.data);
     } catch (error) {
-      logger.error('Error fetching OMDb movie data', { 
-        error: error.message, 
-        title, 
-        year 
+      logger.error('Error fetching OMDb movie data', {
+        error: error.message,
+        title,
+        year,
       });
       return null;
     }
@@ -97,24 +97,24 @@ class OMDbService {
 
     try {
       const response = await this.client.get('/', {
-        params: { i: imdbId }
+        params: { i: imdbId },
       });
-      
+
       if (response.data.Response === 'False') {
         logger.warn('OMDb movie not found', { imdbId, error: response.data.Error });
         return null;
       }
 
-      logger.info('Successfully fetched OMDb movie data by IMDB ID', { 
-        imdbId, 
-        title: response.data.Title 
+      logger.info('Successfully fetched OMDb movie data by IMDB ID', {
+        imdbId,
+        title: response.data.Title,
       });
-      
+
       return this.formatOMDbData(response.data);
     } catch (error) {
-      logger.error('Error fetching OMDb movie data by IMDB ID', { 
-        error: error.message, 
-        imdbId 
+      logger.error('Error fetching OMDb movie data by IMDB ID', {
+        error: error.message,
+        imdbId,
       });
       return null;
     }
@@ -124,24 +124,24 @@ class OMDbService {
     // Parse ratings from the Ratings array
     const ratings = {};
     if (data.Ratings && Array.isArray(data.Ratings)) {
-      data.Ratings.forEach(rating => {
+      data.Ratings.forEach((rating) => {
         switch (rating.Source) {
           case 'Internet Movie Database':
             ratings.imdb = {
               rating: parseFloat(rating.Value.split('/')[0]),
-              votes: data.imdbVotes ? parseInt(data.imdbVotes.replace(/,/g, '')) : null
+              votes: data.imdbVotes ? parseInt(data.imdbVotes.replace(/,/g, '')) : null,
             };
             break;
           case 'Rotten Tomatoes':
             ratings.rottenTomatoes = {
               score: parseInt(rating.Value.replace('%', '')),
-              type: rating.Value.includes('%') ? 'percentage' : 'rating'
+              type: rating.Value.includes('%') ? 'percentage' : 'rating',
             };
             break;
           case 'Metacritic':
             ratings.metacritic = {
               score: parseInt(rating.Value.split('/')[0]),
-              maxScore: parseInt(rating.Value.split('/')[1]) || 100
+              maxScore: parseInt(rating.Value.split('/')[1]) || 100,
             };
             break;
         }
@@ -173,7 +173,7 @@ class OMDbService {
       boxOffice: data.BoxOffice,
       production: data.Production,
       website: data.Website,
-      response: data.Response === 'True'
+      response: data.Response === 'True',
     };
   }
 

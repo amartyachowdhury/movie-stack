@@ -88,14 +88,30 @@ body {
   animation-fill-mode: both;
 }
 
-.movie-card-enhanced:nth-child(1) { animation-delay: 0.1s; }
-.movie-card-enhanced:nth-child(2) { animation-delay: 0.2s; }
-.movie-card-enhanced:nth-child(3) { animation-delay: 0.3s; }
-.movie-card-enhanced:nth-child(4) { animation-delay: 0.4s; }
-.movie-card-enhanced:nth-child(5) { animation-delay: 0.5s; }
-.movie-card-enhanced:nth-child(6) { animation-delay: 0.6s; }
-.movie-card-enhanced:nth-child(7) { animation-delay: 0.7s; }
-.movie-card-enhanced:nth-child(8) { animation-delay: 0.8s; }
+.movie-card-enhanced:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.movie-card-enhanced:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.movie-card-enhanced:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.movie-card-enhanced:nth-child(4) {
+  animation-delay: 0.4s;
+}
+.movie-card-enhanced:nth-child(5) {
+  animation-delay: 0.5s;
+}
+.movie-card-enhanced:nth-child(6) {
+  animation-delay: 0.6s;
+}
+.movie-card-enhanced:nth-child(7) {
+  animation-delay: 0.7s;
+}
+.movie-card-enhanced:nth-child(8) {
+  animation-delay: 0.8s;
+}
 
 @keyframes fadeInScale {
   from {
@@ -107,4 +123,3 @@ body {
     transform: scale(1) translateY(0);
   }
 }
-

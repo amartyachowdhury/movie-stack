@@ -2,11 +2,7 @@ const axios = require('axios');
 const config = require('../config');
 const logger = require('../utils/logger');
 const OMDbService = require('./omdbService');
-const {
-  SAMPLE_MOVIES,
-  SAMPLE_GENRES,
-  getSamplePersonDetails,
-} = require('./tmdbSampleData');
+const { SAMPLE_MOVIES, SAMPLE_GENRES, getSamplePersonDetails } = require('./tmdbSampleData');
 
 class TMDBService {
   constructor() {
@@ -15,15 +11,15 @@ class TMDBService {
     this.imageBaseURL = config.tmdb.imageBaseUrl;
     this.timeout = config.tmdb.timeout;
     this.omdbService = new OMDbService();
-    
+
     // Create axios instance with default config
     this.client = axios.create({
       baseURL: this.baseURL,
       timeout: this.timeout,
       params: {
         api_key: this.apiKey,
-        language: 'en-US'
-      }
+        language: 'en-US',
+      },
     });
 
     // Add request/response interceptors for logging
@@ -40,23 +36,23 @@ class TMDBService {
 
     this.client.interceptors.response.use(
       (response) => {
-        logger.debug('TMDB API Response', { 
-          url: response.config.url, 
+        logger.debug('TMDB API Response', {
+          url: response.config.url,
           status: response.status,
-          dataLength: response.data?.results?.length || 1
+          dataLength: response.data?.results?.length || 1,
         });
         return response;
       },
       (error) => {
-        logger.error('TMDB API Response Error', { 
+        logger.error('TMDB API Response Error', {
           error: error.message,
           status: error.response?.status,
-          url: error.config?.url
+          url: error.config?.url,
         });
         return Promise.reject(error);
       }
     );
-    
+
     if (!this.apiKey) {
       logger.warn('TMDB_API_KEY not found. Using sample data only.');
     }
@@ -70,10 +66,13 @@ class TMDBService {
 
     try {
       const response = await this.client.get('/movie/popular', {
-        params: { page }
+        params: { page },
       });
 
-      logger.info('Successfully fetched popular movies', { page, count: response.data.results.length });
+      logger.info('Successfully fetched popular movies', {
+        page,
+        count: response.data.results.length,
+      });
       return this.formatMovies(response.data.results);
     } catch (error) {
       logger.error('Error fetching popular movies', { error: error.message, page });
@@ -89,10 +88,13 @@ class TMDBService {
 
     try {
       const response = await this.client.get('/movie/top_rated', {
-        params: { page }
+        params: { page },
       });
 
-      logger.info('Successfully fetched top rated movies', { page, count: response.data.results.length });
+      logger.info('Successfully fetched top rated movies', {
+        page,
+        count: response.data.results.length,
+      });
       return this.formatMovies(response.data.results);
     } catch (error) {
       logger.error('Error fetching top rated movies', { error: error.message, page });
@@ -108,10 +110,14 @@ class TMDBService {
 
     try {
       const response = await this.client.get('/search/movie', {
-        params: { query, page }
+        params: { query, page },
       });
 
-      logger.info('Successfully searched movies', { query, page, count: response.data.results.length });
+      logger.info('Successfully searched movies', {
+        query,
+        page,
+        count: response.data.results.length,
+      });
       return this.formatMovies(response.data.results);
     } catch (error) {
       logger.error('Error searching movies', { error: error.message, query, page });
@@ -129,7 +135,7 @@ class TMDBService {
       const params = {
         page,
         sort_by: filters.sortBy || 'popularity.desc',
-        include_adult: false
+        include_adult: false,
       };
 
       // Add filters if provided
@@ -142,17 +148,17 @@ class TMDBService {
 
       const response = await this.client.get('/discover/movie', { params });
 
-      logger.info('Successfully discovered movies', { 
-        filters, 
-        page, 
-        count: response.data.results.length 
+      logger.info('Successfully discovered movies', {
+        filters,
+        page,
+        count: response.data.results.length,
       });
       return this.formatMovies(response.data.results);
     } catch (error) {
-      logger.error('Error discovering movies', { 
-        error: error.message, 
-        filters, 
-        page 
+      logger.error('Error discovering movies', {
+        error: error.message,
+        filters,
+        page,
       });
       return this.getSampleMovies();
     }
@@ -167,8 +173,8 @@ class TMDBService {
     try {
       const response = await this.client.get(`/movie/${movieId}`, {
         params: {
-          append_to_response: 'credits,videos,similar,watch/providers'
-        }
+          append_to_response: 'credits,videos,similar,watch/providers',
+        },
       });
 
       logger.info('Successfully fetched movie details', { movieId, title: response.data.title });
@@ -188,8 +194,8 @@ class TMDBService {
     try {
       const response = await this.client.get(`/person/${personId}`, {
         params: {
-          append_to_response: 'movie_credits,external_ids'
-        }
+          append_to_response: 'movie_credits,external_ids',
+        },
       });
 
       logger.info('Successfully fetched person details', { personId, name: response.data.name });
@@ -211,8 +217,8 @@ class TMDBService {
         params: {
           query,
           page: 1,
-          include_adult: false
-        }
+          include_adult: false,
+        },
       });
 
       const [person] = response.data?.results || [];
@@ -224,7 +230,7 @@ class TMDBService {
         id: person.id,
         name: person.name,
         profile_path: person.profile_path || '',
-        known_for_department: person.known_for_department || ''
+        known_for_department: person.known_for_department || '',
       };
     } catch (error) {
       logger.error('Error searching person by name', { error: error.message, query });
@@ -252,9 +258,7 @@ class TMDBService {
     if (!genres) return [];
     if (Array.isArray(genres) && genres.length > 0) {
       if (typeof genres[0] === 'object' && genres[0] !== null) {
-        return genres
-          .filter((g) => g && g.name)
-          .map((g) => ({ id: g.id ?? 0, name: g.name }));
+        return genres.filter((g) => g && g.name).map((g) => ({ id: g.id ?? 0, name: g.name }));
       }
       return genres
         .map((id) => parseInt(id, 10))
@@ -272,7 +276,7 @@ class TMDBService {
   }
 
   formatMovies(movies) {
-    return movies.map(movie => ({
+    return movies.map((movie) => ({
       id: movie.id, // Use TMDB ID as the primary ID
       tmdb_id: movie.id,
       title: movie.title,
@@ -287,7 +291,7 @@ class TMDBService {
       adult: movie.adult ? 1 : 0,
       original_language: movie.original_language,
       original_title: movie.original_title,
-      video: movie.video ? 1 : 0
+      video: movie.video ? 1 : 0,
     }));
   }
 
@@ -296,20 +300,14 @@ class TMDBService {
 
     // Format videos data
     const videos = movie.videos?.results || [];
-    const trailers = videos.filter(video => 
-      video.type === 'Trailer' && 
-      video.site === 'YouTube' && 
-      video.official === true
+    const trailers = videos.filter(
+      (video) => video.type === 'Trailer' && video.site === 'YouTube' && video.official === true
     );
-    const teasers = videos.filter(video => 
-      video.type === 'Teaser' && 
-      video.site === 'YouTube' && 
-      video.official === true
+    const teasers = videos.filter(
+      (video) => video.type === 'Teaser' && video.site === 'YouTube' && video.official === true
     );
-    const clips = videos.filter(video => 
-      video.type === 'Clip' && 
-      video.site === 'YouTube' && 
-      video.official === true
+    const clips = videos.filter(
+      (video) => video.type === 'Clip' && video.site === 'YouTube' && video.official === true
     );
 
     // Get OMDb data
@@ -323,10 +321,10 @@ class TMDBService {
         omdbData = await this.omdbService.getMovieByTitle(movie.title, year);
       }
     } catch (error) {
-      logger.warn('Failed to fetch OMDb data', { 
-        movieId: movie.id ?? movie.tmdb_id, 
-        title: movie.title, 
-        error: error.message 
+      logger.warn('Failed to fetch OMDb data', {
+        movieId: movie.id ?? movie.tmdb_id,
+        title: movie.title,
+        error: error.message,
       });
     }
 
@@ -335,7 +333,7 @@ class TMDBService {
       title: movie.title,
       overview: movie.overview,
       genres: genres,
-      genre_ids: genres.map(g => g.id),
+      genre_ids: genres.map((g) => g.id),
       release_date: movie.release_date,
       poster_path: movie.poster_path,
       backdrop_path: movie.backdrop_path,
@@ -366,10 +364,10 @@ class TMDBService {
         trailers: trailers,
         teasers: teasers,
         clips: clips,
-        primary_trailer: trailers[0] || teasers[0] || clips[0] || null
+        primary_trailer: trailers[0] || teasers[0] || clips[0] || null,
       },
       watch_providers: movie['watch/providers'] || null,
-      omdb: omdbData
+      omdb: omdbData,
     };
   }
 
@@ -377,14 +375,14 @@ class TMDBService {
     const knownForMovies = [...(person.movie_credits?.cast || [])]
       .sort((a, b) => (b.popularity || 0) - (a.popularity || 0))
       .slice(0, 12)
-      .map(movie => ({
+      .map((movie) => ({
         id: movie.id,
         title: movie.title,
         character: movie.character,
         release_date: movie.release_date,
         poster_path: movie.poster_path,
         vote_average: movie.vote_average,
-        popularity: movie.popularity
+        popularity: movie.popularity,
       }));
 
     return {
@@ -401,7 +399,7 @@ class TMDBService {
       popularity: person.popularity || 0,
       imdb_id: person.external_ids?.imdb_id || '',
       homepage: person.homepage || '',
-      known_for_movies: knownForMovies
+      known_for_movies: knownForMovies,
     };
   }
 

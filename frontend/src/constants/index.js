@@ -16,7 +16,7 @@ export const LOADING_STATES = {
   IDLE: 'idle',
   LOADING: 'loading',
   SUCCESS: 'success',
-  ERROR: 'error'
+  ERROR: 'error',
 };
 
 // Movie Configuration
@@ -25,7 +25,7 @@ export const MOVIE_CONFIG = {
   MAX_OVERVIEW_LENGTH: 150,
   POSTER_SIZE: 'w500',
   BACKDROP_SIZE: 'w1280',
-  PROFILE_SIZE: 'w185'
+  PROFILE_SIZE: 'w185',
 };
 
 // Genre Mapping (for parsing genre IDs)
@@ -48,7 +48,7 @@ export const GENRE_MAP = {
   10770: 'TV Movie',
   53: 'Thriller',
   10752: 'War',
-  37: 'Western'
+  37: 'Western',
 };
 
 // Language Flags Mapping
@@ -105,7 +105,7 @@ export const LANGUAGE_FLAGS = {
   km: '🇰🇭',
   lo: '🇱🇦',
   'zh-cn': '🇨🇳',
-  'zh-tw': '🇹🇼'
+  'zh-tw': '🇹🇼',
 };
 
 // API Endpoints
@@ -115,7 +115,7 @@ export const API_ENDPOINTS = {
   TOP_RATED: '/api/movies/top-rated',
   SEARCH: '/api/movies/search',
   GENRES: '/api/genres',
-  HEALTH: '/api/health'
+  HEALTH: '/api/health',
 };
 
 // Error Messages
@@ -124,12 +124,12 @@ export const ERROR_MESSAGES = {
   MOVIE_NOT_FOUND: 'Movie not found.',
   SEARCH_FAILED: 'Search failed. Please try again.',
   LOADING_FAILED: 'Failed to load data. Please try again.',
-  UNKNOWN_ERROR: 'An unknown error occurred.'
+  UNKNOWN_ERROR: 'An unknown error occurred.',
 };
 
 // Success Messages
 export const SUCCESS_MESSAGES = {
   MOVIES_LOADED: 'Movies loaded successfully',
   SEARCH_COMPLETE: 'Search completed',
-  MOVIE_LOADED: 'Movie details loaded'
+  MOVIE_LOADED: 'Movie details loaded',
 };

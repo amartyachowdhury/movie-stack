@@ -252,8 +252,12 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .trailer-info {
@@ -279,26 +283,25 @@
     margin: 1rem 0;
     padding: 1.5rem;
   }
-  
+
   .video-list {
     grid-template-columns: 1fr;
   }
-  
+
   .trailer-modal {
     max-width: 95vw;
     max-height: 95vh;
   }
-  
+
   .trailer-header {
     padding: 1rem 1.5rem;
   }
-  
+
   .trailer-header h3 {
     font-size: 1.1rem;
   }
-  
+
   .trailer-info {
     padding: 0.75rem 1.5rem;
   }
 }
-

@@ -27,24 +27,31 @@ const WatchProviders = ({ watchProviders }) => {
     11: { name: 'MUBI', color: '#E4007C', icon: '🎨' },
     387: { name: 'Peacock', color: '#00A4E4', icon: '🦚' },
     350: { name: 'Apple TV+', color: '#000000', icon: '🍎' },
-    386: { name: 'Peacock Premium', color: '#00A4E4', icon: '🦚' }
+    386: { name: 'Peacock Premium', color: '#00A4E4', icon: '🦚' },
   };
 
   const getProviderConfig = (providerId) => {
-    return platformConfig[providerId] || { 
-      name: 'Unknown Platform', 
-      color: '#666666', 
-      icon: '📺' 
-    };
+    return (
+      platformConfig[providerId] || {
+        name: 'Unknown Platform',
+        color: '#666666',
+        icon: '📺',
+      }
+    );
   };
 
   const getTypeColor = (type) => {
     switch (type) {
-      case 'Stream': return '#4ade80'; // Green for streaming
-      case 'Free': return '#fbbf24'; // Yellow for free
-      case 'Rent': return '#3b82f6'; // Blue for rent
-      case 'Buy': return '#ef4444'; // Red for buy
-      default: return '#e50914';
+      case 'Stream':
+        return '#4ade80'; // Green for streaming
+      case 'Free':
+        return '#fbbf24'; // Yellow for free
+      case 'Rent':
+        return '#3b82f6'; // Blue for rent
+      case 'Buy':
+        return '#ef4444'; // Red for buy
+      default:
+        return '#e50914';
     }
   };
 
@@ -55,18 +62,15 @@ const WatchProviders = ({ watchProviders }) => {
 
     return (
       <div className="provider-category">
-        <h4 
-          className="provider-category-title"
-          style={{ borderLeftColor: typeColor }}
-        >
+        <h4 className="provider-category-title" style={{ borderLeftColor: typeColor }}>
           {title}
         </h4>
         <div className="provider-list">
           {providers.map((provider) => {
             const config = getProviderConfig(provider.provider_id);
             return (
-              <a 
-                key={provider.provider_id} 
+              <a
+                key={provider.provider_id}
                 href={usProviders.link}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -87,7 +91,7 @@ const WatchProviders = ({ watchProviders }) => {
                 </div>
                 {provider.logo_path && (
                   <div className="provider-logo">
-                    <img 
+                    <img
                       src={`https://image.tmdb.org/t/p/w45${provider.logo_path}`}
                       alt={config.name}
                       className="provider-logo-image"

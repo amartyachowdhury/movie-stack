@@ -45,11 +45,11 @@ const RatingScores = ({ omdbData }) => {
               </div>
             </div>
             <div className="score-bar">
-              <div 
-                className="score-fill" 
-                style={{ 
+              <div
+                className="score-fill"
+                style={{
                   width: `${(ratings.imdb.rating / 10) * 100}%`,
-                  backgroundColor: getScoreColor(ratings.imdb.rating)
+                  backgroundColor: getScoreColor(ratings.imdb.rating),
                 }}
               />
             </div>
@@ -61,7 +61,10 @@ const RatingScores = ({ omdbData }) => {
           <div className="score-card rotten-tomatoes">
             <div className="score-header">
               <div className="score-logo">🍅 RT</div>
-              <div className="score-value" style={{ color: getRottenTomatoesColor(ratings.rottenTomatoes.score) }}>
+              <div
+                className="score-value"
+                style={{ color: getRottenTomatoesColor(ratings.rottenTomatoes.score) }}
+              >
                 {ratings.rottenTomatoes.score}%
               </div>
             </div>
@@ -71,11 +74,11 @@ const RatingScores = ({ omdbData }) => {
               </div>
             </div>
             <div className="score-bar">
-              <div 
-                className="score-fill" 
-                style={{ 
+              <div
+                className="score-fill"
+                style={{
                   width: `${ratings.rottenTomatoes.score}%`,
-                  backgroundColor: getRottenTomatoesColor(ratings.rottenTomatoes.score)
+                  backgroundColor: getRottenTomatoesColor(ratings.rottenTomatoes.score),
                 }}
               />
             </div>
@@ -87,22 +90,28 @@ const RatingScores = ({ omdbData }) => {
           <div className="score-card metacritic">
             <div className="score-header">
               <div className="score-logo">MC</div>
-              <div className="score-value" style={{ color: getMetacriticColor(ratings.metacritic.score) }}>
+              <div
+                className="score-value"
+                style={{ color: getMetacriticColor(ratings.metacritic.score) }}
+              >
                 {ratings.metacritic.score}/{ratings.metacritic.maxScore}
               </div>
             </div>
             <div className="score-details">
               <div className="score-status">
-                {ratings.metacritic.score >= 75 ? 'Universal Acclaim' : 
-                 ratings.metacritic.score >= 50 ? 'Mixed Reviews' : 'Generally Unfavorable'}
+                {ratings.metacritic.score >= 75
+                  ? 'Universal Acclaim'
+                  : ratings.metacritic.score >= 50
+                    ? 'Mixed Reviews'
+                    : 'Generally Unfavorable'}
               </div>
             </div>
             <div className="score-bar">
-              <div 
-                className="score-fill" 
-                style={{ 
+              <div
+                className="score-fill"
+                style={{
                   width: `${(ratings.metacritic.score / ratings.metacritic.maxScore) * 100}%`,
-                  backgroundColor: getMetacriticColor(ratings.metacritic.score)
+                  backgroundColor: getMetacriticColor(ratings.metacritic.score),
                 }}
               />
             </div>
@@ -119,7 +128,7 @@ const RatingScores = ({ omdbData }) => {
               <p>{omdbData.awards}</p>
             </div>
           )}
-          
+
           {omdbData.boxOffice && (
             <div className="box-office-section">
               <h4>💰 Box Office</h4>

@@ -27,7 +27,7 @@ class Logger {
     if (this.isTest) return;
     const logFile = path.join(this.logDir, `${level}.log`);
     const formattedMessage = this.formatMessage(level, message, meta);
-    
+
     fs.appendFileSync(logFile, formattedMessage + '\n');
   }
 

@@ -32,10 +32,7 @@ const PersonCreditCard = ({ person, subtitle, variant, onSelect }) => {
           }}
         />
       ) : null}
-      <div
-        className={placeholderClass}
-        style={{ display: person.profile_path ? 'none' : 'flex' }}
-      >
+      <div className={placeholderClass} style={{ display: person.profile_path ? 'none' : 'flex' }}>
         <span>{person.name.charAt(0)}</span>
       </div>
       <div className={infoClass}>

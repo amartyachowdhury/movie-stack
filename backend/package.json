@@ -7,6 +7,8 @@
     "start": "node server.js",
     "dev": "nodemon server.js",
     "lint": "eslint .",
+    "format": "prettier --ignore-path ../.prettierignore --write .",
+    "format:check": "prettier --ignore-path ../.prettierignore --check .",
     "test": "node -r ./tests/setup.js --test tests/tmdbService.test.js tests/api.person.test.js"
   },
   "dependencies": {
@@ -18,8 +20,10 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "eslint": "^10.15.0",
+    "eslint-config-prettier": "^10.1.8",
     "globals": "^17.14.0",
     "nodemon": "^3.0.1",
+    "prettier": "^3.10.1",
     "supertest": "^7.1.4"
   }
 }

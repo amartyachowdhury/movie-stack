@@ -51,7 +51,14 @@ const MovieDetailsPage = ({ movieId, onBack, onMovieClick, onPersonClick }) => {
     );
   }
 
-  return <MovieDetails movie={movie} onBack={onBack} onMovieClick={onMovieClick} onPersonClick={onPersonClick} />;
+  return (
+    <MovieDetails
+      movie={movie}
+      onBack={onBack}
+      onMovieClick={onMovieClick}
+      onPersonClick={onPersonClick}
+    />
+  );
 };
 
 export default MovieDetailsPage;

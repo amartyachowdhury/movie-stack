@@ -16,10 +16,12 @@ class App {
 
   setupMiddleware() {
     // CORS configuration
-    this.app.use(cors({
-      origin: config.cors.origin,
-      credentials: config.cors.credentials,
-    }));
+    this.app.use(
+      cors({
+        origin: config.cors.origin,
+        credentials: config.cors.credentials,
+      })
+    );
 
     // Body parsing middleware
     this.app.use(express.json({ limit: '10mb' }));
@@ -31,7 +33,7 @@ class App {
         method: req.method,
         url: req.url,
         ip: req.ip,
-        userAgent: req.get('User-Agent')
+        userAgent: req.get('User-Agent'),
       });
       next();
     });
@@ -52,8 +54,8 @@ class App {
           movies: '/api/movies',
           genres: '/api/genres',
           personDetails: '/api/movies/person/:id',
-          personSearch: '/api/movies/person/search?q='
-        }
+          personSearch: '/api/movies/person/search?q=',
+        },
       });
     });
   }

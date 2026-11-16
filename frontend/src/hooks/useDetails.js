@@ -53,7 +53,12 @@ const fetchMovieById = (id) => api.getMovie(id);
 const fetchPersonById = (id) => api.getPerson(id);
 
 export const useMovieDetails = (movieId) => {
-  const { data: movie, loading, error, refetch } = useCachedEntity(
+  const {
+    data: movie,
+    loading,
+    error,
+    refetch,
+  } = useCachedEntity(
     'movie_details',
     movieId,
     fetchMovieById,
@@ -64,7 +69,12 @@ export const useMovieDetails = (movieId) => {
 };
 
 export const usePersonDetails = (personId) => {
-  const { data: person, loading, error, refetch } = useCachedEntity(
+  const {
+    data: person,
+    loading,
+    error,
+    refetch,
+  } = useCachedEntity(
     'person_details',
     personId,
     fetchPersonById,

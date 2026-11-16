@@ -45,7 +45,7 @@ const TrailerSection = ({ videos }) => {
                 <div className="video-play-overlay">
                   <div className="play-button">
                     <svg viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M8 5v14l11-7z"/>
+                      <path d="M8 5v14l11-7z" />
                     </svg>
                   </div>
                 </div>
@@ -53,7 +53,8 @@ const TrailerSection = ({ videos }) => {
               <div className="video-details">
                 <h5 className="video-title">{video.name}</h5>
                 <p className="video-meta">
-                  {video.type} • {video.size}p • {video.published_at ? new Date(video.published_at).getFullYear() : 'N/A'}
+                  {video.type} • {video.size}p •{' '}
+                  {video.published_at ? new Date(video.published_at).getFullYear() : 'N/A'}
                 </p>
               </div>
             </div>
@@ -76,11 +77,7 @@ const TrailerSection = ({ videos }) => {
         {renderVideoList(videos.clips, 'Clips', '🎥')}
       </div>
 
-      <TrailerPlayer
-        video={selectedVideo}
-        isOpen={isPlayerOpen}
-        onClose={handleClosePlayer}
-      />
+      <TrailerPlayer video={selectedVideo} isOpen={isPlayerOpen} onClose={handleClosePlayer} />
     </div>
   );
 };

@@ -42,10 +42,10 @@
 }
 
 @keyframes titleGlow {
-  0% { 
+  0% {
     filter: drop-shadow(0 0 5px rgba(229, 9, 20, 0.3));
   }
-  100% { 
+  100% {
     filter: drop-shadow(0 0 20px rgba(229, 9, 20, 0.6));
   }
 }
@@ -271,8 +271,12 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .loading-message {
@@ -281,7 +285,8 @@
   margin: 0;
 }
 
-.error-message, .no-results {
+.error-message,
+.no-results {
   text-align: center;
   padding: 4rem 2rem;
   background: rgba(255, 255, 255, 0.05);
@@ -290,13 +295,15 @@
   margin: 2rem 0;
 }
 
-.error-message h3, .no-results h3 {
+.error-message h3,
+.no-results h3 {
   color: #ff6b6b;
   margin: 0 0 1rem 0;
   font-size: 1.5rem;
 }
 
-.error-message p, .no-results p {
+.error-message p,
+.no-results p {
   color: #b3b3b3;
   margin: 0 0 2rem 0;
   font-size: 1.1rem;
@@ -406,33 +413,33 @@
   .header-content {
     padding: 0 1rem;
   }
-  
+
   .header-title h1 {
     font-size: 2rem;
   }
-  
+
   .main-content {
     padding: 0 1rem 2rem 1rem;
   }
-  
+
   .search-input-group {
     flex-direction: column;
     border-radius: 15px;
   }
-  
+
   .search-input {
     border-radius: 15px 15px 0 0;
   }
-  
+
   .search-button {
     border-radius: 0 0 15px 15px;
   }
-  
+
   .nav-tabs {
     flex-direction: column;
     align-items: center;
   }
-  
+
   .nav-tab {
     width: 200px;
   }
@@ -442,13 +449,12 @@
   .header-title h1 {
     font-size: 1.5rem;
   }
-  
+
   .header-title p {
     font-size: 1rem;
   }
-  
+
   .results-header h2 {
     font-size: 1.5rem;
   }
 }
-

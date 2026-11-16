@@ -117,8 +117,12 @@
 }
 
 @keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 /* Specific score card styles */
@@ -171,22 +175,21 @@
     margin: 1rem 0;
     padding: 1.5rem;
   }
-  
+
   .scores-grid {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
-  
+
   .score-card {
     padding: 1rem;
   }
-  
+
   .score-value {
     font-size: 1.5rem;
   }
-  
+
   .rating-scores h3 {
     font-size: 1.5rem;
   }
 }
-

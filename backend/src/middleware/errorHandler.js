@@ -36,9 +36,7 @@ class ErrorHandler {
     }
 
     // Default error response
-    const message = process.env.NODE_ENV === 'production' 
-      ? 'Something went wrong!' 
-      : err.message;
+    const message = process.env.NODE_ENV === 'production' ? 'Something went wrong!' : err.message;
 
     return ResponseHelper.error(res, message, err);
   }

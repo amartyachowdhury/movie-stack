@@ -10,14 +10,14 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  box-shadow: 
+  box-shadow:
     0 4px 20px rgba(0, 0, 0, 0.3),
     0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 .movie-card-enhanced:hover {
   transform: translateY(-12px) scale(1.02);
-  box-shadow: 
+  box-shadow:
     0 25px 50px rgba(0, 0, 0, 0.8),
     0 0 30px rgba(229, 9, 20, 0.3),
     0 5px 15px rgba(0, 0, 0, 0.4);
@@ -228,8 +228,12 @@
 }
 
 @keyframes twinkle {
-  0% { transform: scale(1); }
-  100% { transform: scale(1.1); }
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.1);
+  }
 }
 
 .rating-score {
@@ -326,7 +330,8 @@
   border-left: 3px solid #e50914;
 }
 
-.budget, .revenue {
+.budget,
+.revenue {
   font-size: 11px;
   color: #888;
 }
@@ -341,7 +346,9 @@
   border-radius: 8px;
   overflow: hidden;
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
   border: 1px solid #333;
 }
 
@@ -375,4 +382,3 @@
   font-weight: 600;
   margin-top: 8px;
 }
-
